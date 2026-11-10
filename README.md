@@ -2,7 +2,7 @@
 > **Archivo:** `README.md`  
 > **Objetivo:** tarea_1_curso_2 · Taller A2A  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2001
+> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2009
 <!--/encabezado-grupo-->
 
 # tarea_1_curso_2 · Taller A2A

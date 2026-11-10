@@ -2,7 +2,7 @@
 > **Archivo:** `ROADMAP.md`  
 > **Objetivo:** ROADMAP · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2001
+> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2009
 <!--/encabezado-grupo-->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -80,6 +80,15 @@ paso del taller a él.
 | B.3 | **Guardar evidencias** (catálogo, ronda, fichas) | 🟡 | `tools/guardar_evidencias.py` |
 | B.4 | **Guía end-to-end + scripts** Mac/Windows | ✅ | `guia_ezequiel_tomas.md`, `scripts/*.sh` y `*.ps1` |
 | B.5 | **Corrida real entre tus 2 equipos** | ⬜ | ejecutar la guía con `GOOGLE_API_KEY` + túneles |
+
+---
+
+## Conocimiento conectado (prompt 13)
+
+| # | Qué | Estado | Dónde |
+|---|-----|--------|-------|
+| C.1 | **Ezequiel · BD SQLite** de modelos (sup./no sup./refuerzo) + `consultar_modelos` | ✅ | `src/agente_ezequiel/bd_modelos.py` |
+| C.2 | **Tomás · RAG Reiki** (Redis dockerizado) + `buscar_reiki` + docs niveles 1-4 | 🟡 | `src/agente_tomas/rag.py`, `data/reiki/`, `docker-compose.yml`; falta ingesta en vivo (Redis + key) |
 
 ---
 

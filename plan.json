@@ -352,6 +352,49 @@
         "scripts y guía listos; corrida en vivo entre 2 equipos pendiente"
       ],
       "evidencia": "herramientas 5/5 sin key; agente_tomas registrado; guía + 6 scripts."
+    },
+    {
+      "id": "e03",
+      "grupo": "agente-ezequiel",
+      "nombre": "Tool SQLite: catálogo de modelos de ciencia de datos",
+      "descripcion": "src/agente_ezequiel/bd_modelos.py crea/puebla data/modelos_ds.sqlite (modelos supervisados/no supervisados/refuerzo con para_que, como_se_utiliza, librerias, ejemplo_python); tool consultar_modelos en herramientas.py. La BD se crea sola.",
+      "estado": "hecho",
+      "depende_de": [
+        "e01"
+      ],
+      "entregables": [
+        "src/agente_ezequiel/bd_modelos.py",
+        "src/agente_ezequiel/herramientas.py",
+        "tests/test_bd_modelos.py"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_bd_modelos.py → 5 passed",
+        "consultar_modelos(tipo='refuerzo') devuelve los modelos de RL"
+      ],
+      "evidencia": "21 modelos (9 sup, 7 no sup, 5 RL); consulta por tipo/texto OK."
+    },
+    {
+      "id": "t02",
+      "grupo": "agente-tomas",
+      "nombre": "RAG de Reiki con Redis (dockerizado) + tool buscar_reiki",
+      "descripcion": "data/reiki/ (docs originales niveles 1-4 + FUENTES), src/agente_tomas/rag.py (Redis como vector store, embeddings Gemini, carga/búsqueda), tools/cargar_rag_reiki.py, docker-compose.yml (redis-stack, REDIS_URL cambiable), tool buscar_reiki. Degrada si no hay Redis/clave.",
+      "estado": "hecho",
+      "depende_de": [
+        "t01"
+      ],
+      "entregables": [
+        "data/reiki/*",
+        "src/agente_tomas/rag.py",
+        "tools/cargar_rag_reiki.py",
+        "docker-compose.yml",
+        "src/agente_tomas/herramientas.py",
+        "tests/test_rag_tomas.py"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_rag_tomas.py → pasa (lectura de docs y degradación)",
+        "docker compose up -d + GOOGLE_API_KEY: cargar_rag_reiki.py indexa y buscar_reiki recupera"
+      ],
+      "evidencia": "Redis up (disponible=True); 4 docs de niveles; tool degrada con nota sin clave."
     }
   ]
 }

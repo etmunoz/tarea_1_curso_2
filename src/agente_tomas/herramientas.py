@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de Tomás · Maestro Reiki.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2001
+# Última modificación: 20261110 2009
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de Tomás · Maestro Reiki.
@@ -18,6 +18,8 @@ from __future__ import annotations
 import unicodedata
 
 from langchain_core.tools import tool
+
+from src.agente_tomas import rag
 
 
 def _norm(texto: str) -> str:
@@ -99,4 +101,19 @@ def info_simbolo(nombre: str) -> dict:
     return {"simbolo": clave.title(), **SIMBOLOS[clave]}
 
 
-HERRAMIENTAS = [principios_reiki, posiciones_manos, info_simbolo]
+@tool
+def buscar_reiki(consulta: str) -> list[dict] | dict:
+    """Busca en los documentos de Reiki (niveles 1 a 4) cargados en el RAG (Redis) y
+    devuelve los fragmentos más relevantes [{texto, fuente}]. Úsala para responder con
+    el material de los documentos (niveles, símbolos, prácticas, iniciaciones). Si el RAG
+    no está disponible, lo dice en una línea."""
+    if not rag.disponible():
+        return {"nota": "El RAG (Redis) no está disponible. Levanta Redis (docker compose up) y carga los documentos con tools/cargar_rag_reiki.py."}
+    try:
+        res = rag.buscar(consulta)
+        return res or {"nota": "No encontré fragmentos para esa consulta en los documentos de Reiki."}
+    except Exception as exc:  # noqa: BLE001 - reportar sin romper
+        return {"nota": f"No pude consultar el RAG: {exc}"}
+
+
+HERRAMIENTAS = [principios_reiki, posiciones_manos, info_simbolo, buscar_reiki]

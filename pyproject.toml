@@ -3,7 +3,7 @@
 # Objetivo: Configuración del proyecto y dependencias (uv).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2001
+# Última modificación: 20261110 2009
 # --8<-- fin-encabezado-grupo
 
 [project]
@@ -33,6 +33,10 @@ dependencies = [
   "pytest>=8",
   "nbformat>=5.10",
   "ipykernel>=6",
+  # RAG del agente de Tomás (Redis como vector store + carga de documentos)
+  "langchain-redis>=0.2",
+  "redis>=5",
+  "pypdf>=5",
 ]
 
 # No es un paquete instalable: el código se ejecuta desde la raíz con imports `src.*`

@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1603
-# Última modificación: 20261110 2001
+# Última modificación: 20261110 2009
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.
@@ -18,6 +18,8 @@ from __future__ import annotations
 import unicodedata
 
 from langchain_core.tools import tool
+
+from src.agente_ezequiel import bd_modelos
 
 
 def _norm(texto: str) -> str:
@@ -130,4 +132,14 @@ def elegir_modelo(tipo_de_dato: str) -> dict:
     return {"tipo": clave, **MODELOS[clave]}
 
 
-HERRAMIENTAS = [recomendar_tecnica, metricas_recomendadas, elegir_modelo]
+@tool
+def consultar_modelos(consulta: str = "", tipo: str = "") -> list[dict]:
+    """Consulta el catálogo de modelos de ciencia de datos en la base SQLite.
+    `tipo` opcional: 'supervisado', 'no supervisado' o 'refuerzo'. `consulta` busca por
+    nombre, para qué sirve, cómo se usa o librerías (p. ej. 'clustering', 'xgboost', 'RL').
+    Devuelve, por modelo: nombre, tipo, para_que, como_se_utiliza, librerias y ejemplo_python.
+    Si no hay coincidencias, devuelve una lista vacía."""
+    return bd_modelos.consultar(consulta=consulta, tipo=tipo)
+
+
+HERRAMIENTAS = [recomendar_tecnica, metricas_recomendadas, elegir_modelo, consultar_modelos]

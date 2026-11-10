@@ -2,7 +2,7 @@
 > **Archivo:** `AGENTS.md`  
 > **Objetivo:** AGENTS.md · agente-viajes-a2a  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1514 · **Última modificación:** 20261110 2001
+> **Creación:** 20261110 1514 · **Última modificación:** 20261110 2009
 <!--/encabezado-grupo-->
 
 # AGENTS.md · agente-viajes-a2a

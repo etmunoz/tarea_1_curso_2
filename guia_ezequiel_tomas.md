@@ -2,7 +2,7 @@
 > **Archivo:** `guia_ezequiel_tomas.md`  
 > **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2001
+> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2009
 <!--/encabezado-grupo-->
 
 # Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)

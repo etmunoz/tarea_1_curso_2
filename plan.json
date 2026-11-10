@@ -3,7 +3,8 @@
   "grupos": {
     "viajes": "Agente de viajes expuesto por A2A nativo (servidor de LangGraph). HECHO.",
     "agente-conversacional": "Agente conversacional que consume al de viajes por A2A. SIN TAREAS AÚN: las crea @spec con el pedido del README.",
-    "swarm": "Agregar el agente de actividades al swarm vuelos+hoteles. PENDIENTE."
+    "swarm": "Agregar el agente de actividades al swarm vuelos+hoteles. PENDIENTE.",
+    "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO."
   },
   "tareas": [
     {
@@ -136,6 +137,28 @@
         "POST /assistants/search {\"graph_id\":\"swarm_viajes\"} devuelve un assistant y su tarjeta responde 200",
         "message/send al swarm con 'hotel en Bogotá 2 noches' devuelve completed"
       ]
+    },
+    {
+      "id": "e01",
+      "grupo": "agente-ezequiel",
+      "nombre": "Agente de Ezequiel: herramientas de IA/DS, prompt, grafo y registro A2A",
+      "estado": "hecho",
+      "depende_de": [
+        "v02"
+      ],
+      "entregables": [
+        "src/agente_ezequiel/herramientas.py",
+        "src/agente_ezequiel/prompts.py",
+        "src/agente_ezequiel/graph.py",
+        "langgraph.json",
+        "tests/test_agente_ezequiel.py"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_agente_ezequiel.py → 5 passed",
+        "langgraph.json registra el grafo agente_ezequiel",
+        "langgraph dev publica agente_ezequiel y responde message/send (requiere GOOGLE_API_KEY)"
+      ],
+      "evidencia": "herramientas verificadas sin API key; 5/5 tests. Falta prueba en vivo con Gemini."
     }
   ]
 }

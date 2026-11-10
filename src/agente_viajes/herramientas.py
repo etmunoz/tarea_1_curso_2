@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de viajes. Datos simulados: en producción serían APIs reales (Amadeus, Booking...).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 1941
+# Última modificación: 20261110 1952
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de viajes. Datos simulados: en producción serían APIs reales (Amadeus, Booking...)."""

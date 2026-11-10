@@ -3,7 +3,7 @@ Archivo: prompts_ejecutados/README.md
 Objetivo: Prompts ejecutados
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1603
-Última modificación: 20261110 1941
+Última modificación: 20261110 1952
 --8<-- fin-encabezado-grupo -->
 
 # Prompts ejecutados
@@ -25,3 +25,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 09 | [ROADMAP + fix encabezado frontmatter](09-roadmap-y-fix-frontmatter.md) | [respuesta](../respuestas/09-roadmap-y-fix-frontmatter.md) |
 | 10 | [Blueprint + coordinador (supervisor)](10-blueprint-y-coordinador.md) | [respuesta](../respuestas/10-blueprint-y-coordinador.md) |
 | 11 | [Esqueleto de entrega y empaquetador](11-esqueleto-entrega.md) | [respuesta](../respuestas/11-esqueleto-entrega.md) |
+| 12 | [Agente Tomás + guía y scripts 2 computadores](12-agente-tomas-y-guia-2-equipos.md) | [respuesta](../respuestas/12-agente-tomas-y-guia-2-equipos.md) |

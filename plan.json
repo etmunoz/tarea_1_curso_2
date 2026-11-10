@@ -6,7 +6,8 @@
     "swarm": "Swarm vuelos + hoteles + actividades (handoff entre los tres). HECHO.",
     "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO.",
     "coordinador": "Supervisor que enruta la pregunta al agente remoto según su ficha (locales + compañeros vía URLS_AGENTES). HECHO (falta corrida en vivo).",
-    "entrega": "Esqueleto de entrega (Paso 9): documento, companeros.md, evidencias/ y empaquetador del zip. PARCIAL."
+    "entrega": "Esqueleto de entrega (Paso 9): documento, companeros.md, evidencias/ y empaquetador del zip. PARCIAL.",
+    "agente-tomas": "Segundo agente del usuario: Tomás (Maestro Reiki), para la prueba A2A entre sus 2 computadores. HECHO."
   },
   "tareas": [
     {
@@ -324,6 +325,33 @@
         "uv run python tools/empaquetar_entrega.py --grupo 1 crea dist/grupo-1-taller-a2a.zip sin .env; avisa de pendientes"
       ],
       "evidencia": "zip con proyecto/ (93 archivos) + documento + blueprint + companeros + evidencias; sin .env"
+    },
+    {
+      "id": "t01",
+      "grupo": "agente-tomas",
+      "nombre": "Agente de Tomás (Maestro Reiki): herramientas, prompt, grafo, registro, ficha, guía y scripts",
+      "descripcion": "src/agente_tomas/ (principios_reiki, posiciones_manos, info_simbolo; sin consejo médico), registro en langgraph.json, src/fichas.py + tools/configurar_fichas.py, tools/guardar_evidencias.py, guia_ezequiel_tomas.md y scripts/ (.sh Mac / .ps1 Windows).",
+      "estado": "hecho",
+      "depende_de": [
+        "e01",
+        "k02"
+      ],
+      "entregables": [
+        "src/agente_tomas/*",
+        "src/fichas.py",
+        "tools/configurar_fichas.py",
+        "tools/guardar_evidencias.py",
+        "guia_ezequiel_tomas.md",
+        "scripts/*",
+        "tests/test_agente_tomas.py",
+        "notebooks/tomas_paso_a_paso.ipynb"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_agente_tomas.py → 5 passed",
+        "langgraph.json registra agente_tomas",
+        "scripts y guía listos; corrida en vivo entre 2 equipos pendiente"
+      ],
+      "evidencia": "herramientas 5/5 sin key; agente_tomas registrado; guía + 6 scripts."
     }
   ]
 }

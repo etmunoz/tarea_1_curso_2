@@ -3,7 +3,7 @@ Archivo: ROADMAP.md
 Objetivo: ROADMAP · Taller A2A (Curso 2 · Sesión 1)
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1928
-Última modificación: 20261110 1941
+Última modificación: 20261110 1952
 --8<-- fin-encabezado-grupo -->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -50,7 +50,7 @@ paso del taller a él.
 | 1.2 | **Paso 3 · Mi agente con mi skill** | `src/agente_ezequiel/` (herramientas, prompt, grafo) + registro | ✅ | `src/agente_ezequiel/`, `langgraph.json`, prompt `04` |
 | 1.3 | **Paso 4 · Probarlo solo** | el agente responde y rechaza lo ajeno; evidencia | 🟡 | tests ✅ (`tests/test_agente_ezequiel.py`); falta captura en vivo (`langgraph dev` + `GOOGLE_API_KEY`) |
 | 1.4 | **Paso 4 · Notebook paso a paso** | notebook nbformat | ✅ | `notebooks/ezequiel_paso_a_paso.ipynb` |
-| 1.5 | **Paso 5 · La ficha (Agent Card)** | descripción "sé/no hago" + skills con ejemplo; `evidencias/02-ficha.json` | ⬜ | Con `langgraph dev`: `PATCH /assistants/<id>` (name+description). Para varias skills con ejemplos, exponer con `a2a-sdk`. |
+| 1.5 | **Paso 5 · La ficha (Agent Card)** | descripción "sé/no hago"; `evidencias/02-ficha-<grafo>.json` | 🟡 | ✅ `src/fichas.py` + `tools/configurar_fichas.py` (PATCH name+description, guarda evidencia). Falta aplicarla en vivo. |
 
 ---
 
@@ -69,6 +69,18 @@ paso del taller a él.
 | 3.1 | **Paso 7 · Sumar a los compañeros** | un **coordinador/supervisor** que lee las fichas y enruta; `compañeros.md`; `evidencias/04-catalogo.png` | 🟡 | ✅ construido: [`src/coordinador/`](src/coordinador/) (catálogo desde `URLS_AGENTES`, supervisor LangGraph). Falta corrida en vivo + `compañeros.md`/evidencia. |
 | 3.2 | **Paso 8 · La ronda de preguntas** | 3 preguntas por integrante con su camino; `evidencias/05-ronda.png` | ⬜ | Actividad en vivo con los agentes del grupo (Fabio, Gustavo, Ezequiel) sumados al coordinador. |
 | 3.3 | **Paso 9 · Entrega y evaluación** | zip del grupo: documento, blueprints, `companeros.md`, proyecto completo, `evidencias/` | 🟡 | ✅ esqueleto: `entrega/documento-entrega.md`, `entrega/companeros.md`, `evidencias/README.md` y `tools/empaquetar_entrega.py` (arma el zip con `git ls-files`, sin `.env`). Falta completar ⟨pendiente⟩, PNGs y exportar el PDF. |
+
+---
+
+## Fase 3.bis · Prueba 2 computadores (Ezequiel Mac ↔ Tomás Windows)
+
+| # | Qué | Estado | Dónde |
+|---|-----|--------|-------|
+| B.1 | **Agente Tomás** (Maestro Reiki) | ✅ | `src/agente_tomas/`, registrado en `langgraph.json` |
+| B.2 | **Fichas** de Ezequiel y Tomás | 🟡 | `src/fichas.py`, `tools/configurar_fichas.py` (aplicar en vivo) |
+| B.3 | **Guardar evidencias** (catálogo, ronda, fichas) | 🟡 | `tools/guardar_evidencias.py` |
+| B.4 | **Guía end-to-end + scripts** Mac/Windows | ✅ | `guia_ezequiel_tomas.md`, `scripts/*.sh` y `*.ps1` |
+| B.5 | **Corrida real entre tus 2 equipos** | ⬜ | ejecutar la guía con `GOOGLE_API_KEY` + túneles |
 
 ---
 

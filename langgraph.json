@@ -4,7 +4,8 @@
   ],
   "graphs": {
     "agente_viajes": "./src/agente_viajes/graph.py:graph",
-    "agente_ezequiel": "./src/agente_ezequiel/graph.py:graph"
+    "agente_ezequiel": "./src/agente_ezequiel/graph.py:graph",
+    "agente_tomas": "./src/agente_tomas/graph.py:graph"
   },
   "env": ".env"
 }

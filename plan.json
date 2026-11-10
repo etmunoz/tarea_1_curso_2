@@ -142,6 +142,7 @@
       "id": "e01",
       "grupo": "agente-ezequiel",
       "nombre": "Agente de Ezequiel: herramientas de IA/DS, prompt, grafo y registro A2A",
+      "descripcion": "Crear src/agente_ezequiel/ (herramientas de ML/DS con @tool y datos simulados, prompt separado, grafo create_agent) y registrarlo en langgraph.json. Regla AGENTS.md: prompts en prompts.py, herramientas con docstring, A2A nativo por langgraph.json.",
       "estado": "hecho",
       "depende_de": [
         "v02"
@@ -163,6 +164,7 @@
     {
       "id": "c01",
       "nombre": "Cliente A2A: assistant_id, tarjeta y message/send con contextId fijo por conversación",
+      "descripcion": "Cliente A2A en src/consumidor/a2a_cliente.py: resolver assistant_id (POST /assistants/search), leer la tarjeta y enviar message/send con contextId UUID fijo por conversación. URLs desde el entorno (AGENTS.md).",
       "entregables": [
         "src/consumidor/a2a_cliente.py"
       ],
@@ -179,6 +181,7 @@
     {
       "id": "c02",
       "nombre": "Agente conversacional (create_agent) con herramienta remota + precio_btc local y prompt",
+      "descripcion": "Agente conversacional src/consumidor/graph.py con create_agent (estado messages), prompt en prompts.py y dos herramientas: consultar_agente_viajes (remota A2A) y precio_btc (local). Lo remoto es un dato (AGENTS.md).",
       "entregables": [
         "src/consumidor/herramientas.py",
         "src/consumidor/prompts.py",
@@ -197,6 +200,7 @@
     {
       "id": "c03",
       "nombre": "Notebook paso a paso (3 secciones) y pruebas",
+      "descripcion": "Notebook notebooks/consumidor_paso_a_paso.ipynb (nbformat) con las tres secciones: configuración base, agentes y consumo multi-turno mezclando viajes y precio BTC.",
       "entregables": [
         "notebooks/consumidor_paso_a_paso.ipynb",
         "tests/test_consumidor.py"
@@ -215,6 +219,7 @@
       "id": "s01",
       "grupo": "swarm",
       "nombre": "Agente de actividades en el swarm: herramienta buscar_actividades, prompt y handoffs cruzados",
+      "descripcion": "Agente de actividades en el swarm: herramienta buscar_actividades (datos simulados), SYSTEM_ACTIVIDADES y handoffs cruzados; create_swarm con los tres agentes. No se altera el agente de viajes nativo.",
       "estado": "hecho",
       "depende_de": [],
       "entregables": [
@@ -228,6 +233,23 @@
         "python -m src.swarm.graph transfiere a 'actividades' ante un panorama (requiere GOOGLE_API_KEY)"
       ],
       "evidencia": "buscar_actividades devuelve 2 panoramas por ciudad (LIM/BOG/EZE); swarm con 3 agentes."
+    },
+    {
+      "id": "e02",
+      "grupo": "agente-ezequiel",
+      "nombre": "Notebook paso a paso del agente de Ezequiel",
+      "descripcion": "notebooks/ezequiel_paso_a_paso.ipynb (nbformat): herramientas, el agente por A2A nativo (assistant_id + tarjeta) y consumo por message/send.",
+      "estado": "hecho",
+      "depende_de": [
+        "e01"
+      ],
+      "entregables": [
+        "notebooks/ezequiel_paso_a_paso.ipynb"
+      ],
+      "verificacion": [
+        "nbformat.validate OK; con langgraph dev + GOOGLE_API_KEY corre de arriba abajo"
+      ],
+      "evidencia": "notebook válido (7 celdas)"
     }
   ]
 }

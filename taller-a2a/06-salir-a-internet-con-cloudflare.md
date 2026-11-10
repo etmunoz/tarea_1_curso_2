@@ -3,7 +3,7 @@ Archivo: taller-a2a/06-salir-a-internet-con-cloudflare.md
 Objetivo: Salir a internet con Cloudflare
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1450
-Última modificación: 20261110 1920
+Última modificación: 20261110 1923
 --8<-- fin-encabezado-grupo -->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 6/10 · Parte 2 · Internet -->

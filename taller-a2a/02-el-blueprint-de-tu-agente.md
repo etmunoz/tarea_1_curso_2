@@ -3,7 +3,7 @@ Archivo: taller-a2a/02-el-blueprint-de-tu-agente.md
 Objetivo: El blueprint de tu agente
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1450
-Última modificación: 20261110 1920
+Última modificación: 20261110 1923
 --8<-- fin-encabezado-grupo -->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 2/10 · Parte 1 · Tu agente -->

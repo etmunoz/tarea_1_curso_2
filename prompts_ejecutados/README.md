@@ -3,7 +3,7 @@ Archivo: prompts_ejecutados/README.md
 Objetivo: Prompts ejecutados
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1603
-Última modificación: 20261110 1928
+Última modificación: 20261110 1934
 --8<-- fin-encabezado-grupo -->
 
 # Prompts ejecutados
@@ -23,3 +23,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 07 | [Swarm con el agente de actividades](07-swarm-agente-actividades.md) | [respuesta](../respuestas/07-swarm-agente-actividades.md) |
 | 08 | [Aplicar convenciones OpenCode (@spec/@implementador)](08-aplicar-convenciones-opencode.md) | [respuesta](../respuestas/08-aplicar-convenciones-opencode.md) |
 | 09 | [ROADMAP + fix encabezado frontmatter](09-roadmap-y-fix-frontmatter.md) | [respuesta](../respuestas/09-roadmap-y-fix-frontmatter.md) |
+| 10 | [Blueprint + coordinador (supervisor)](10-blueprint-y-coordinador.md) | [respuesta](../respuestas/10-blueprint-y-coordinador.md) |

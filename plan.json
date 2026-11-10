@@ -4,7 +4,8 @@
     "viajes": "Agente de viajes expuesto por A2A nativo (servidor de LangGraph). HECHO.",
     "agente-conversacional": "Agente conversacional que consume al de viajes por A2A (3 pasos: config base, agentes, consumo). HECHO.",
     "swarm": "Swarm vuelos + hoteles + actividades (handoff entre los tres). HECHO.",
-    "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO."
+    "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO.",
+    "coordinador": "Supervisor que enruta la pregunta al agente remoto según su ficha (locales + compañeros vía URLS_AGENTES). HECHO (falta corrida en vivo)."
   },
   "tareas": [
     {
@@ -250,6 +251,60 @@
         "nbformat.validate OK; con langgraph dev + GOOGLE_API_KEY corre de arriba abajo"
       ],
       "evidencia": "notebook válido (7 celdas)"
+    },
+    {
+      "id": "k01",
+      "nombre": "Cliente A2A general y catálogo de agentes desde el entorno",
+      "descripcion": "src/coordinador/a2a.py (assistant_id, card, enviar por base_url+graph) y src/coordinador/catalogo.py (A2A_BASE, A2A_GRAFOS_LOCALES, URLS_AGENTES). URLs en el entorno (AGENTS.md).",
+      "entregables": [
+        "src/coordinador/a2a.py",
+        "src/coordinador/catalogo.py",
+        ".env.example"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_coordinador.py → 3 passed (parse catálogo y texto A2A sin key)"
+      ],
+      "grupo": "coordinador",
+      "estado": "hecho",
+      "depende_de": [
+        "e01"
+      ],
+      "evidencia": "verificado sin key (3 passed, 1 skipped); falta corrida en vivo"
+    },
+    {
+      "id": "k02",
+      "nombre": "Grafo supervisor: enruta por ficha y reenvía por A2A",
+      "descripcion": "src/coordinador/graph.py: StateGraph enrutar (with_structured_output Decision) → consultar/sin_agente; respuesta remota etiquetada [Nombre] (es un dato). Prompt en prompts.py.",
+      "entregables": [
+        "src/coordinador/graph.py",
+        "src/coordinador/prompts.py"
+      ],
+      "verificacion": [
+        "python -m src.coordinador.graph enruta IA/DS→agente_ezequiel, viajes→agente_viajes, resto→ninguno (requiere langgraph dev + GOOGLE_API_KEY)"
+      ],
+      "grupo": "coordinador",
+      "estado": "hecho",
+      "depende_de": [
+        "e01"
+      ],
+      "evidencia": "verificado sin key (3 passed, 1 skipped); falta corrida en vivo"
+    },
+    {
+      "id": "k03",
+      "nombre": "Notebook paso a paso del coordinador",
+      "descripcion": "notebooks/coordinador_paso_a_paso.ipynb (nbformat): catálogo, supervisor y ronda de preguntas.",
+      "entregables": [
+        "notebooks/coordinador_paso_a_paso.ipynb"
+      ],
+      "verificacion": [
+        "nbformat.validate OK; corre con langgraph dev + GOOGLE_API_KEY"
+      ],
+      "grupo": "coordinador",
+      "estado": "hecho",
+      "depende_de": [
+        "e01"
+      ],
+      "evidencia": "verificado sin key (3 passed, 1 skipped); falta corrida en vivo"
     }
   ]
 }

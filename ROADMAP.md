@@ -3,7 +3,7 @@ Archivo: ROADMAP.md
 Objetivo: ROADMAP · Taller A2A (Curso 2 · Sesión 1)
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1928
-Última modificación: 20261110 1928
+Última modificación: 20261110 1934
 --8<-- fin-encabezado-grupo -->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -46,7 +46,7 @@ paso del taller a él.
 
 | # | Paso del taller | Qué entrega | Estado | Dónde / Nota |
 |---|-----------------|-------------|--------|--------------|
-| 1.1 | **Paso 2 · Blueprint** | `blueprint-ezequiel.md` (qué hace / qué no / herramienta) | ⬜ | Crear en la raíz. Base para la ficha. |
+| 1.1 | **Paso 2 · Blueprint** | `blueprint-ezequiel.md` (qué hace / qué no / herramienta) | ✅ | [`blueprint-ezequiel.md`](blueprint-ezequiel.md) |
 | 1.2 | **Paso 3 · Mi agente con mi skill** | `src/agente_ezequiel/` (herramientas, prompt, grafo) + registro | ✅ | `src/agente_ezequiel/`, `langgraph.json`, prompt `04` |
 | 1.3 | **Paso 4 · Probarlo solo** | el agente responde y rechaza lo ajeno; evidencia | 🟡 | tests ✅ (`tests/test_agente_ezequiel.py`); falta captura en vivo (`langgraph dev` + `GOOGLE_API_KEY`) |
 | 1.4 | **Paso 4 · Notebook paso a paso** | notebook nbformat | ✅ | `notebooks/ezequiel_paso_a_paso.ipynb` |
@@ -66,7 +66,7 @@ paso del taller a él.
 
 | # | Paso del taller | Qué entrega | Estado | Dónde / Nota |
 |---|-----------------|-------------|--------|--------------|
-| 3.1 | **Paso 7 · Sumar a los compañeros** | un **coordinador/supervisor** que lee las fichas de varios agentes remotos y enruta; `compañeros.md`; `evidencias/04-catalogo.png` | ⬜ | **No construido aún.** En el stack real: un grafo supervisor (LangGraph) que descubre cada Agent Card por su URL y elige a quién mandar, con las URLs en el entorno. Reusa el cliente A2A de `src/consumidor/a2a_cliente.py`. |
+| 3.1 | **Paso 7 · Sumar a los compañeros** | un **coordinador/supervisor** que lee las fichas y enruta; `compañeros.md`; `evidencias/04-catalogo.png` | 🟡 | ✅ construido: [`src/coordinador/`](src/coordinador/) (catálogo desde `URLS_AGENTES`, supervisor LangGraph). Falta corrida en vivo + `compañeros.md`/evidencia. |
 | 3.2 | **Paso 8 · La ronda de preguntas** | 3 preguntas por integrante con su camino; `evidencias/05-ronda.png` | ⬜ | Actividad en vivo con los agentes del grupo (Fabio, Gustavo, Ezequiel) sumados al coordinador. |
 | 3.3 | **Paso 9 · Entrega y evaluación** | zip del grupo: `documento-entrega.pdf`, `blueprint-*.md`, `compañeros.md`, proyecto completo, `evidencias/` | ⬜ | Empaquetado final. Ver estructura y rúbrica en `taller-a2a/09-entrega-y-evaluacion.md`. **Nunca** incluir `.env` ni `.venv` (sí `.env.example`). |
 

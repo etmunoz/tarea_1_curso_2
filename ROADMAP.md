@@ -3,7 +3,7 @@ Archivo: ROADMAP.md
 Objetivo: ROADMAP · Taller A2A (Curso 2 · Sesión 1)
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1928
-Última modificación: 20261110 1934
+Última modificación: 20261110 1935
 --8<-- fin-encabezado-grupo -->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)

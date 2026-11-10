@@ -3,7 +3,7 @@ Archivo: respuestas/09-roadmap-y-fix-frontmatter.md
 Objetivo: 09 · Respuesta — ROADMAP + fix frontmatter
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1928
-Última modificación: 20261110 1934
+Última modificación: 20261110 1935
 --8<-- fin-encabezado-grupo -->
 
 # 09 · Respuesta — ROADMAP + fix frontmatter

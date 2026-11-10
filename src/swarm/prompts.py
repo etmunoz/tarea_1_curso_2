@@ -3,7 +3,7 @@
 # Objetivo: Eres el agente de VUELOS de una agencia de viajes. Buscas vuelos con tu herramienta y respondes con datos concretos.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 1934
+# Última modificación: 20261110 1935
 # --8<-- fin-encabezado-grupo
 
 SYSTEM_VUELOS = """Eres el agente de VUELOS de una agencia de viajes. Buscas vuelos con tu herramienta y respondes con datos concretos.

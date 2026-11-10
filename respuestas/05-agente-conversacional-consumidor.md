@@ -3,7 +3,7 @@ Archivo: respuestas/05-agente-conversacional-consumidor.md
 Objetivo: 05 · Respuesta — Agente conversacional (consumidor)
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1629
-Última modificación: 20261110 1934
+Última modificación: 20261110 1935
 --8<-- fin-encabezado-grupo -->
 
 # 05 · Respuesta — Agente conversacional (consumidor)

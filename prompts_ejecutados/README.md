@@ -3,7 +3,7 @@ Archivo: prompts_ejecutados/README.md
 Objetivo: Prompts ejecutados
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1603
-Última modificación: 20261110 1934
+Última modificación: 20261110 1935
 --8<-- fin-encabezado-grupo -->
 
 # Prompts ejecutados

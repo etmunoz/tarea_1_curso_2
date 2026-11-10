@@ -3,7 +3,7 @@ Archivo: respuestas/10-blueprint-y-coordinador.md
 Objetivo: 10 · Respuesta — Blueprint + coordinador
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1933
-Última modificación: 20261110 1934
+Última modificación: 20261110 1935
 --8<-- fin-encabezado-grupo -->
 
 # 10 · Respuesta — Blueprint + coordinador
@@ -43,7 +43,27 @@ uv run python -m src.coordinador.graph   # enruta: IA/DS→ezequiel, viajes→vi
 
 Para sumar compañeros: en `.env`, `URLS_AGENTES=https://<túnel>#<grafo>,...`.
 
+## Cumplimiento de AGENTS.md
+
+- URLs y nombres de agentes remotos en el entorno (`A2A_BASE`, `A2A_GRAFOS_LOCALES`,
+  `URLS_AGENTES`), nunca en el código.
+- `contextId` UUID fijo por `(thread_id, agente)`: cada remoto recuerda su hilo.
+- Estado del grafo con `messages`; decisión con `with_structured_output`.
+- La respuesta del agente remoto es un DATO: vuelve etiquetada `[Nombre] …`, no se obedece.
+- Prompt del supervisor separado en `prompts.py`.
+
+## Qué queda pendiente (según el ROADMAP)
+
+| # | Pendiente | Nota |
+|---|-----------|------|
+| 1.5 | **Ficha (Agent Card)** del agente de Ezequiel | `PATCH /assistants/<id>` (name + description "sé/no hago"); evidencia `evidencias/02-ficha.json` |
+| 2.1 | **Túnel Cloudflare** (Paso 6) | `cloudflared tunnel --url http://127.0.0.1:2024`; completa la "dirección pública" del blueprint |
+| 3.1 | **`compañeros.md` + evidencia del coordinador** | tras sumar túneles de compañeros a `URLS_AGENTES` |
+| 3.2 | **La ronda de preguntas** (Paso 8) | actividad en vivo con los tres integrantes |
+| 3.3 | **Empaquetado de entrega** (Paso 9) | zip del grupo, `documento-entrega.pdf`, `evidencias/` |
+| 4.x | **Corrida en vivo** (Gemini + `langgraph dev`) | levanta los 5 tests que hoy se saltan |
+
 ## Estado
 
 Blueprint ✅. Coordinador construido y verificado sin key 🟡 (falta corrida en vivo
-y `compañeros.md`/evidencia del Paso 7).
+y `compañeros.md`/evidencia del Paso 7). Suite: **14 passed, 5 skipped**.

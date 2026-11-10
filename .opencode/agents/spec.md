@@ -1,12 +1,11 @@
-<!-- --8<-- encabezado-grupo
-Archivo: .opencode/agents/spec.md
-Objetivo: Rol
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1514
-Última modificación: 20261110 1923
---8<-- fin-encabezado-grupo -->
-
 ---
+# --8<-- encabezado-grupo
+# Archivo: .opencode/agents/spec.md
+# Objetivo: Agente creador de especificaciones (tareas en plan.json)
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1928
+# --8<-- fin-encabezado-grupo
 description: Agente creador de especificaciones (tareas en plan.json)
 mode: subagent
 model: openai/gpt-6-luna

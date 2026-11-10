@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261110 1923
+# Última modificación: 20261110 1928
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
@@ -117,11 +117,53 @@ def _quitar_encabezado_inicio(cuerpo: str, markup: bool) -> str:
     return c[idx + len(fin):].lstrip("\n")
 
 
-def _creacion_previa(cuerpo: str, markup: bool) -> str | None:
-    if not _tiene_encabezado_inicio(cuerpo, markup):
-        return None
-    m = re.search(r"Creación:\s*(\d{8} \d{4})", cuerpo)
+def _creacion_previa(texto: str) -> str | None:
+    m = re.search(r"Creación:\s*(\d{8} \d{4})", texto)
     return m.group(1) if m else None
+
+
+def _header_hash_lines(rel: str, objetivo: str, creacion: str) -> list[str]:
+    campos = [
+        f"Archivo: {rel}",
+        f"Objetivo: {objetivo}",
+        f"Grupo del curso: {GRUPO}",
+        f"Creación: {creacion}",
+        f"Última modificación: {AHORA}",
+    ]
+    return [INI_HASH, *[f"# {c}" for c in campos], FIN_HASH]
+
+
+def _frontmatter(cuerpo: str) -> tuple[list[str], str] | None:
+    """Si el cuerpo empieza con frontmatter YAML (--- … ---), devuelve (líneas internas, resto)."""
+    c = cuerpo.lstrip("\n")
+    lines = c.split("\n")
+    if not lines or lines[0].strip() != "---":
+        return None
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            return lines[1:i], "\n".join(lines[i + 1:])
+    return None
+
+
+def _strip_header_inner(inner: list[str]) -> list[str]:
+    out, skip = [], False
+    for ln in inner:
+        if ln.strip() == INI_HASH:
+            skip = True
+            continue
+        if skip and ln.strip() == FIN_HASH:
+            skip = False
+            continue
+        if not skip:
+            out.append(ln)
+    return out
+
+
+def _tiene_encabezado(cuerpo: str, markup: bool) -> bool:
+    if _tiene_encabezado_inicio(cuerpo, markup):
+        return True
+    fm = _frontmatter(cuerpo)
+    return fm is not None and any(ln.strip() == INI_HASH for ln in fm[0])
 
 
 def procesar(path: Path, check: bool) -> bool:
@@ -132,13 +174,27 @@ def procesar(path: Path, check: bool) -> bool:
     shebang, cuerpo = _split_shebang(texto)
 
     if check:
-        return _tiene_encabezado_inicio(cuerpo, markup)
+        return _tiene_encabezado(cuerpo, markup)
 
-    creacion = _creacion_previa(cuerpo, markup) or _git_creacion(rel) or AHORA
-    cuerpo_limpio = _quitar_encabezado_inicio(cuerpo, markup)
-    objetivo = _objetivo(path, ext, cuerpo_limpio)
+    creacion = _creacion_previa(texto) or _git_creacion(rel) or AHORA
+    # Quitar cualquier encabezado previo al inicio (esquema viejo: HTML o hash).
+    cuerpo = _quitar_encabezado_inicio(_quitar_encabezado_inicio(cuerpo, True), False)
+
+    fm = _frontmatter(cuerpo)
+    if fm is not None:
+        # Archivos con frontmatter YAML (p. ej. agentes OpenCode): el encabezado va
+        # DENTRO del frontmatter como comentarios `#`, para no romper el `---` inicial.
+        inner, resto = fm
+        inner = _strip_header_inner(inner)
+        desc = next((ln.split(":", 1)[1].strip() for ln in inner if ln.strip().startswith("description:")), None)
+        objetivo = desc or _objetivo(path, ext, resto)
+        nuevo = "\n".join(["---", *_header_hash_lines(rel, objetivo, creacion), *inner, "---"]) + "\n" + resto
+        path.write_text(shebang + nuevo, encoding="utf-8")
+        return True
+
+    objetivo = _objetivo(path, ext, cuerpo)
     encabezado = _construir(rel, objetivo, creacion, markup)
-    path.write_text(shebang + encabezado + "\n\n" + cuerpo_limpio, encoding="utf-8")
+    path.write_text(shebang + encabezado + "\n\n" + cuerpo, encoding="utf-8")
     return True
 
 
@@ -157,7 +213,7 @@ def _notebooks(check: bool) -> list[str]:
             if not tiene:
                 faltan.append(rel)
             continue
-        creacion = (_creacion_previa(celdas[0].source, True) if tiene else None) or _git_creacion(rel) or AHORA
+        creacion = (_creacion_previa(celdas[0].source) if tiene else None) or _git_creacion(rel) or AHORA
         celda = nbformat.v4.new_markdown_cell(_construir(rel, f"Notebook: {path.stem}", creacion, markup=True))
         if tiene:
             celdas[0] = celda

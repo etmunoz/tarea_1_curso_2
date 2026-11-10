@@ -2,7 +2,7 @@
 > **Archivo:** `ROADMAP.md`  
 > **Objetivo:** ROADMAP · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2013
+> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2041
 <!--/encabezado-grupo-->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -49,7 +49,7 @@ paso del taller a él.
 | 1.2 | **Paso 3 · Mi agente con mi skill** | `src/agente_ezequiel/` (herramientas, prompt, grafo) + registro | ✅ | `src/agente_ezequiel/`, `langgraph.json`, prompt `04` |
 | 1.3 | **Paso 4 · Probarlo solo** | el agente responde y rechaza lo ajeno; evidencia | 🟡 | tests ✅ (`tests/test_agente_ezequiel.py`); falta captura en vivo (`langgraph dev` + `GOOGLE_API_KEY`) |
 | 1.4 | **Paso 4 · Notebook paso a paso** | notebook nbformat | ✅ | `notebooks/ezequiel_paso_a_paso.ipynb` |
-| 1.5 | **Paso 5 · La ficha (Agent Card)** | descripción "sé/no hago"; `evidencias/02-ficha-<grafo>.json` | 🟡 | ✅ `src/fichas.py` + `tools/configurar_fichas.py` (PATCH name+description, guarda evidencia). Falta aplicarla en vivo. |
+| 1.5 | **Paso 5 · La ficha (Agent Card)** | descripción "sé/no hago"; `evidencias/02-ficha-<grafo>.json` | ✅ | aplicada en vivo; 4 fichas guardadas en `evidencias/` |
 
 ---
 
@@ -88,7 +88,7 @@ paso del taller a él.
 | # | Qué | Estado | Dónde |
 |---|-----|--------|-------|
 | C.1 | **Ezequiel · BD SQLite** de modelos (sup./no sup./refuerzo) + `consultar_modelos` | ✅ | `src/agente_ezequiel/bd_modelos.py` |
-| C.2 | **Tomás · RAG Reiki** (Redis dockerizado) + `buscar_reiki` + docs niveles 1-4 | 🟡 | `src/agente_tomas/rag.py`, `data/reiki/`, `docker-compose.yml`; falta ingesta en vivo (Redis + key) |
+| C.2 | **Tomás · RAG Reiki** (Redis dockerizado) + `buscar_reiki` + docs niveles 1-4 | ✅ | `src/agente_tomas/rag.py`, `data/reiki/`; ingesta en vivo OK (9 fragmentos), buscar_reiki responde |
 | C.3 | **Agente de cocina chilena** · ~20 recetas + costeo SQLite (`costear_receta`) | ✅ | `src/agente_cocina/` |
 
 ---
@@ -97,10 +97,10 @@ paso del taller a él.
 
 | # | Qué | Estado | Nota |
 |---|-----|--------|------|
-| 4.1 | `cp .env.example .env` + `GOOGLE_API_KEY` | ⬜ | La clave va solo en `.env` (ignorado). |
-| 4.2 | `uv run langgraph dev` publica `agente_viajes` y `agente_ezequiel` | ⬜ | Levanta los 3 tests que hoy se saltan. |
+| 4.1 | `cp .env.example .env` + GOOGLE_API_KEY | ✅ | clave con saldo; probar_gemini.py → OK |
+| 4.2 | `uv run langgraph dev` publica los 4 agentes | ✅ | corrida en vivo OK (prompt 15) |
 | 4.3 | Correr los notebooks de arriba abajo (ezequiel, consumidor, swarm) | ⬜ | Sirve de evidencia del Paso 4. |
-| 4.4 | `uv run pytest` sin skips (con `langgraph dev` arriba) | ⬜ | Hoy: 11 passed, 4 skipped. |
+| 4.4 | `uv run pytest` con langgraph dev | ✅ | 36 passed, 1 skipped (prompt 15) |
 
 ---
 

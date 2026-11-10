@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2013
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2041
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -27,3 +27,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 12 | [Agente Tomás + guía y scripts 2 computadores](12-agente-tomas-y-guia-2-equipos.md) | [respuesta](../respuestas/12-agente-tomas-y-guia-2-equipos.md) |
 | 13 | [Conocimiento: SQLite (Ezequiel) y RAG Redis (Tomás)](13-conocimiento-sqlite-y-rag.md) | [respuesta](../respuestas/13-conocimiento-sqlite-y-rag.md) |
 | 14 | [Agente de cocina chilena con costeo](14-agente-cocina-recetas-chilenas.md) | [respuesta](../respuestas/14-agente-cocina-recetas-chilenas.md) |
+| 15 | [Corrida en vivo (Gemini + Redis + A2A) y correcciones](15-corrida-en-vivo-gemini-redis-a2a.md) | [respuesta](../respuestas/15-corrida-en-vivo-gemini-redis-a2a.md) |

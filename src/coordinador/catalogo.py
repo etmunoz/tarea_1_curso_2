@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -11,7 +11,7 @@
 Las direcciones vienen del entorno (nunca del código, regla de AGENTS.md):
 
   A2A_BASE            base del servidor local de langgraph dev (def. http://127.0.0.1:2024)
-  A2A_GRAFOS_LOCALES  grafos locales a incluir, separados por comas (def. agente_viajes,agente_ezequiel,agente_cocina)
+  A2A_GRAFOS_LOCALES  grafos locales a incluir, separados por comas (def. agente_viajes,agente_ezequiel,agente_cocina,agente_tomas)
   URLS_AGENTES        agentes de compañeros: lista separada por comas de `url` o `url#grafo`
                       (si no se indica grafo, se asume 'agente'); cada url es su túnel público
 
@@ -78,7 +78,7 @@ def _parse_urls_agentes(valor: str) -> list[tuple[str, str]]:
 def construir_catalogo() -> list[AgenteRemoto]:
     """Arma el catálogo desde el entorno: grafos locales + agentes de compañeros."""
     base = os.environ.get("A2A_BASE", "http://127.0.0.1:2024").rstrip("/")
-    locales = os.environ.get("A2A_GRAFOS_LOCALES", "agente_viajes,agente_ezequiel,agente_cocina")
+    locales = os.environ.get("A2A_GRAFOS_LOCALES", "agente_viajes,agente_ezequiel,agente_cocina,agente_tomas")
     catalogo = [AgenteRemoto(base, g.strip()) for g in locales.split(",") if g.strip()]
     for url, graph in _parse_urls_agentes(os.environ.get("URLS_AGENTES", "")):
         catalogo.append(AgenteRemoto(url, graph))

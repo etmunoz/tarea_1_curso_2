@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del agente conversacional (consumidor).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del agente conversacional (consumidor).

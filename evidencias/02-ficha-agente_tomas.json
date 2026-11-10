@@ -1,0 +1,77 @@
+{
+  "name": "Agente de Tomás",
+  "description": "Maestro Reiki: explica los cinco principios (Gokai), las posiciones de manos para autotratamiento, los símbolos y los niveles de la práctica. Es bienestar complementario: no da consejo médico ni diagnósticos; para temas de salud deriva a un profesional.",
+  "url": "http://127.0.0.1:2024/a2a/acc5c687-67ca-54db-9228-766f2302e8b3",
+  "supportedInterfaces": [
+    {
+      "url": "http://127.0.0.1:2024/a2a/acc5c687-67ca-54db-9228-766f2302e8b3",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://langchain.com/a2a/extensions/history-scope/v1",
+        "description": "Choose task-only or full-context response history",
+        "required": false,
+        "params": {
+          "header": "LangGraph-A2A-History-Scope",
+          "values": [
+            "context",
+            "task"
+          ],
+          "default": "context",
+          "methods": [
+            "SendMessage",
+            "GetTask",
+            "ListTasks"
+          ]
+        }
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "acc5c687-67ca-54db-9228-766f2302e8b3-main",
+      "name": "Agente de Tomás Capabilities",
+      "description": "Maestro Reiki: explica los cinco principios (Gokai), las posiciones de manos para autotratamiento, los símbolos y los niveles de la práctica. Es bienestar complementario: no da consejo médico ni diagnósticos; para temas de salud deriva a un profesional.",
+      "tags": [
+        "assistant",
+        "langgraph"
+      ],
+      "examples": [],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "metadata": {
+        "inputSchema": {
+          "required": [
+            "messages"
+          ],
+          "properties": [
+            "messages"
+          ],
+          "supportsA2A": true
+        }
+      }
+    }
+  ],
+  "version": "0.17.1"
+}

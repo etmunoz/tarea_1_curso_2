@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024)."""
@@ -32,7 +32,10 @@ pytestmark = pytest.mark.skipif(not _servidor_arriba(), reason="langgraph dev no
 def test_agent_card():
     aid = assistant_id()
     card = httpx.get(f"{BASE}/.well-known/agent-card.json", params={"assistant_id": aid}, timeout=10).json()
-    assert card["name"] == GRAPH and card["url"].endswith(f"/a2a/{aid}")
+    # El nombre puede ser el id del grafo (por defecto) o el de la ficha personalizada
+    # (tools/configurar_fichas.py); basta con que exista y la url apunte al endpoint A2A.
+    assert isinstance(card.get("name"), str) and card["name"]
+    assert card["url"].endswith(f"/a2a/{aid}")
     assert isinstance(card.get("skills"), list)
 
 

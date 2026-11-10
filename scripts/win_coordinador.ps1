@@ -3,7 +3,7 @@
 # Objetivo: win_coordinador.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 # Windows · corre el coordinador enrutando a Tomás (local) + el remoto que le pases, y guarda evidencias.

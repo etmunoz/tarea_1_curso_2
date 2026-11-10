@@ -3,7 +3,7 @@
 # Objetivo: RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 """RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).
@@ -16,7 +16,7 @@ modelo de embeddings) son tardíos: importar este módulo no exige Redis ni la c
 Variables de entorno:
   REDIS_URL     conexión a Redis (def. redis://localhost:6379)
   REDIS_INDEX   nombre del índice vectorial (def. reiki)
-  MODELO_EMBEDDINGS   modelo de embeddings de Gemini (def. models/text-embedding-004)
+  MODELO_EMBEDDINGS   modelo de embeddings de Gemini (def. models/gemini-embedding-001)
 """
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ CARPETA_DOCS = Path(os.environ.get("REIKI_DOCS", RAIZ / "data" / "reiki"))
 def _embeddings():
     from langchain_google_genai import GoogleGenerativeAIEmbeddings  # import tardío (requiere key)
 
-    return GoogleGenerativeAIEmbeddings(model=os.environ.get("MODELO_EMBEDDINGS", "models/text-embedding-004"))
+    return GoogleGenerativeAIEmbeddings(model=os.environ.get("MODELO_EMBEDDINGS", "models/gemini-embedding-001"))
 
 
 def _vector_store(from_existing: bool):
@@ -46,6 +46,14 @@ def _vector_store(from_existing: bool):
     return RedisVectorStore(_embeddings(), config=config)
 
 
+def _sin_encabezado(texto: str) -> str:
+    """Quita el encabezado de grupo (<!--encabezado-grupo--> … <!--/encabezado-grupo-->)
+    para no indexarlo como contenido del RAG."""
+    import re
+
+    return re.sub(r"<!--encabezado-grupo-->.*?<!--/encabezado-grupo-->\s*", "", texto, count=1, flags=re.S)
+
+
 def _leer_documentos(carpeta: Path) -> list[tuple[str, str]]:
     """Devuelve [(texto, fuente)] de los .md/.txt/.pdf de la carpeta."""
     docs: list[tuple[str, str]] = []
@@ -53,7 +61,7 @@ def _leer_documentos(carpeta: Path) -> list[tuple[str, str]]:
         if not p.is_file():
             continue
         if p.suffix.lower() in {".md", ".txt"}:
-            docs.append((p.read_text(encoding="utf-8", errors="replace"), p.name))
+            docs.append((_sin_encabezado(p.read_text(encoding="utf-8", errors="replace")), p.name))
         elif p.suffix.lower() == ".pdf":
             from pypdf import PdfReader  # import tardío
 

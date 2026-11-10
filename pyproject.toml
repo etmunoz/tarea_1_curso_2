@@ -3,7 +3,7 @@
 # Objetivo: Configuración del proyecto y dependencias (uv).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 [project]
@@ -37,6 +37,7 @@ dependencies = [
   "langchain-redis>=0.2",
   "redis>=5",
   "pypdf>=5",
+  "langchain-text-splitters>=0.3",
 ]
 
 # No es un paquete instalable: el código se ejecuta desde la raíz con imports `src.*`

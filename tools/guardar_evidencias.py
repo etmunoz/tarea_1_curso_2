@@ -3,7 +3,7 @@
 # Objetivo: Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2013
+# Última modificación: 20261110 2041
 # --8<-- fin-encabezado-grupo
 
 """Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
@@ -60,9 +60,12 @@ def guardar_ronda(preguntas: list[str]) -> None:
         print(f"· ronda omitida: {exc}\n  (requiere GOOGLE_API_KEY y `langgraph dev` arriba)")
         return
 
-    hilo = {"configurable": {"thread_id": "evidencia-ronda"}}
+    import uuid
+
     lineas = ["# Ronda de preguntas · evidencia\n"]
     for p in preguntas:
+        # Hilo nuevo por pregunta: cada enrutamiento es independiente (ruta/estado limpios).
+        hilo = {"configurable": {"thread_id": f"evidencia-{uuid.uuid4().hex[:8]}"}}
         r = graph.invoke({"messages": [HumanMessage(content=p)]}, hilo)
         ruta = " → ".join(r.get("ruta", []))
         lineas.append(f"**> {p}**\n\n- ruta: {ruta}\n- {r.get('respuesta', '')}\n")

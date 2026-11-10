@@ -1,6 +1,6 @@
 # 01 · Respuesta — Crear el agente de Ezequiel
 
-Prompt: [`../prompts_ejecutados/01-crear-agente-ezequiel.md`](../prompts_ejecutados/01-crear-agente-ezequiel.md)
+Prompt: [`../prompts_ejecutados/04-crear-agente-ezequiel.md`](../prompts_ejecutados/04-crear-agente-ezequiel.md)
 
 ## Archivos creados / modificados
 

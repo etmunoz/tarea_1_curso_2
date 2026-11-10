@@ -1,10 +1,9 @@
-<!-- --8<-- encabezado-grupo
-Archivo: evidencias/README.md
-Objetivo: Evidencias
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1941
-Última modificación: 20261110 1952
---8<-- fin-encabezado-grupo -->
+<!--encabezado-grupo-->
+> **Archivo:** `evidencias/README.md`  
+> **Objetivo:** Evidencias  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2001
+<!--/encabezado-grupo-->
 
 # Evidencias
 

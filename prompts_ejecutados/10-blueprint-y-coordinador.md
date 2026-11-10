@@ -1,10 +1,9 @@
-<!-- --8<-- encabezado-grupo
-Archivo: prompts_ejecutados/10-blueprint-y-coordinador.md
-Objetivo: 10 · Blueprint + coordinador (supervisor)
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1933
-Última modificación: 20261110 1952
---8<-- fin-encabezado-grupo -->
+<!--encabezado-grupo-->
+> **Archivo:** `prompts_ejecutados/10-blueprint-y-coordinador.md`  
+> **Objetivo:** 10 · Blueprint + coordinador (supervisor)  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** 20261110 1933 · **Última modificación:** 20261110 2001
+<!--/encabezado-grupo-->
 
 # 10 · Blueprint + coordinador (supervisor)
 

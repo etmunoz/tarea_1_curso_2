@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261110 1952
+# Última modificación: 20261110 2001
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
@@ -39,11 +39,14 @@ EXCLUIR_EXT = {".json", ".lock", ".bru", ".woff2", ".png", ".jpg", ".svg", ".ipy
 EXCLUIR_NOMBRE = {"uv.lock", ".python-version"}
 EXCLUIR_DIR = {".git", ".venv", "__pycache__", ".langgraph_api", ".ipynb_checkpoints"}
 
-# Centinelas (se construyen por partes para no confundir el anclado al inicio).
+# Centinelas. En almohadilla (.py, etc.) el encabezado es texto visible.
 _TAG = "--8<-- encabezado-grupo"
 _TAG_FIN = "--8<-- fin-encabezado-grupo"
 INI_HASH, FIN_HASH = f"# {_TAG}", f"# {_TAG_FIN}"
-INI_MK, FIN_MK = f"<!-- {_TAG}", f"{_TAG_FIN} -->"
+# En markup (.md/.html) el encabezado es un blockquote VISIBLE al renderizar,
+# entre centinelas HTML invisibles. (El formato viejo era un comentario HTML oculto.)
+INI_MK, FIN_MK = "<!--encabezado-grupo-->", "<!--/encabezado-grupo-->"
+INI_MK_VIEJO, FIN_MK_VIEJO = "<!-- --8<-- encabezado-grupo", "--8<-- fin-encabezado-grupo -->"
 
 
 def _git_creacion(rel: str) -> str | None:
@@ -80,6 +83,16 @@ def _objetivo(path: Path, ext: str, cuerpo: str) -> str:
 
 
 def _construir(rel: str, objetivo: str, creacion: str, markup: bool) -> str:
+    if markup:
+        # Blockquote visible al renderizar, entre centinelas HTML.
+        return "\n".join([
+            INI_MK,
+            f"> **Archivo:** `{rel}`  ",
+            f"> **Objetivo:** {objetivo}  ",
+            f"> **Grupo del curso:** {GRUPO}  ",
+            f"> **Creación:** {creacion} · **Última modificación:** {AHORA}",
+            FIN_MK,
+        ])
     campos = [
         f"Archivo: {rel}",
         f"Objetivo: {objetivo}",
@@ -87,8 +100,6 @@ def _construir(rel: str, objetivo: str, creacion: str, markup: bool) -> str:
         f"Creación: {creacion}",
         f"Última modificación: {AHORA}",
     ]
-    if markup:
-        return INI_MK + "\n" + "\n".join(campos) + "\n" + FIN_MK
     return "\n".join([INI_HASH, *[f"# {c}" for c in campos], FIN_HASH])
 
 
@@ -101,24 +112,32 @@ def _split_shebang(texto: str) -> tuple[str, str]:
 
 
 def _tiene_encabezado_inicio(cuerpo: str, markup: bool) -> bool:
-    ini = INI_MK if markup else INI_HASH
-    return cuerpo.lstrip("\n").startswith(ini)
+    c = cuerpo.lstrip("\n")
+    if markup:
+        return c.startswith(INI_MK) or c.startswith(INI_MK_VIEJO)
+    return c.startswith(INI_HASH)
 
 
 def _quitar_encabezado_inicio(cuerpo: str, markup: bool) -> str:
-    ini = INI_MK if markup else INI_HASH
-    fin = FIN_MK if markup else FIN_HASH
     c = cuerpo.lstrip("\n")
-    if not c.startswith(ini):
+    if markup:
+        # Quita el encabezado al inicio, en formato nuevo (visible) o viejo (comentario).
+        for ini, fin in ((INI_MK, FIN_MK), (INI_MK_VIEJO, FIN_MK_VIEJO)):
+            if c.startswith(ini):
+                idx = c.find(fin)
+                if idx != -1:
+                    return c[idx + len(fin):].lstrip("\n")
         return cuerpo
-    idx = c.find(fin)
+    if not c.startswith(INI_HASH):
+        return cuerpo
+    idx = c.find(FIN_HASH)
     if idx == -1:
         return cuerpo
-    return c[idx + len(fin):].lstrip("\n")
+    return c[idx + len(FIN_HASH):].lstrip("\n")
 
 
 def _creacion_previa(texto: str) -> str | None:
-    m = re.search(r"Creación:\s*(\d{8} \d{4})", texto)
+    m = re.search(r"Creaci[oó]n:\s*\**\s*(\d{8} \d{4})", texto)
     return m.group(1) if m else None
 
 
@@ -208,7 +227,9 @@ def _notebooks(check: bool) -> list[str]:
         rel = str(path.relative_to(RAIZ))
         nb = nbformat.read(str(path), 4)
         celdas = nb.cells
-        tiene = bool(celdas) and celdas[0].cell_type == "markdown" and celdas[0].source.startswith(INI_MK)
+        tiene = bool(celdas) and celdas[0].cell_type == "markdown" and (
+            celdas[0].source.startswith(INI_MK) or celdas[0].source.startswith(INI_MK_VIEJO)
+        )
         if check:
             if not tiene:
                 faltan.append(rel)

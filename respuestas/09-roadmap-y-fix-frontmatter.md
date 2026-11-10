@@ -1,10 +1,9 @@
-<!-- --8<-- encabezado-grupo
-Archivo: respuestas/09-roadmap-y-fix-frontmatter.md
-Objetivo: 09 · Respuesta — ROADMAP + fix frontmatter
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1928
-Última modificación: 20261110 1952
---8<-- fin-encabezado-grupo -->
+<!--encabezado-grupo-->
+> **Archivo:** `respuestas/09-roadmap-y-fix-frontmatter.md`  
+> **Objetivo:** 09 · Respuesta — ROADMAP + fix frontmatter  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2001
+<!--/encabezado-grupo-->
 
 # 09 · Respuesta — ROADMAP + fix frontmatter
 

@@ -1,10 +1,9 @@
-<!-- --8<-- encabezado-grupo
-Archivo: prompts_ejecutados/12-agente-tomas-y-guia-2-equipos.md
-Objetivo: 12 · Agente Tomás (Maestro Reiki) + guía y scripts para prueba 2 computadores
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1952
-Última modificación: 20261110 1952
---8<-- fin-encabezado-grupo -->
+<!--encabezado-grupo-->
+> **Archivo:** `prompts_ejecutados/12-agente-tomas-y-guia-2-equipos.md`  
+> **Objetivo:** 12 · Agente Tomás (Maestro Reiki) + guía y scripts para prueba 2 computadores  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2001
+<!--/encabezado-grupo-->
 
 # 12 · Agente Tomás (Maestro Reiki) + guía y scripts para prueba 2 computadores
 

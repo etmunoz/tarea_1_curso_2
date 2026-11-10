@@ -1,10 +1,9 @@
-<!-- --8<-- encabezado-grupo
-Archivo: CONVENCIONES.md
-Objetivo: Convenciones de desarrollo
-Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-Creación: 20261110 1746
-Última modificación: 20261110 1952
---8<-- fin-encabezado-grupo -->
+<!--encabezado-grupo-->
+> **Archivo:** `CONVENCIONES.md`  
+> **Objetivo:** Convenciones de desarrollo  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** 20261110 1746 · **Última modificación:** 20261110 2001
+<!--/encabezado-grupo-->
 
 # Convenciones de desarrollo
 
@@ -35,8 +34,19 @@ En archivos con comentarios de almohadilla (`.py`, `.toml`, `.txt`, `.sh`, `.ps1
 # --8<-- fin-encabezado-grupo
 ```
 
-En archivos Markdown/HTML (`.md`, `.html`) el mismo bloque dentro de `<!-- … -->`;
-en notebooks (`.ipynb`), como primera celda Markdown.
+En archivos Markdown/HTML (`.md`, `.html`) el encabezado es **visible** al renderizar:
+un blockquote entre centinelas HTML invisibles `<!--encabezado-grupo-->` … `<!--/encabezado-grupo-->`:
+
+```text
+<!--encabezado-grupo-->
+> **Archivo:** `<ruta>`  
+> **Objetivo:** <una línea>  
+> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
+> **Creación:** <yyyymmdd HHMM> · **Última modificación:** <yyyymmdd HHMM>
+<!--/encabezado-grupo-->
+```
+
+En notebooks (`.ipynb`) ese mismo bloque va como primera celda Markdown. En archivos con frontmatter YAML (p. ej. `.opencode/agents/*.md`) va DENTRO del frontmatter como comentarios `#`.
 
 ### Qué queda fuera
 

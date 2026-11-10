@@ -3,7 +3,7 @@
 # Objetivo: Fichas (Agent Card) de los agentes locales: nombre y descripción.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2009
+# Última modificación: 20261110 2013
 # --8<-- fin-encabezado-grupo
 
 """Fichas (Agent Card) de los agentes locales: nombre y descripción.
@@ -35,6 +35,13 @@ FICHAS: dict[str, dict[str, str]] = {
         "name": "Agente de viajes",
         "description": (
             "Busca vuelos y hoteles (SCL, LIM, BOG, EZE) con precios en CLP. No gestiona pagos ni seguros."
+        ),
+    },
+    "agente_cocina": {
+        "name": "Agente de cocina chilena",
+        "description": (
+            "Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta "
+            "(costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina."
         ),
     },
 }

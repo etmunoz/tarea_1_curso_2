@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2009
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2013
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -26,3 +26,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 11 | [Esqueleto de entrega y empaquetador](11-esqueleto-entrega.md) | [respuesta](../respuestas/11-esqueleto-entrega.md) |
 | 12 | [Agente Tomás + guía y scripts 2 computadores](12-agente-tomas-y-guia-2-equipos.md) | [respuesta](../respuestas/12-agente-tomas-y-guia-2-equipos.md) |
 | 13 | [Conocimiento: SQLite (Ezequiel) y RAG Redis (Tomás)](13-conocimiento-sqlite-y-rag.md) | [respuesta](../respuestas/13-conocimiento-sqlite-y-rag.md) |
+| 14 | [Agente de cocina chilena con costeo](14-agente-cocina-recetas-chilenas.md) | [respuesta](../respuestas/14-agente-cocina-recetas-chilenas.md) |

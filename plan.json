@@ -7,7 +7,8 @@
     "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO.",
     "coordinador": "Supervisor que enruta la pregunta al agente remoto según su ficha (locales + compañeros vía URLS_AGENTES). HECHO (falta corrida en vivo).",
     "entrega": "Esqueleto de entrega (Paso 9): documento, companeros.md, evidencias/ y empaquetador del zip. PARCIAL.",
-    "agente-tomas": "Segundo agente del usuario: Tomás (Maestro Reiki), para la prueba A2A entre sus 2 computadores. HECHO."
+    "agente-tomas": "Segundo agente del usuario: Tomás (Maestro Reiki), para la prueba A2A entre sus 2 computadores. HECHO.",
+    "agente-cocina": "Agente de cocina chilena: ~20 recetas clásicas y costeo desde SQLite (por ingrediente, total y por persona). HECHO."
   },
   "tareas": [
     {
@@ -395,6 +396,27 @@
         "docker compose up -d + GOOGLE_API_KEY: cargar_rag_reiki.py indexa y buscar_reiki recupera"
       ],
       "evidencia": "Redis up (disponible=True); 4 docs de niveles; tool degrada con nota sin clave."
+    },
+    {
+      "id": "co01",
+      "grupo": "agente-cocina",
+      "nombre": "Agente de cocina chilena con BD SQLite de recetas y costeo",
+      "descripcion": "src/agente_cocina/bd_recetas.py: SQLite con recetas + ingredientes (precio por la unidad usada, sin conversión) + items; costear_receta escala a N personas (def. 4) y da costo por ingrediente, total y por persona. Herramientas listar_recetas/ver_receta/costear_receta, grafo registrado en langgraph.json, ficha, sumado al catálogo del coordinador.",
+      "estado": "hecho",
+      "depende_de": [],
+      "entregables": [
+        "src/agente_cocina/*",
+        "langgraph.json",
+        "src/fichas.py",
+        "src/coordinador/catalogo.py",
+        "tests/test_bd_recetas.py",
+        "notebooks/cocina_paso_a_paso.ipynb"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_bd_recetas.py → 5 passed",
+        "costear_receta('Pastel de choclo',4) da total y por_persona; total = suma de costos por ingrediente"
+      ],
+      "evidencia": "20 recetas; costeo por ingrediente/total/por persona; escalado por personas verificado."
     }
   ]
 }

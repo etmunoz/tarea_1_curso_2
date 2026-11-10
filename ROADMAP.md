@@ -2,7 +2,7 @@
 > **Archivo:** `ROADMAP.md`  
 > **Objetivo:** ROADMAP · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2009
+> **Creación:** 20261110 1928 · **Última modificación:** 20261110 2013
 <!--/encabezado-grupo-->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -89,6 +89,7 @@ paso del taller a él.
 |---|-----|--------|-------|
 | C.1 | **Ezequiel · BD SQLite** de modelos (sup./no sup./refuerzo) + `consultar_modelos` | ✅ | `src/agente_ezequiel/bd_modelos.py` |
 | C.2 | **Tomás · RAG Reiki** (Redis dockerizado) + `buscar_reiki` + docs niveles 1-4 | 🟡 | `src/agente_tomas/rag.py`, `data/reiki/`, `docker-compose.yml`; falta ingesta en vivo (Redis + key) |
+| C.3 | **Agente de cocina chilena** · ~20 recetas + costeo SQLite (`costear_receta`) | ✅ | `src/agente_cocina/` |
 
 ---
 

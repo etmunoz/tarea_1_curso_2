@@ -3,7 +3,7 @@ Archivo: CONVENCIONES.md
 Objetivo: Convenciones de desarrollo
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1746
-Última modificación: 20261110 1749
+Última modificación: 20261110 1920
 --8<-- fin-encabezado-grupo -->
 
 # Convenciones de desarrollo

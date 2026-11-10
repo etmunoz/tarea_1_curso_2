@@ -3,7 +3,7 @@
   "grupos": {
     "viajes": "Agente de viajes expuesto por A2A nativo (servidor de LangGraph). HECHO.",
     "agente-conversacional": "Agente conversacional que consume al de viajes por A2A (3 pasos: config base, agentes, consumo). HECHO.",
-    "swarm": "Agregar el agente de actividades al swarm vuelos+hoteles. PENDIENTE.",
+    "swarm": "Swarm vuelos + hoteles + actividades (handoff entre los tres). HECHO.",
     "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO."
   },
   "tareas": [
@@ -210,6 +210,24 @@
         "v03"
       ],
       "evidencia": "verificado sin key/servidor; falta prueba en vivo con Gemini + langgraph dev"
+    },
+    {
+      "id": "s01",
+      "grupo": "swarm",
+      "nombre": "Agente de actividades en el swarm: herramienta buscar_actividades, prompt y handoffs cruzados",
+      "estado": "hecho",
+      "depende_de": [],
+      "entregables": [
+        "src/agente_viajes/herramientas.py",
+        "src/swarm/prompts.py",
+        "src/swarm/graph.py",
+        "tests/test_swarm.py"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_swarm.py → 3 passed (actividades sin key), 1 skipped (swarm en vivo)",
+        "python -m src.swarm.graph transfiere a 'actividades' ante un panorama (requiere GOOGLE_API_KEY)"
+      ],
+      "evidencia": "buscar_actividades devuelve 2 panoramas por ciudad (LIM/BOG/EZE); swarm con 3 agentes."
     }
   ]
 }

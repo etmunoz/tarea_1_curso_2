@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de viajes. Datos simulados: en producción serían APIs reales (Amadeus, Booking...).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 1749
+# Última modificación: 20261110 1920
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de viajes. Datos simulados: en producción serían APIs reales (Amadeus, Booking...)."""
@@ -24,6 +24,14 @@ HOTELES = {
     "EZE": [{"hotel": "Palacio Duhau", "zona": "Recoleta", "estrellas": 5, "noche_clp": 390000},
             {"hotel": "Hotel Madero", "zona": "Puerto Madero", "estrellas": 4, "noche_clp": 120000}],
 }
+ACTIVIDADES = {
+    "LIM": [{"actividad": "Tour gastronómico en Barranco", "tipo": "gastronomía", "horas": 4, "precio_clp": 45000},
+            {"actividad": "City tour Centro Histórico", "tipo": "cultural", "horas": 3, "precio_clp": 28000}],
+    "BOG": [{"actividad": "Cerro de Monserrate", "tipo": "naturaleza", "horas": 3, "precio_clp": 32000},
+            {"actividad": "Museo del Oro + La Candelaria", "tipo": "cultural", "horas": 4, "precio_clp": 25000}],
+    "EZE": [{"actividad": "Show de tango en San Telmo", "tipo": "espectáculo", "horas": 3, "precio_clp": 60000},
+            {"actividad": "Tour por Recoleta y Palermo", "tipo": "cultural", "horas": 4, "precio_clp": 38000}],
+}
 
 
 @tool
@@ -39,4 +47,13 @@ def buscar_hoteles(ciudad: str, noches: int = 1) -> list[dict]:
     return [dict(h, noches=noches, total_clp=h["noche_clp"] * noches) for h in HOTELES.get(ciudad.upper(), [])]
 
 
+@tool
+def buscar_actividades(ciudad: str) -> list[dict]:
+    """Busca actividades y panoramas en una ciudad (código IATA: LIM, BOG, EZE).
+    Devuelve actividad, tipo, duración en horas y precio en CLP. Lista vacía si no hay."""
+    return list(ACTIVIDADES.get(ciudad.upper(), []))
+
+
+# El agente de viajes nativo sigue siendo vuelos + hoteles; `buscar_actividades`
+# la usa el agente de actividades del swarm (no se agrega aquí para no cambiarlo).
 HERRAMIENTAS = [buscar_vuelos, buscar_hoteles]

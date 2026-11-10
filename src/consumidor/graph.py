@@ -3,7 +3,7 @@
 # Objetivo: Agente conversacional que CONSUME al agente de viajes por A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261110 1749
+# Última modificación: 20261110 1920
 # --8<-- fin-encabezado-grupo
 
 """Agente conversacional que CONSUME al agente de viajes por A2A.

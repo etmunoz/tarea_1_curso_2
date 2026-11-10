@@ -3,7 +3,7 @@ Archivo: prompts_ejecutados/README.md
 Objetivo: Prompts ejecutados
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1603
-Última modificación: 20261110 1749
+Última modificación: 20261110 1920
 --8<-- fin-encabezado-grupo -->
 
 # Prompts ejecutados
@@ -20,3 +20,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 04 | [Crear el agente de Ezequiel](04-crear-agente-ezequiel.md) | [respuesta](../respuestas/04-crear-agente-ezequiel.md) |
 | 05 | [Construir el agente conversacional (consumidor)](05-agente-conversacional-consumidor.md) | [respuesta](../respuestas/05-agente-conversacional-consumidor.md) |
 | 06 | [Regla: encabezado de archivos del grupo](06-regla-encabezado-archivos.md) | [respuesta](../respuestas/06-regla-encabezado-archivos.md) |
+| 07 | [Swarm con el agente de actividades](07-swarm-agente-actividades.md) | [respuesta](../respuestas/07-swarm-agente-actividades.md) |

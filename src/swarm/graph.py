@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/swarm/graph.py
+# Objetivo: Swarm · dos agentes que se PASAN EL CONTROL (handoff) en vez de tener un supervisor.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Swarm · dos agentes que se PASAN EL CONTROL (handoff) en vez de tener un supervisor.
 
 Patrón de langgraph-swarm: cada agente es un ReAct con sus herramientas + una herramienta de

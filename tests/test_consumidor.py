@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: tests/test_consumidor.py
+# Objetivo: Pruebas del agente conversacional (consumidor).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1629
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Pruebas del agente conversacional (consumidor).
 
 Las del precio BTC y el mapeo de contextId no requieren API key ni servidor.

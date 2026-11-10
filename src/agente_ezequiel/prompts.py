@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_ezequiel/prompts.py
+# Objetivo: System prompt del agente de Ezequiel. Separado del grafo (regla de AGENTS.md).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1603
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """System prompt del agente de Ezequiel. Separado del grafo (regla de AGENTS.md)."""
 
 SYSTEM_EZEQUIEL = """Eres el agente de Ezequiel, IA Engineer y Data Scientist.

@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: .opencode/agents/implementador.md
+Objetivo: Rol
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1514
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 ---
 description: Implementador de agentes con LangChain y LangGraph (toma tareas de plan.json)
 mode: subagent

@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/consumidor/graph.py
+# Objetivo: Agente conversacional que CONSUME al agente de viajes por A2A.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1629
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Agente conversacional que CONSUME al agente de viajes por A2A.
 
 Es un agente ReAct (create_agent, estado `messages`) con dos herramientas

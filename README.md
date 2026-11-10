@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: README.md
+Objetivo: tarea_1_curso_2 · Taller A2A
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1450
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 # tarea_1_curso_2 · Taller A2A
 
 Proyecto del **Taller · tu skill es un agente y habla por A2A** (Curso 2 · Sesión 1).

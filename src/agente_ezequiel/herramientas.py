@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_ezequiel/herramientas.py
+# Objetivo: Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1603
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.
 
 Datos simulados pero creíbles dentro del archivo (como en el molde de viajes): en

@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_ezequiel/graph.py
+# Objetivo: Agente de Ezequiel (IA Engineer & Data Scientist) · expuesto por A2A NATIVO.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1603
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Agente de Ezequiel (IA Engineer & Data Scientist) · expuesto por A2A NATIVO.
 
 Mismo molde que el agente de viajes: no hay código de servidor aquí. `langgraph dev`

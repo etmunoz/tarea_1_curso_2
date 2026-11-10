@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: AGENTS.md
+Objetivo: AGENTS.md · agente-viajes-a2a
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1514
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 # AGENTS.md · agente-viajes-a2a
 
 Proyecto del Curso 2. Tres piezas:

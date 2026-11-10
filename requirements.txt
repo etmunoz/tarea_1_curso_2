@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: requirements.txt
+# Objetivo: Dependencias del proyecto (pip).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 # runtime del agente (familia LangChain 1.x)
 langchain>=1.3,<2
 langchain-core>=1.6,<2

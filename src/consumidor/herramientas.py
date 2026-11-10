@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/consumidor/herramientas.py
+# Objetivo: Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1629
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.
 
   · `consultar_agente_viajes`  → remota (A2A): llama al agente de viajes.

@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_viajes/graph.py
+# Objetivo: Agente de viajes · se expone por A2A de forma NATIVA con el servidor de LangGraph.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Agente de viajes · se expone por A2A de forma NATIVA con el servidor de LangGraph.
 
 No hay código de servidor aquí. `langgraph dev` (o un deploy de LangGraph Platform) lee

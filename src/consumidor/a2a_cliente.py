@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/consumidor/a2a_cliente.py
+# Objetivo: Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1629
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.
 
 No sabe nada de vuelos ni hoteles: sabe descubrir al agente por su Agent Card y

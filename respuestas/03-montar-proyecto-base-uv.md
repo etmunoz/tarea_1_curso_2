@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: respuestas/03-montar-proyecto-base-uv.md
+Objetivo: 03 · Respuesta — Montar el proyecto base A2A con uv + Python 3.13
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1620
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 # 03 · Respuesta — Montar el proyecto base A2A con uv + Python 3.13
 
 Prompt: [`../prompts_ejecutados/03-montar-proyecto-base-uv.md`](../prompts_ejecutados/03-montar-proyecto-base-uv.md)

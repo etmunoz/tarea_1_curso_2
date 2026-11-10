@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: tests/test_a2a_viajes.py
+# Objetivo: Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024)."""
 import os, uuid, httpx, pytest
 

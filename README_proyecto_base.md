@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: README_proyecto_base.md
+Objetivo: agente-viajes-a2a
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1514
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 # agente-viajes-a2a
 
 Un agente de viajes (LangGraph) expuesto por **A2A de forma nativa**, un consumidor pendiente de construir con OpenCode, y un **swarm** vuelos + hoteles al que se le agrega un tercer agente.

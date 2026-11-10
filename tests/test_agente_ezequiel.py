@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: tests/test_agente_ezequiel.py
+# Objetivo: Pruebas de las herramientas del agente de Ezequiel. No requieren API key ni servidor.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1603
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """Pruebas de las herramientas del agente de Ezequiel. No requieren API key ni servidor."""
 from src.agente_ezequiel.herramientas import (
     elegir_modelo,

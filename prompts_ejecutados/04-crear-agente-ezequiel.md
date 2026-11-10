@@ -1,3 +1,11 @@
+<!-- --8<-- encabezado-grupo
+Archivo: prompts_ejecutados/04-crear-agente-ezequiel.md
+Objetivo: 01 · Crear el agente de Ezequiel (IA Engineer & Data Scientist)
+Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+Creación: 20261110 1603
+Última modificación: 20261110 1749
+--8<-- fin-encabezado-grupo -->
+
 # 01 · Crear el agente de Ezequiel (IA Engineer & Data Scientist)
 
 **Fecha:** 2026-11-10

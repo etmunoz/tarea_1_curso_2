@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_viajes/prompts.py
+# Objetivo: System prompts del agente de viajes. Separados del grafo (regla de AGENTS.md).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 1514
+# Última modificación: 20261110 1749
+# --8<-- fin-encabezado-grupo
+
 """System prompts del agente de viajes. Separados del grafo (regla de AGENTS.md)."""
 
 SYSTEM_VIAJES = """Eres el agente de viajes de una agencia. Ayudas a encontrar vuelos y hoteles.

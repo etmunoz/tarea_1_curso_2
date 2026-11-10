@@ -10,3 +10,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 02 | [Crear el repo de contenido tarea_1_curso_2](02-crear-repo-contenido.md) | [respuesta](../respuestas/02-crear-repo-contenido.md) |
 | 03 | [Montar el proyecto base A2A con uv + Python 3.13](03-montar-proyecto-base-uv.md) | [respuesta](../respuestas/03-montar-proyecto-base-uv.md) |
 | 04 | [Crear el agente de Ezequiel](04-crear-agente-ezequiel.md) | [respuesta](../respuestas/04-crear-agente-ezequiel.md) |
+| 05 | [Construir el agente conversacional (consumidor)](05-agente-conversacional-consumidor.md) | [respuesta](../respuestas/05-agente-conversacional-consumidor.md) |

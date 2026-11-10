@@ -2,7 +2,7 @@
   "proyecto": "agente-viajes-a2a",
   "grupos": {
     "viajes": "Agente de viajes expuesto por A2A nativo (servidor de LangGraph). HECHO.",
-    "agente-conversacional": "Agente conversacional que consume al de viajes por A2A. SIN TAREAS AÚN: las crea @spec con el pedido del README.",
+    "agente-conversacional": "Agente conversacional que consume al de viajes por A2A (3 pasos: config base, agentes, consumo). HECHO.",
     "swarm": "Agregar el agente de actividades al swarm vuelos+hoteles. PENDIENTE.",
     "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO."
   },
@@ -159,6 +159,57 @@
         "langgraph dev publica agente_ezequiel y responde message/send (requiere GOOGLE_API_KEY)"
       ],
       "evidencia": "herramientas verificadas sin API key; 5/5 tests. Falta prueba en vivo con Gemini."
+    },
+    {
+      "id": "c01",
+      "nombre": "Cliente A2A: assistant_id, tarjeta y message/send con contextId fijo por conversación",
+      "entregables": [
+        "src/consumidor/a2a_cliente.py"
+      ],
+      "verificacion": [
+        "enviar_mensaje devuelve texto del remoto (con langgraph dev); contextId estable por hilo"
+      ],
+      "grupo": "agente-conversacional",
+      "estado": "hecho",
+      "depende_de": [
+        "v03"
+      ],
+      "evidencia": "verificado sin key/servidor; falta prueba en vivo con Gemini + langgraph dev"
+    },
+    {
+      "id": "c02",
+      "nombre": "Agente conversacional (create_agent) con herramienta remota + precio_btc local y prompt",
+      "entregables": [
+        "src/consumidor/herramientas.py",
+        "src/consumidor/prompts.py",
+        "src/consumidor/graph.py"
+      ],
+      "verificacion": [
+        "uv run pytest tests/test_consumidor.py → 3 passed (precio_btc y contextId sin key/servidor)"
+      ],
+      "grupo": "agente-conversacional",
+      "estado": "hecho",
+      "depende_de": [
+        "v03"
+      ],
+      "evidencia": "verificado sin key/servidor; falta prueba en vivo con Gemini + langgraph dev"
+    },
+    {
+      "id": "c03",
+      "nombre": "Notebook paso a paso (3 secciones) y pruebas",
+      "entregables": [
+        "notebooks/consumidor_paso_a_paso.ipynb",
+        "tests/test_consumidor.py"
+      ],
+      "verificacion": [
+        "nbformat.validate OK; test A2A pasa con langgraph dev + GOOGLE_API_KEY"
+      ],
+      "grupo": "agente-conversacional",
+      "estado": "hecho",
+      "depende_de": [
+        "v03"
+      ],
+      "evidencia": "verificado sin key/servidor; falta prueba en vivo con Gemini + langgraph dev"
     }
   ]
 }

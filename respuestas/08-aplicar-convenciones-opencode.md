@@ -3,7 +3,7 @@ Archivo: respuestas/08-aplicar-convenciones-opencode.md
 Objetivo: 08 · Respuesta — Aplicar las convenciones OpenCode
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1923
-Última modificación: 20261110 1935
+Última modificación: 20261110 1941
 --8<-- fin-encabezado-grupo -->
 
 # 08 · Respuesta — Aplicar las convenciones OpenCode

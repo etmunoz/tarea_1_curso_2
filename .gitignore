@@ -3,7 +3,7 @@
 # Objetivo: Archivos y carpetas ignorados por git.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1450
-# Última modificación: 20261110 1935
+# Última modificación: 20261110 1941
 # --8<-- fin-encabezado-grupo
 
 # entorno y claves
@@ -20,3 +20,6 @@ uv.lock.bak
 .DS_Store
 .idea/
 .vscode/
+
+# empaquetado de entrega
+dist/

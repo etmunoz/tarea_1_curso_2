@@ -3,7 +3,7 @@ Archivo: ROADMAP.md
 Objetivo: ROADMAP · Taller A2A (Curso 2 · Sesión 1)
 Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 Creación: 20261110 1928
-Última modificación: 20261110 1935
+Última modificación: 20261110 1941
 --8<-- fin-encabezado-grupo -->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)
@@ -68,7 +68,7 @@ paso del taller a él.
 |---|-----------------|-------------|--------|--------------|
 | 3.1 | **Paso 7 · Sumar a los compañeros** | un **coordinador/supervisor** que lee las fichas y enruta; `compañeros.md`; `evidencias/04-catalogo.png` | 🟡 | ✅ construido: [`src/coordinador/`](src/coordinador/) (catálogo desde `URLS_AGENTES`, supervisor LangGraph). Falta corrida en vivo + `compañeros.md`/evidencia. |
 | 3.2 | **Paso 8 · La ronda de preguntas** | 3 preguntas por integrante con su camino; `evidencias/05-ronda.png` | ⬜ | Actividad en vivo con los agentes del grupo (Fabio, Gustavo, Ezequiel) sumados al coordinador. |
-| 3.3 | **Paso 9 · Entrega y evaluación** | zip del grupo: `documento-entrega.pdf`, `blueprint-*.md`, `compañeros.md`, proyecto completo, `evidencias/` | ⬜ | Empaquetado final. Ver estructura y rúbrica en `taller-a2a/09-entrega-y-evaluacion.md`. **Nunca** incluir `.env` ni `.venv` (sí `.env.example`). |
+| 3.3 | **Paso 9 · Entrega y evaluación** | zip del grupo: documento, blueprints, `companeros.md`, proyecto completo, `evidencias/` | 🟡 | ✅ esqueleto: `entrega/documento-entrega.md`, `entrega/companeros.md`, `evidencias/README.md` y `tools/empaquetar_entrega.py` (arma el zip con `git ls-files`, sin `.env`). Falta completar ⟨pendiente⟩, PNGs y exportar el PDF. |
 
 ---
 

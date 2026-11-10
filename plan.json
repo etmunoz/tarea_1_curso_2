@@ -5,7 +5,8 @@
     "agente-conversacional": "Agente conversacional que consume al de viajes por A2A (3 pasos: config base, agentes, consumo). HECHO.",
     "swarm": "Swarm vuelos + hoteles + actividades (handoff entre los tres). HECHO.",
     "agente-ezequiel": "Agente propio del taller: Ezequiel (IA Engineer & Data Scientist), expuesto por A2A nativo. HECHO.",
-    "coordinador": "Supervisor que enruta la pregunta al agente remoto según su ficha (locales + compañeros vía URLS_AGENTES). HECHO (falta corrida en vivo)."
+    "coordinador": "Supervisor que enruta la pregunta al agente remoto según su ficha (locales + compañeros vía URLS_AGENTES). HECHO (falta corrida en vivo).",
+    "entrega": "Esqueleto de entrega (Paso 9): documento, companeros.md, evidencias/ y empaquetador del zip. PARCIAL."
   },
   "tareas": [
     {
@@ -305,6 +306,24 @@
         "e01"
       ],
       "evidencia": "verificado sin key (3 passed, 1 skipped); falta corrida en vivo"
+    },
+    {
+      "id": "z01",
+      "grupo": "entrega",
+      "nombre": "Esqueleto de entrega y empaquetador del zip",
+      "descripcion": "entrega/documento-entrega.md (borrador con la estructura de la rúbrica), entrega/companeros.md, evidencias/README.md y tools/empaquetar_entrega.py que arma grupo-N-taller-a2a.zip con git ls-files (nunca .env/.venv).",
+      "estado": "hecho",
+      "depende_de": [],
+      "entregables": [
+        "entrega/documento-entrega.md",
+        "entrega/companeros.md",
+        "evidencias/README.md",
+        "tools/empaquetar_entrega.py"
+      ],
+      "verificacion": [
+        "uv run python tools/empaquetar_entrega.py --grupo 1 crea dist/grupo-1-taller-a2a.zip sin .env; avisa de pendientes"
+      ],
+      "evidencia": "zip con proyecto/ (93 archivos) + documento + blueprint + companeros + evidencias; sin .env"
     }
   ]
 }

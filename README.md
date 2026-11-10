@@ -1,38 +1,64 @@
-# Tarea 1 · Curso 2 — Taller A2A
+# tarea_1_curso_2 · Taller A2A
 
-Contenido del **Taller · tu skill es un agente y habla por A2A** (Curso 2 · Sesión 1
-· *Productivizar agentes*) extraído a Markdown legible, página por página, para
-poder leerlo y trabajar sobre él sin servidor ni navegador.
+Proyecto del **Taller · tu skill es un agente y habla por A2A** (Curso 2 · Sesión 1).
+Base: un agente de viajes (LangGraph) expuesto por **A2A de forma nativa** con el
+servidor de LangGraph, un **swarm** (vuelos + hoteles) y un **agente conversacional**
+pendiente de construir. Entorno con **uv + Python 3.13**.
 
-- **Origen:** plataforma del curso Agentes IA · sección `sf8f5c9` · clase `61408ca1`.
-- **Formato:** una slide por archivo, con tablas y bloques de código/prompts
-  preservados. El HTML original completo está en `taller-a2a/clase.html`.
+- Material del taller (10 páginas, lectura): [`taller-a2a/`](taller-a2a/index.md)
+- Guía del proyecto base original: [`README_proyecto_base.md`](README_proyecto_base.md)
+- Reglas de arquitectura y flujo de trabajo: [`AGENTS.md`](AGENTS.md)
 
-## Las 10 páginas (en orden)
-
-| # | Página | Parte |
-|---|---|---|
-| 1 | [Lo que vamos a armar y entregar](taller-a2a/01-lo-que-vamos-a-armar-y-entregar.md) | Parte 1 · Tu agente |
-| 2 | [El blueprint de tu agente](taller-a2a/02-el-blueprint-de-tu-agente.md) | Parte 1 · Tu agente |
-| 3 | [Mi agente, con mi skill](taller-a2a/03-mi-agente-con-mi-skill.md) | Parte 1 · Tu agente |
-| 4 | [Probarlo solo, antes de conectarlo](taller-a2a/04-probarlo-solo-antes-de-conectarlo.md) | Parte 1 · Tu agente |
-| 5 | [La ficha es tu currículum](taller-a2a/05-la-ficha-es-tu-curriculum.md) | Parte 1 · Tu agente |
-| 6 | [Salir a internet con Cloudflare](taller-a2a/06-salir-a-internet-con-cloudflare.md) | Parte 2 · Internet |
-| 7 | [Sumar a los compañeros](taller-a2a/07-sumar-a-los-companeros.md) | Parte 3 · Hablar entre agentes |
-| 8 | [La ronda de preguntas](taller-a2a/08-la-ronda-de-preguntas.md) | Parte 3 · Hablar entre agentes |
-| 9 | [Entrega y evaluación](taller-a2a/09-entrega-y-evaluacion.md) | Parte 3 · Hablar entre agentes |
-| 10 | [Tres ideas para seguir](taller-a2a/10-tres-ideas-para-seguir.md) | Parte 3 · *extra* |
-
-## Cómo se generó
-
-Extraído con `tools/extraer_clase.py` del proyecto
-[`descargaweb`](https://github.com/etmunoz/descargaweb) (la herramienta que descarga
-el curso y lo sirve offline). Para regenerarlo:
+## Puesta en marcha
 
 ```bash
-python3 tools/extraer_clase.py <mirror> sf8f5c9 61408ca1 --out <este_repo>/taller-a2a
+uv sync                       # crea .venv con Python 3.13 e instala todo
+cp .env.example .env          # pega tu GOOGLE_API_KEY (Gemini)
+uv run langgraph dev          # levanta el agente de viajes en http://127.0.0.1:2024
 ```
+
+> Sin `GOOGLE_API_KEY` el entorno se instala igual, pero los grafos no arrancan:
+> el agente se construye con Gemini al importar. La clave va **solo** en `.env`
+> (ignorado por git); nunca en el código ni en `.env.example`.
+
+## Comandos útiles (con uv)
+
+```bash
+# Verificar las herramientas (no requiere API key)
+uv run python -c "from src.agente_viajes.herramientas import buscar_vuelos; print(buscar_vuelos.invoke({'origen':'SCL','destino':'LIM','fecha':'2026-11-10'}))"
+
+# Demo del swarm (vuelos ↔ hoteles en un mismo hilo) — requiere API key
+uv run python -m src.swarm.graph
+
+# Pruebas del A2A del agente de viajes (con `uv run langgraph dev` corriendo en otra terminal)
+uv run pytest tests/test_a2a_viajes.py
+```
+
+Obtener el `assistant_id`, la Agent Card y mandar un `message/send` por A2A: ver los
+`curl` en [`README_proyecto_base.md`](README_proyecto_base.md) o la colección
+[`bruno/`](bruno/) (entorno `local`).
+
+## Estructura
+
+```
+src/agente_viajes/   graph.py · herramientas.py · prompts.py   (A2A nativo · hecho)
+src/swarm/           graph.py · prompts.py                     (vuelos+hoteles · hecho)
+src/consumidor/      README.md                                 (agente conversacional · por construir)
+bruno/               colección para probar tarjeta y message/send
+tests/               test_a2a_viajes.py
+plan.json            grupos y tareas (viajes · agente-conversacional · swarm)
+langgraph.json       grafos que publica `langgraph dev`
+taller-a2a/          las 10 páginas del taller, en Markdown (referencia)
+```
+
+## Qué sigue (según `plan.json`)
+
+1. **Agente conversacional** (`src/consumidor/`): consume al de viajes por A2A; se
+   construye con OpenCode (`@spec` crea tareas, `@implementador` las ejecuta) — ver
+   sección 2 de `README_proyecto_base.md`.
+2. **Swarm · actividades:** agregar un tercer agente al swarm (tareas `s01…s05`).
+3. **Tu propio agente** (lo que pide el taller): tu skill real, su ficha, su túnel.
 
 ## Nota
 
-Material de curso, para uso personal/educativo. Pertenece a sus autores.
+Material de curso para uso personal/educativo. Pertenece a sus autores.

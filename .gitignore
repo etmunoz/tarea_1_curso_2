@@ -1,3 +1,14 @@
+# entorno y claves
+.env
+.venv/
+__pycache__/
+*.pyc
+# langgraph / notebooks
+.langgraph_api/
+.ipynb_checkpoints/
+# uv
+uv.lock.bak
+# SO / editores
 .DS_Store
 .idea/
 .vscode/

@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taller · tu skill es un agente y habla por A2A</title>
+<style>
+  :root { --ink:#1e293b; --muted:#64748b; --line:#e2e8f0; --accent:#6d28d9; --soft:#f5f3ff; --code:#0f172a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#fff; color:var(--ink); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  .deck { max-width:900px; margin:0 auto; padding:28px 24px 40px; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+  .top .where { font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .nav { display:flex; align-items:center; gap:8px; }
+  .nav button { width:40px; height:40px; border:1px solid var(--line); background:#fff; border-radius:10px; font-size:22px; line-height:1; color:var(--accent); cursor:pointer; }
+  .nav button:hover { background:var(--soft); }
+  .nav button:disabled { opacity:.3; cursor:default; }
+  .dots { display:flex; gap:6px; margin:0 6px; }
+  .dots span { width:8px; height:8px; border-radius:50%; background:var(--line); cursor:pointer; }
+  .dots span.on { background:var(--accent); }
+  .dots span.extra { background:#a7f3d0; } .dots span.extra.on { background:#047857; }
+  .slide { display:none; }
+  .slide.on { display:block; }
+  .kicker { color:var(--accent); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:0 0 6px; }
+  h1 { margin:0 0 6px; font-size:clamp(24px,3.6vw,34px); line-height:1.15; letter-spacing:-.02em; }
+  h2 { margin:18px 0 8px; font-size:18px; }
+  .sub { margin:0 0 18px; color:var(--muted); font-size:15px; }
+  .diagram { margin:4px 0 16px; }
+  .diagram svg { width:100%; height:auto; display:block; }
+  .box { background:var(--code); border-radius:12px; overflow:hidden; margin:0 0 16px; }
+  .box .head { display:flex; justify-content:space-between; align-items:center; padding:9px 14px; border-bottom:1px solid #334155; color:#c4b5fd; font-size:12px; }
+  .box .head span.ok { color:#a7f3d0; margin-left:auto; margin-right:10px; }
+  .box button { background:var(--accent); color:#fff; border:0; border-radius:6px; padding:6px 12px; font:600 12px/1.4 inherit; cursor:pointer; }
+  .box button:hover { background:#5b21b6; }
+  .box.term { background:#1e293b; } .box.term .head { color:#fcd34d; }
+  pre { margin:0; padding:16px 18px; white-space:pre-wrap; overflow-wrap:anywhere; color:#cbd5e1; font:13.5px/1.65 "SF Mono",Menlo,Consolas,monospace; }
+  pre .h { display:block; color:#fcd34d; font-weight:700; margin-top:4px; }
+  pre .warn { color:#fca5a5; }
+  pre .key { color:#a5b4fc; font-weight:700; }
+  pre .case { color:#f1f5f9; font-weight:600; }
+  pre .t { color:#6ee7b7; }
+  pre .c { color:#94a3b8; font-style:italic; }
+  .change { background:var(--soft); border-left:4px solid var(--accent); border-radius:0 10px 10px 0; padding:12px 16px; }
+  .change p, .sala p { margin:0 0 6px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .change ol { margin:0; padding-left:20px; }
+  .change li { margin:4px 0; font-size:15px; }
+  .change li b { color:var(--ink); }
+  .sala { background:#fffbeb; border-left:4px solid #f59e0b; border-radius:0 10px 10px 0; padding:12px 16px; margin:0 0 16px; font-size:15px; }
+  .sala p { color:#b45309; }
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:6px 0 16px; }
+  .cards div { border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:13.5px; line-height:1.45; }
+  .cards b { display:block; color:var(--accent); margin-bottom:3px; }
+  .cards small { display:block; color:var(--muted); margin-top:6px; font-size:12px; }
+  table { border-collapse:collapse; width:100%; margin:6px 0 16px; font-size:14px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  th { background:#f8fafc; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .ideas { margin:0 0 16px; padding-left:20px; }
+  .ideas li { margin:6px 0; font-size:15px; }
+  code { background:#f1f5f9; padding:1px 5px; border-radius:4px; font:.9em "SF Mono",Menlo,Consolas,monospace; }
+  .hint { color:var(--muted); font-size:13px; margin:14px 0 0; }
+  .part { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-right:8px; vertical-align:middle; color:#fff; }
+  .p1 { background:#6d28d9; } .p2 { background:#b45309; } .p3 { background:#1d4ed8; } .p4 { background:#047857; }
+  .map { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:6px 0 16px; }
+  .map div { border-radius:10px; padding:10px 10px 8px; color:#fff; font-size:12px; line-height:1.35; }
+  .map b { display:block; font-size:12px; letter-spacing:.04em; text-transform:uppercase; margin-bottom:4px; }
+  .map span { opacity:.9; }
+  @media (max-width:640px) { .map, .cards { grid-template-columns:1fr 1fr; } .deck { padding:18px 16px 32px; } .nav button { width:36px; height:36px; } .dots { display:none; } }
+
+  .entrega { background:#ecfdf5; border-left:4px solid #047857; border-radius:0 10px 10px 0; padding:12px 16px; margin:0 0 16px; }
+  .entrega p { margin:0 0 6px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#047857; }
+  .entrega ul { margin:0; padding-left:20px; }
+  .entrega li { margin:4px 0; font-size:15px; }
+  .logre { display:flex; gap:10px; align-items:flex-start; background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:10px 14px; margin:0 0 16px; font-size:14.5px; }
+  .logre b { color:#047857; white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="top">
+    <div class="where" id="where">Paso 1 de 9</div>
+    <div class="nav">
+      <button id="prev" aria-label="Anterior">&lsaquo;</button>
+      <div class="dots" id="dots"></div>
+      <button id="next" aria-label="Siguiente">&rsaquo;</button>
+    </div>
+  </div>
+
+  <section class="slide" data-parte="Parte 1 · Tu agente">
+    <p class="kicker"><span class="part p1">Parte 1 · Tu agente</span>Paso 1</p>
+    <h1>Lo que vamos a armar y entregar</h1>
+    <p class="sub">En la clase armamos tres agentes inventados. En este taller cada persona arma <b>uno real: el suyo</b>, con lo que sabe hacer. Después los conectan y las preguntas viajan al compañero que sabe. Mismo proyecto, mismos archivos, mismo A2A. Se entrega el código completo, las evidencias de cada paso y un documento.</p>
+    <div class="diagram"><svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,sans-serif" font-size="13">
+<defs>
+<marker id="tcA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1d4ed8"/></marker>
+<marker id="tcF" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#d97706"/></marker>
+</defs>
+<!-- internet -->
+<rect x="20" y="18" width="820" height="72" rx="36" fill="#fff7ed" stroke="#fdba74" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="430" y="44" text-anchor="middle" font-weight="700" fill="#9a3412" font-size="12" letter-spacing=".08em">INTERNET · CLOUDFLARE</text>
+<text x="430" y="64" text-anchor="middle" fill="#9a3412" font-size="11.5">cada agente tiene su dirección https pública; se comparten en el chat de la clase</text>
+<text x="430" y="80" text-anchor="middle" fill="#b45309" font-size="10.5">ana → https://verde-luna-456…   ·   luis → https://rojo-sol-789…   ·   tú → https://azul-rio-123…</text>
+<!-- computadores -->
+<rect x="20" y="120" width="250" height="190" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="145" y="142" text-anchor="middle" font-weight="700" fill="#475569" font-size="12" letter-spacing=".08em">ANA · su computador</text><rect x="35" y="155" width="220" height="56" rx="10" fill="#ecfdf5" stroke="#047857" stroke-width="2"/><text x="145" y="177" text-anchor="middle" font-weight="700" fill="#065f46" font-size="12">Agente de Ana · :8003</text><text x="145" y="196" text-anchor="middle" fill="#64748b" font-size="11">contabilidad: IVA, boletas, facturas</text><rect x="35" y="222" width="220" height="34" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/><text x="145" y="244" text-anchor="middle" fill="#9a3412" font-size="11" font-weight="700">cloudflared → https://…trycloudflare.com</text><text x="145" y="286" text-anchor="middle" fill="#94a3b8" font-size="10.5">(también puede tener su coordinador)</text>
+<rect x="305" y="120" width="250" height="190" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="430" y="142" text-anchor="middle" font-weight="700" fill="#475569" font-size="12" letter-spacing=".08em">TÚ · tu computador</text><rect x="320" y="155" width="220" height="56" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/><text x="430" y="177" text-anchor="middle" font-weight="700" fill="#1e3a8a" font-size="12">Agente de Tú · :8003</text><text x="430" y="196" text-anchor="middle" fill="#64748b" font-size="11">TI: wifi, VPN, correo, impresoras</text><rect x="320" y="222" width="220" height="34" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/><text x="430" y="244" text-anchor="middle" fill="#9a3412" font-size="11" font-weight="700">cloudflared → https://…trycloudflare.com</text><rect x="320" y="266" width="220" height="34" rx="8" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.5"/><text x="430" y="288" text-anchor="middle" fill="#4c1d95" font-size="11" font-weight="700">coordinador · :8002 · URLS_AGENTES</text>
+<rect x="590" y="120" width="250" height="190" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/><text x="715" y="142" text-anchor="middle" font-weight="700" fill="#475569" font-size="12" letter-spacing=".08em">LUIS · su computador</text><rect x="605" y="155" width="220" height="56" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="2"/><text x="715" y="177" text-anchor="middle" font-weight="700" fill="#92400e" font-size="12">Agente de Luis · :8003</text><text x="715" y="196" text-anchor="middle" fill="#64748b" font-size="11">cocina: recetas, tiempos, reemplazos</text><rect x="605" y="222" width="220" height="34" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/><text x="715" y="244" text-anchor="middle" fill="#9a3412" font-size="11" font-weight="700">cloudflared → https://…trycloudflare.com</text><text x="715" y="286" text-anchor="middle" fill="#94a3b8" font-size="10.5">(también puede tener su coordinador)</text>
+<!-- túneles hacia internet -->
+<path d="M100 222 V90" stroke="#d97706" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#tcF)"/>
+<path d="M430 222 V90" stroke="#d97706" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#tcF)"/>
+<path d="M715 222 V90" stroke="#d97706" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#tcF)"/>
+<!-- la pregunta -->
+<path d="M320 283 H288 V108 H238 V152" stroke="#1d4ed8" stroke-width="2.5" fill="none" marker-end="url(#tcA)"/>
+<rect x="206" y="296" width="150" height="30" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+<text x="281" y="315" text-anchor="middle" fill="#1e3a8a" font-size="11" font-weight="700">"¿Cómo declaro el IVA?"</text>
+<text x="250" y="101" text-anchor="middle" fill="#1d4ed8" font-size="10.5" font-weight="700">message/send → Agente de Ana</text>
+<text x="20" y="334" fill="#94a3b8" font-size="10.5" letter-spacing=".06em">TU COORDINADOR LEE LAS FICHAS AL ARRANCAR · ELIGE A QUIÉN LLAMAR · LA RESPUESTA VUELVE COMO [AGENTE DE ANA]</text>
+</svg></div>
+    <div class="cards">
+      <div><b>Tu skill</b>Lo que sabes hacer: TI, contabilidad, cocina, fútbol, derecho, música. Una herramienta con datos de ese tema y un prompt que diga quién eres.</div>
+      <div><b>Tu ficha</b>Es tu currículum. El supervisor de los demás la lee para decidir si te pregunta a ti. Mientras mejor diga qué sabes y qué no, mejor te eligen.</div>
+      <div><b>Tu túnel</b>Cloudflare le da a tu agente una dirección https. La pegas en el chat de la clase y cualquiera te puede preguntar desde su computador.</div>
+      <div><b>Tu coordinador</b>El supervisor del paso 9 de la clase, sin cambios. Solo le sumas las direcciones de tus compañeros y aparecen en su catálogo.</div>
+    </div>
+    <div class="change">
+      <p>Cómo funciona el taller</p>
+      <ol>
+        <li><b>En grupos</b> de 2 o 3. Cada integrante arma su propio agente con su skill; el grupo entrega un solo zip con todos los agentes y un coordinador que los suma.</li>
+        <li><b>Cada paso tiene entregables</b> (recuadro verde). Al final hay un paso de entrega con la estructura del zip y cómo se evalúa. Guarden las capturas a medida que avanzan: después no se pueden rehacer.</li>
+        <li><b>Punto de partida:</b> el proyecto de la clase "A2A paso a paso" funcionando: viajes en el 8000, restaurantes en el 8001, coordinador en el 8002 y el paso 10 de Cloudflare hecho.</li>
+        <li><b>Nunca entreguen claves:</b> la de Gemini va en el <code>.env</code>, que no se sube. Sí va el <code>.env.example</code>.</li>
+      </ol>
+    </div>
+  </section>
+  <section class="slide" data-parte="Parte 1 · Tu agente">
+    <p class="kicker"><span class="part p1">Parte 1 · Tu agente</span>Paso 2 · blueprint</p>
+    <h1>El blueprint de tu agente</h1>
+    <p class="sub">Antes de pedirle nada a OpenCode, cada integrante escribe en una tabla qué hace su agente, qué no hace y con qué herramienta. Es la misma tabla del Curso 1. Va en un archivo propio, <code>blueprint-NOMBRE.md</code>, y de ahí salen los prompts de los pasos siguientes.</p>
+    <div class="box"><div class="head"><span>blueprint-NOMBRE.md · plantilla (completa cada fila con una frase)</span><span class="ok"></span><button>Copiar</button></div><pre>## Blueprint · Agente de NOMBRE
+
+| Qué definir        | Mi agente                                                                 |
+|--------------------|---------------------------------------------------------------------------|
+| Quién soy          | NOMBRE · ESPECIALIDAD (una frase)                                         |
+| Hace               | …                                                                         |
+| No hace            | …                                                                         |
+| Herramientas       | nombre_de_la_herramienta(parámetros): qué devuelve y de dónde salen los datos |
+| Decide solo        | …                                                                         |
+| Nunca sin persona  | …                                                                         |
+| Deriva a otro      | Cuando la pregunta es de … → lo dice en una frase y no responde           |
+| Dónde se ejecuta   | http://127.0.0.1:8003 · src/agente_NOMBRE/ · python main.py NOMBRE        |
+| Dirección pública  | (se completa en el paso 6 con la URL del túnel)                           |</pre></div>
+    <div class="change"><p>Qué puedes cambiar</p><ol><li><b>Hace / No hace:</b> una frase cada una, concreta. “Responde sobre el estado del wifi, la VPN, el correo y las impresoras”, no “ayuda con TI”.</li><li><b>La herramienta:</b> una basta. Escribe de dónde salen los datos (un diccionario inventado hoy; una API real si quieres seguir después).</li><li><b>Deriva a otro:</b> esta fila es la que después hace que el supervisor no te mande preguntas que no son tuyas.</li></ol></div>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>blueprint-NOMBRE.md</code> completo, uno por integrante, en la raíz del zip.</li><li>En el documento de entrega: los nombres y apellidos de los integrantes, el grupo y el blueprint de cada uno.</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Puedo decir en una frase qué hace mi agente, qué no hace y qué herramienta usa.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 1 · Tu agente">
+    <p class="kicker"><span class="part p1">Parte 1 · Tu agente</span>Paso 3 · prompt 1</p>
+    <h1>Mi agente, con mi skill</h1>
+    <p class="sub">El molde es el agente de viajes: cuatro archivos y nada más. Cambias los datos, el rol y el nombre. Antes de pegar el prompt, reemplaza <b>NOMBRE</b> y <b>ESPECIALIDAD</b> por los de tu blueprint.</p>
+    <div class="diagram"><svg viewBox="0 0 860 180" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,sans-serif" font-size="13">
+<defs><marker id="ma8003" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1d4ed8"/></marker></defs>
+<rect x="20" y="20" width="250" height="140" rx="12" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+<text x="145" y="44" text-anchor="middle" font-weight="700" fill="#1e3a8a" font-size="12">AGENTE DE NOMBRE · tu skill · LangGraph</text>
+<text x="40" y="70" font-family="SF Mono,Menlo,monospace" font-size="12" fill="#1e293b" font-weight="700">src/agente_NOMBRE/</text>
+<text x="52" y="90" font-family="SF Mono,Menlo,monospace" font-size="11.5" fill="#475569">├─ tools.py      datos y funciones</text>
+<text x="52" y="108" font-family="SF Mono,Menlo,monospace" font-size="11.5" fill="#475569">├─ prompts.py    rol y reglas</text>
+<text x="52" y="126" font-family="SF Mono,Menlo,monospace" font-size="11.5" fill="#475569">├─ graph.py     responder(texto, context_id)</text>
+<text x="52" y="144" font-family="SF Mono,Menlo,monospace" font-size="11.5" fill="#475569">└─ server.py     tarjeta + crear_app</text>
+<path d="M270 90 H320" stroke="#1d4ed8" stroke-width="2" fill="none" marker-end="url(#ma8003)"/>
+<rect x="320" y="50" width="220" height="80" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<text x="430" y="74" text-anchor="middle" font-weight="700" fill="#475569" font-size="12">src/comun (ya hecho)</text>
+<text x="430" y="94" text-anchor="middle" fill="#64748b" font-size="11">Executor + crear_app + crear_tarjeta</text>
+<text x="430" y="112" text-anchor="middle" fill="#64748b" font-size="11">igual para todos los agentes</text>
+<path d="M540 90 H590" stroke="#1d4ed8" stroke-width="2" fill="none" marker-end="url(#ma8003)"/>
+<rect x="590" y="40" width="250" height="100" rx="12" fill="#fff1f2" stroke="#fda4af" stroke-width="2"/>
+<text x="715" y="66" text-anchor="middle" font-weight="700" fill="#9f1239" font-size="12">uvicorn · puerto 8003</text>
+<text x="715" y="88" text-anchor="middle" fill="#64748b" font-size="11">GET /.well-known/agent-card.json</text>
+<text x="715" y="106" text-anchor="middle" fill="#64748b" font-size="11">POST /  (message/send)</text>
+<text x="715" y="124" text-anchor="middle" fill="#64748b" font-size="11">GET /salud</text>
+</svg></div>
+    <div class="box"><div class="head"><span>prompt 1 · copiar y pegar en OpenCode (cambia NOMBRE y ESPECIALIDAD)</span><span class="ok"></span><button>Copiar</button></div><pre>Quiero crear un agente nuevo que represente lo que yo sé hacer. Mi nombre es NOMBRE y mi especialidad es ESPECIALIDAD (por ejemplo: TI, redes y soporte técnico). Hazlo copiando el molde del agente de viajes, en src/agente_NOMBRE/ con los mismos cuatro archivos y siguiendo AGENTS.md:
+
+<b class="h">1) tools.py. Una o dos herramientas con @tool de mi especialidad, con datos inventados pero creíbles dentro del archivo. Por ejemplo, para TI: estado_servicio(servicio) que dice si el wifi, la VPN, el correo o las impresoras están funcionando. Si piden algo que no está en los datos, la herramienta lo dice en una línea, nunca lanza un error.</b>
+
+<b class="h">2) prompts.py. Un SYSTEM_PROMPT que diga: eres NOMBRE, especialista en ESPECIALIDAD. Responde solo sobre eso, en español y corto, usando las herramientas antes de contestar y sin inventar datos. Si te preguntan algo que no es de tu tema, dilo en una frase y no intentes responderlo. Si te preguntan quién eres, di tu nombre y tu especialidad.</b>
+
+<b class="h">3) graph.py. Igual que el de viajes: create_agent con el modelo de Gemini, mis herramientas, el SYSTEM_PROMPT y MemorySaver, con las tres funciones responder, saltos y diagrama. Conéctalo a main.py para que funcionen python main.py NOMBRE "pregunta", --saltos y --diagrama.</b>
+
+<b class="h">4) server.py. La ficha con crear_tarjeta: nombre "Agente de NOMBRE", una descripción de dos frases (qué sé y qué no hago) y una skill por herramienta con una pregunta de ejemplo. Lee URL_NOMBRE del .env (agrégala al .env y al .env.example apuntando a http://127.0.0.1:8003) y arma app = crear_app(tarjeta, responder).</b>
+
+No lo levantes tú. Dime cómo probarlo sin servidor y después el comando: uvicorn src.agente_NOMBRE.server:app --port 8003 --reload.</pre></div>
+    <div class="change"><p>Qué puedes cambiar</p><ol><li><b>La especialidad:</b> cualquier cosa que sepas de verdad. Ideas: contabilidad (IVA, boletas), cocina (recetas, reemplazos), fútbol (tabla, fixture), derecho laboral (finiquitos, vacaciones), música (acordes, escalas).</li><li><b>Las herramientas:</b> con una basta. Si pones dos, que sean del mismo tema: el supervisor te elige por tema, no por cantidad.</li><li><b>El framework:</b> si prefieres CrewAI, copia el molde de restaurantes (crew.py en vez de graph.py, en .venv-crew). Para A2A da igual: la ficha y el servidor son los mismos.</li><li><b>El puerto:</b> 8003 para el primer integrante, 8004 para el segundo, 8005 para el tercero. Cada agente con su URL_NOMBRE en el .env.</li></ol></div>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li>La carpeta <code>src/agente_NOMBRE/</code> con sus cuatro archivos, dentro del proyecto completo.</li><li><code>main.py</code> con tu agente registrado y <code>.env.example</code> con tu <code>URL_NOMBRE</code>.</li><li>En el documento: el prompt que usaste y, en dos líneas, qué cambiaste después de verlo funcionar.</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Existe src/agente_NOMBRE/ y python main.py NOMBRE “pregunta” responde con mi herramienta.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 1 · Tu agente">
+    <p class="kicker"><span class="part p1">Parte 1 · Tu agente</span>Paso 4 · terminal</p>
+    <h1>Probarlo solo, antes de conectarlo</h1>
+    <p class="sub">Primero sin servidor, con <code>--saltos</code>, para ver que llama a tu herramienta y que rechaza lo que no es de tu tema. Después levantado en tu puerto, con la ficha y un mensaje, igual que en el paso 6 de la clase.</p>
+    <div class="box term"><div class="head"><span>terminal · --saltos y --diagrama</span><span class="ok"></span><button>Copiar</button></div><pre><span class="c"># sin servidor, desde la raíz y con el .venv activo (cambia "jose" por tu nombre)</span>
+python main.py jose "¿Está caída la VPN?" --saltos
+<span class="c"># → model : llama a estado_servicio(servicio="vpn")</span>
+<span class="c"># → tools : "degradado: latencia alta desde las 09:00"</span>
+<span class="c"># → model : respuesta final</span>
+<span class="c"># Saltos: 3 · Herramientas: estado_servicio</span>
+
+python main.py jose "¿Qué vuelos hay a Lima?"
+<span class="c"># → "Eso no es de mi especialidad: yo veo TI y soporte técnico."</span>
+
+python main.py jose --diagrama
+<span class="c"># graph TD;  __start__ --> model;  model -. tools .-> tools;  tools --> model;  model -. end .-> __end__</span></pre></div>
+    <h2>Mac / Linux</h2>
+    <div class="box term"><div class="head"><span>terminal · servidor, ficha y mensaje</span><span class="ok"></span><button>Copiar</button></div><pre><span class="c"># terminal 1 · levantar tu agente en el 8003</span>
+uvicorn src.agente_jose.server:app --port 8003 --reload
+
+<span class="c"># terminal 2 · la ficha</span>
+curl -s http://127.0.0.1:8003/.well-known/agent-card.json | python3 -m json.tool
+
+<span class="c"># terminal 2 · un mensaje</span>
+CTX=$(python3 -c "import uuid; print(uuid.uuid4())")
+curl -s -X POST http://127.0.0.1:8003/ -H "Content-Type: application/json" -d "{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"message/send\",\"params\":{\"message\":{\"role\":\"user\",\"messageId\":\"m1\",\"contextId\":\"$CTX\",\"parts\":[{\"kind\":\"text\",\"text\":\"¿Está caída la VPN?\"}]}}}" | python3 -m json.tool</pre></div>
+    <h2>Windows · PowerShell</h2>
+    <div class="box term"><div class="head"><span>powershell · servidor, ficha y mensaje</span><span class="ok"></span><button>Copiar</button></div><pre><span class="c"># terminal 1 · levantar tu agente en el 8003</span>
+uvicorn src.agente_jose.server:app --port 8003 --reload
+
+<span class="c"># terminal 2 · la ficha</span>
+Invoke-RestMethod http://127.0.0.1:8003/.well-known/agent-card.json | ConvertTo-Json -Depth 10
+
+<span class="c"># terminal 2 · un mensaje</span>
+$ctx = [guid]::NewGuid().ToString()
+$cuerpo = @{ jsonrpc="2.0"; id="1"; method="message/send"; params=@{ message=@{ role="user"; messageId="m1"; contextId=$ctx; parts=@(@{ kind="text"; text="¿Está caída la VPN?" }) } } } | ConvertTo-Json -Depth 10
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8003/ -ContentType "application/json; charset=utf-8" -Body ([System.Text.Encoding]::UTF8.GetBytes($cuerpo)) | ConvertTo-Json -Depth 10</pre></div>
+    <ul class="ideas">
+      <li><b>Qué mirar:</b> en <code>--saltos</code>, que aparezca tu herramienta por su nombre. En la ficha, tu nombre en <code>name</code>. En la respuesta, el texto dentro de <code>artifacts</code>.</li>
+      <li><b>Si responde cosas de otro tema,</b> el problema está en <code>prompts.py</code>: la regla “si no es de tu tema, dilo en una frase” tiene que estar clara.</li>
+      <li><b>Si la herramienta no se llama,</b> revisa el docstring de la función en <code>tools.py</code>: es lo que el modelo lee para decidir usarla.</li>
+    </ul>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>evidencias/01-saltos.png</code>: la captura de <code>--saltos</code> con una pregunta de tu tema (se ve tu herramienta) y una de otro tema (la rechaza).</li><li>La salida de <code>--diagrama</code> pegada en el documento.</li><li>La respuesta del mensaje por curl o PowerShell, con el texto dentro de <code>artifacts</code>.</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Mi agente contesta por A2A en mi puerto y rechaza lo que no es de mi tema.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 1 · Tu agente">
+    <p class="kicker"><span class="part p1">Parte 1 · Tu agente</span>Paso 5 · prompt 2</p>
+    <h1>La ficha es tu currículum</h1>
+    <p class="sub">Cuando un compañero pregunte, su supervisor va a leer tu ficha junto a las de los demás y elegir una. No sabe nada de tu tema: solo tiene la descripción. Una ficha vaga hace que te manden preguntas que no son tuyas, o que nunca te elijan.</p>
+    <div class="cards" style="grid-template-columns:1fr 1fr">
+      <div><b>Ficha floja</b>“Agente de José. Ayuda con cosas de TI.”<small>El supervisor no sabe si “TI” incluye programar, comprar un computador o arreglar la VPN. Adivina.</small></div>
+      <div><b>Ficha clara</b>“Responde sobre el estado del wifi, la VPN, el correo y las impresoras de la oficina, y da pasos de soporte básico. No programa, no cotiza equipos ni gestiona cuentas.”<small>Dice qué sí y qué no. El supervisor elige sin dudar.</small></div>
+    </div>
+    <div class="box"><div class="head"><span>prompt 2 · copiar y pegar en OpenCode (cambia NOMBRE)</span><span class="ok"></span><button>Copiar</button></div><pre>Revisa la ficha de mi agente en src/agente_NOMBRE/server.py pensando en quién la va a leer: otro agente, el supervisor, que con cada pregunta decide si me la manda a mí o a otro. Él no sabe nada de mi tema; solo lee la ficha. Mejórala así:
+
+<b class="h">1) description. Dos frases. La primera dice qué sé, con temas concretos (no "ayudo con TI", sino "estado del wifi, la VPN, el correo y las impresoras de la oficina"). La segunda dice qué no hago, para que no me manden preguntas que no puedo responder.</b>
+
+<b class="h">2) skills. Una por herramienta: un name corto, una description de una línea y un ejemplo con una pregunta real, escrita como la haría una persona.</b>
+
+<b class="h">3) Al terminar, muéstrame la ficha final con el curl de /.well-known/agent-card.json y explícame en dos líneas cómo la usaría el supervisor para elegirme frente a un agente de viajes.</b></pre></div>
+    <div class="change"><p>Qué puedes cambiar</p><ol><li><b>Las skills:</b> son la lista de “lo que sé hacer” dentro de la ficha. Una por herramienta, cada una con una pregunta de ejemplo real.</li><li><b>La frase de “no hago”:</b> es la más importante. Evita que te lleguen preguntas que tu herramienta no puede responder. Cópiala de la fila “No hace” del blueprint.</li><li><b>Reinicia el servidor</b> después de cambiar la ficha: el supervisor de tus compañeros la lee cuando arranca, no cada vez.</li></ol></div>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>evidencias/02-ficha.json</code>: tu ficha final descargada con curl desde <code>/.well-known/agent-card.json</code>.</li><li>En el documento: la descripción antes y después del prompt 2, y por qué la cambiaste.</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Mi ficha dice qué sé y qué no hago, y cada skill tiene una pregunta de ejemplo.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 2 · Internet">
+    <p class="kicker"><span class="part p2">Parte 2 · Internet</span>Paso 6 · terminal</p>
+    <h1>Salir a internet con Cloudflare</h1>
+    <p class="sub">Lo mismo del paso 10 de la clase, pero con tu agente en tu puerto. El túnel te da una dirección https; la pones en <code>URL_PUBLICA</code> para que tu ficha la publique, y la compartes en el chat con tu nombre y tu skill.</p>
+    <div class="box term"><div class="head"><span>terminal · túnel, .env y lo que pegas en el chat</span><span class="ok"></span><button>Copiar</button></div><pre><span class="c"># terminal 1 · tu agente (ya corriendo en el 8003)</span>
+uvicorn src.agente_jose.server:app --port 8003
+
+<span class="c"># terminal 2 · el túnel apuntando a TU puerto</span>
+cloudflared tunnel --url http://127.0.0.1:8003
+<span class="c"># ... imprime algo como:  https://verde-luna-456.trycloudflare.com</span>
+
+<span class="c"># en tu .env, y reinicia la terminal 1 (así tu ficha publica la dirección pública):</span>
+URL_PUBLICA=https://verde-luna-456.trycloudflare.com
+
+<span class="c"># comprueba desde el teléfono o desde otro computador que la ficha se ve:</span>
+curl -s https://verde-luna-456.trycloudflare.com/.well-known/agent-card.json | python3 -m json.tool
+
+<span class="c"># pega en el chat de la clase UNA línea con este formato:</span>
+José · TI y soporte técnico · https://verde-luna-456.trycloudflare.com</pre></div>
+    <div class="cards">
+      <div><b>Una línea en el chat</b>Nombre · skill · dirección. Así todos saben a quién están sumando y qué sabe.</div>
+      <div><b>La dirección cambia</b>Cada vez que arrancas cloudflared sale otra. Si lo reinicias, vuelve a pegarla.</div>
+      <div><b>Deja las dos terminales abiertas</b>Si cierras el túnel o el agente, tus compañeros ven “no responde” en su catálogo.</div>
+      <div><b>Cualquiera con la URL puede usarlo</b>Y gasta tu clave. Compártela solo en el chat de la clase y cierra el túnel con Ctrl+C al terminar.</div>
+    </div>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>evidencias/03-tunel.png</code>: la terminal de cloudflared con tu URL y, al lado, tu ficha abierta desde el teléfono o desde el computador de un compañero.</li><li>La fila “Dirección pública” de tu blueprint completada con esa URL (aunque después cambie).</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Mi ficha se ve desde fuera de mi computador y publica mi dirección https.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 3 · Hablar entre agentes">
+    <p class="kicker"><span class="part p3">Parte 3 · Hablar entre agentes</span>Paso 7 · terminal</p>
+    <h1>Sumar a los compañeros</h1>
+    <p class="sub">Copia dos o tres direcciones del chat a <code>URLS_AGENTES</code>, reinicia tu coordinador y mira el catálogo: ahora tiene a viajes, restaurantes y a tus compañeros. Pregunta algo que no es de tu tema y sigue el camino con <code>--saltos</code>.</p>
+    <div class="diagram"><svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,sans-serif" font-size="13">
+<defs><marker id="tcS" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4c1d95"/></marker></defs>
+<rect x="20" y="20" width="380" height="170" rx="12" fill="#ede9fe" stroke="#a78bfa" stroke-width="2"/>
+<text x="210" y="44" text-anchor="middle" font-weight="700" fill="#4c1d95" font-size="12" letter-spacing=".08em">TU COORDINADOR · CATÁLOGO AL ARRANCAR</text>
+<circle cx="52" cy="66" r="4" fill="#6d28d9"/><text x="64" y="70" font-size="12" fill="#1e293b" font-weight="700">Agente de viajes</text><text x="230" y="70" font-size="11" fill="#64748b">vuelos y hoteles · :8000</text><circle cx="52" cy="96" r="4" fill="#6d28d9"/><text x="64" y="100" font-size="12" fill="#1e293b" font-weight="700">Agente de restaurantes</text><text x="230" y="100" font-size="11" fill="#64748b">dónde comer · :8001</text><circle cx="52" cy="126" r="4" fill="#047857"/><text x="64" y="130" font-size="12" fill="#1e293b" font-weight="700">Agente de Ana</text><text x="230" y="130" font-size="11" fill="#64748b">contabilidad · túnel</text><circle cx="52" cy="156" r="4" fill="#b45309"/><text x="64" y="160" font-size="12" fill="#1e293b" font-weight="700">Agente de Luis</text><text x="230" y="160" font-size="11" fill="#64748b">cocina · túnel</text>
+<path d="M400 105 H450" stroke="#4c1d95" stroke-width="2" fill="none" marker-end="url(#tcS)"/>
+<rect x="450" y="65" width="170" height="80" rx="12" fill="#fff" stroke="#a78bfa" stroke-width="2"/>
+<text x="535" y="92" text-anchor="middle" font-weight="700" fill="#4c1d95" font-size="12">supervisor</text>
+<text x="535" y="110" text-anchor="middle" fill="#64748b" font-size="11">lee la pregunta y</text>
+<text x="535" y="126" text-anchor="middle" fill="#64748b" font-size="11">elige por las fichas</text>
+<path d="M620 105 H670" stroke="#4c1d95" stroke-width="2" fill="none" marker-end="url(#tcS)"/>
+<rect x="670" y="50" width="170" height="110" rx="12" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+<text x="755" y="76" text-anchor="middle" font-weight="700" fill="#065f46" font-size="12">agente_remoto</text>
+<text x="755" y="98" text-anchor="middle" fill="#334155" font-size="11">"[Agente de Ana]</text>
+<text x="755" y="114" text-anchor="middle" fill="#334155" font-size="11">El IVA se declara</text>
+<text x="755" y="130" text-anchor="middle" fill="#334155" font-size="11">hasta el día 12…"</text>
+<text x="755" y="150" text-anchor="middle" fill="#94a3b8" font-size="10">o sin_agente si eligió "ninguno"</text>
+<text x="20" y="205" fill="#94a3b8" font-size="10.5" letter-spacing=".08em">LO ÚNICO NUEVO ES LA LISTA: EL SUPERVISOR ES EL MISMO DEL PASO 9 DE LA CLASE</text>
+</svg></div>
+    <div class="box term"><div class="head"><span>terminal · .env, coordinador y tres preguntas</span><span class="ok"></span><button>Copiar</button></div><pre><span class="c"># en tu .env: las direcciones de tus compañeros, separadas por comas (copia 2 o 3 del chat)</span>
+URLS_AGENTES=https://verde-luna-456.trycloudflare.com,https://rojo-sol-789.trycloudflare.com
+
+<span class="c"># terminal 3 · tu coordinador (reinícialo para que vuelva a leer las fichas)</span>
+uvicorn src.coordinador.server:app --port 8002
+<span class="c"># → Supervisor con 4 agentes     (viajes, restaurantes y los dos compañeros)</span>
+
+<span class="c"># terminal 4 · pregunta algo que NO es de tu tema y mira a quién se lo manda</span>
+python main.py coordinador "¿Cómo declaro el IVA este mes?" --saltos
+<span class="c"># → supervisor     : agente="Agente de Ana" · motivo="pregunta de contabilidad"</span>
+<span class="c"># → agente_remoto  : "[Agente de Ana] El IVA se declara hasta el día 12 con el formulario 29..."</span>
+<span class="c"># Saltos: 2</span>
+
+python main.py coordinador "¿Cuánto cuesta un vuelo a Lima?" --saltos
+<span class="c"># → supervisor     : agente="Agente de viajes"</span>
+
+python main.py coordinador "¿Quién ganó el mundial de 1962?" --saltos
+<span class="c"># → supervisor     : agente="ninguno"</span>
+<span class="c"># → sin_agente     : "No tengo un agente para eso. Puedo ayudarte con: ..."</span></pre></div>
+    <ul class="ideas">
+      <li><b>“Supervisor con N agentes”:</b> si N es menor que lo que esperabas, alguna dirección no respondió. El coordinador avisa en una línea cuál; pídele al compañero que revise su túnel.</li>
+      <li><b>El motivo del supervisor</b> te dice por qué eligió a ese agente. Si eligió mal, casi siempre es la ficha del compañero: es su currículum, no el tuyo, el que está flojo.</li>
+      <li><b>Nombres repetidos:</b> si dos compañeros se llaman “Agente de José”, el supervisor no los distingue. Cada ficha con nombre propio.</li>
+    </ul>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>evidencias/04-catalogo.png</code>: la terminal del coordinador con “Supervisor con N agentes”, donde N incluye al menos dos agentes de otros computadores.</li><li><code>compañeros.md</code>: nombre, skill, URL y la ficha JSON de cada agente ajeno que sumaron (así sabemos de quién era cada uno).</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Mi coordinador tiene en su catálogo a agentes que corren en otros computadores.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 3 · Hablar entre agentes">
+    <p class="kicker"><span class="part p3">Parte 3 · Hablar entre agentes</span>Paso 8 · en grupo</p>
+    <h1>La ronda de preguntas</h1>
+    <p class="sub">Cada persona hace tres preguntas a su coordinador y anota a quién fue cada una. La gracia es ver al supervisor elegir entre personas reales, y descubrir qué fichas están bien escritas y cuáles no.</p>
+    <table>
+      <tr><th>#</th><th>Qué preguntar</th><th>A quién debería ir</th><th>Qué anotar</th></tr>
+      <tr><td>1</td><td>Algo de <b>tu propia skill</b>, con tu agente sumado a tu coordinador.</td><td>A ti mismo, como <code>[Agente de NOMBRE]</code>.</td><td>¿Usó tu herramienta? (míralo en tu terminal 1).</td></tr>
+      <tr><td>2</td><td>Algo de la <b>skill de un compañero</b>, escrito como lo preguntaría alguien que no sabe del tema.</td><td>Al compañero, por el túnel.</td><td>El motivo del supervisor y si la respuesta sirve.</td></tr>
+      <tr><td>3</td><td>Algo que <b>nadie</b> en el catálogo sabe.</td><td>A nadie: “ninguno” y la lista de lo que sí hay.</td><td>Si algún agente la “robó”, su ficha promete de más.</td></tr>
+    </table>
+    <div class="sala"><p>Para comentar en el documento</p>¿Qué ficha fue la que mejor eligió el supervisor, y qué decía? ¿Hubo alguna pregunta que dos agentes podrían responder? ¿Cómo la resolvió? ¿Qué cambiarían de su propia ficha después de la ronda?</div>
+    <div class="entrega"><p>Entregables de este paso</p><ul><li><code>evidencias/05-ronda.png</code>: las tres preguntas con <code>--saltos</code>, donde se vea el agente elegido, el motivo y la respuesta con “[Agente de …]”.</li><li>En el documento: la tabla de la ronda llena (pregunta, a quién fue, si estuvo bien) por cada integrante, y las respuestas a las preguntas de arriba.</li></ul></div>
+    <div class="logre"><b>Lo logré ✓</b><span>Una pregunta mía llegó al agente de un compañero y volvió con su nombre entre corchetes.</span></div>
+  </section>
+  <section class="slide" data-parte="Parte 3 · Hablar entre agentes">
+    <p class="kicker"><span class="part p3">Parte 3 · Hablar entre agentes</span>Paso 9 · entrega</p>
+    <h1>Entrega y evaluación</h1>
+    <p class="sub">Un solo zip por grupo. Dentro va el proyecto completo de la clase con los agentes del grupo agregados, las evidencias de cada paso y un documento. Si falta el código o el documento, no se puede evaluar.</p>
+    <div class="box term"><div class="head"><span>estructura del zip de entrega</span><span class="ok"></span><button>Copiar</button></div><pre>grupo-N-taller-a2a.zip
+├── documento-entrega.pdf     integrantes, grupo, blueprints, evidencias, ronda
+├── blueprint-NOMBRE.md       uno por integrante
+├── compañeros.md             nombre, skill, URL y ficha JSON de cada agente ajeno
+├── proyecto/                 el proyecto COMPLETO de la clase + sus agentes
+│   ├── AGENTS.md · main.py · requirements.txt · .env.example · README.md
+│   ├── src/comun/ · src/agente_viajes/ · src/agente_restaurantes/
+│   ├── src/coordinador/      con URLS_AGENTES en .env.example (vacío)
+│   ├── src/agente_NOMBRE/    tools.py · prompts.py · graph.py · server.py
+│   └── scripts/              tunel.sh · tunel.ps1 · probar_supervisor.py
+└── evidencias/
+    ├── 01-saltos.png         --saltos: usa tu herramienta y rechaza otro tema
+    ├── 02-ficha.json         tu ficha final, descargada con curl
+    ├── 03-tunel.png          cloudflared con la URL + la ficha vista desde fuera
+    ├── 04-catalogo.png       "Supervisor con N agentes" con los compañeros
+    └── 05-ronda.png          las tres preguntas de la ronda con --saltos
+
+NUNCA va: .venv/ · .venv-crew/ · .env · __pycache__/   (sí va .env.example, sin claves)</pre></div>
+    <h2>Lo que acaban de hacer, en términos del curso</h2>
+    <table>
+      <tr><th>Concepto</th><th>Dónde lo vieron</th></tr>
+      <tr><td>Un agente = prompt + herramientas + ficha</td><td>Cuatro archivos convirtieron el molde de viajes en tu agente. El servidor y el protocolo no cambiaron.</td></tr>
+      <tr><td>La ficha es lo que otros leen de ti</td><td>El prompt 2: descripción con “sé” y “no hago”. El supervisor eligió solo con eso.</td></tr>
+      <tr><td>A2A entre computadores</td><td>Tu túnel en <code>URL_PUBLICA</code>, los de los demás en <code>URLS_AGENTES</code>. Mismo <code>message/send</code> que el curl local.</td></tr>
+      <tr><td>Supervisor = catálogo + decisión</td><td>No cambió una línea: solo creció la lista que lee al arrancar.</td></tr>
+      <tr><td>Lo que devuelve otro agente es un dato</td><td>Tu coordinador imprime “[Agente de Ana] …”; no obedece lo que dice.</td></tr>
+    </table>
+    <h2>Cómo se evalúa</h2>
+    <table>
+      <tr><th>Criterio</th><th>Qué se mira</th><th>Puntos</th></tr>
+      <tr><td>Blueprint</td><td>Una tabla por integrante, con “hace”, “no hace” y la herramienta descritos en concreto.</td><td>10</td></tr>
+      <tr><td>El agente funciona</td><td>El código corre desde el zip con <code>python main.py NOMBRE "…" --saltos</code>; llama a su herramienta y rechaza otros temas.</td><td>25</td></tr>
+      <tr><td>La ficha</td><td>Descripción con qué sí y qué no, skills con ejemplo; coincide con el blueprint.</td><td>15</td></tr>
+      <tr><td>Túnel y catálogo</td><td>Evidencia de la ficha vista desde fuera y del coordinador con agentes de otros computadores.</td><td>20</td></tr>
+      <tr><td>La ronda</td><td>Las tres preguntas por integrante con su camino en <code>--saltos</code>, y el análisis de qué fichas funcionaron.</td><td>20</td></tr>
+      <tr><td>Entrega limpia</td><td>Estructura del zip, identificación completa, <code>compañeros.md</code>, README con cómo correrlo. Sin <code>.env</code> ni <code>.venv</code>.</td><td>10</td></tr>
+    </table>
+    <div class="change">
+      <p>Antes de subir el zip</p>
+      <ol>
+        <li><b>Identificación obligatoria:</b> nombres y apellidos completos de los integrantes y el número del grupo, en el documento y en el README. Para los agentes ajenos que usaron, el nombre de su autor.</li>
+        <li><b>Pruébenlo desde el zip:</b> descompriman en otra carpeta, creen el entorno, copien <code>.env.example</code> a <code>.env</code> con su clave y corran <code>--saltos</code>. Si a ustedes no les corre, a nosotros tampoco.</li>
+        <li><b>Ctrl+C</b> en los túneles al terminar: mientras estén abiertos, cualquiera con la URL gasta su clave.</li>
+      </ol>
+    </div>
+  </section>
+  <section class="slide extra" data-parte="Parte 3 · Hablar entre agentes" data-extra="1">
+    <p class="kicker"><span class="part p4">Extra · no se evalúa</span>Si les sobra tiempo</p>
+    <h1>Tres ideas para seguir</h1>
+    <ul class="ideas">
+      <li><b>Datos de verdad.</b> Cambia el diccionario de <code>tools.py</code> por una API real de tu tema (el clima, una hoja de cálculo, una base de datos). La ficha no cambia: los demás ni se enteran.</li>
+      <li><b>Dos skills en una persona.</b> Un segundo agente tuyo en otro puerto con otra especialidad y su propio túnel. Tu coordinador los tiene a los dos y elige por la ficha, igual que con los compañeros.</li>
+      <li><b>Que te pregunten a ti, no al coordinador.</b> Pídele a un compañero de otro grupo que ponga tu URL en su <code>URLS_AGENTES</code> y haga la ronda desde su computador: ahora eres tú el que aparece como “[Agente de …]” en la terminal de otro.</li>
+    </ul>
+    <p class="hint">Si quieren una página para ver y probar sus agentes, miren la lámina extra de la clase “A2A paso a paso”: una sola oración a OpenCode, o <code>@spec</code> y <code>@implementador</code> para hacerlo con más control.</p>
+  </section>
+</div>
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prev = document.getElementById('prev'), next = document.getElementById('next'), where = document.getElementById('where'), dots = document.getElementById('dots');
+  let i = 0;
+  slides.forEach((s, n) => { const d = document.createElement('span'); if (s.dataset.extra) d.classList.add('extra'); d.addEventListener('click', () => go(n)); dots.appendChild(d); });
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('on', k === i));
+    Array.from(dots.children).forEach((d, k) => d.classList.toggle('on', k === i));
+    const parte = slides[i].dataset.parte; const pasos = slides.filter(s => !s.dataset.extra); const total = pasos.length;
+    where.textContent = (slides[i].dataset.extra ? 'Extra' : 'Paso ' + (pasos.indexOf(slides[i]) + 1) + ' de ' + total) + (parte ? ' · ' + parte : '');
+    prev.disabled = i === 0; next.disabled = i === slides.length - 1;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+  prev.addEventListener('click', () => go(i - 1));
+  next.addEventListener('click', () => go(i + 1));
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1); });
+  document.querySelectorAll('.box').forEach(box => {
+    const btn = box.querySelector('button'), ok = box.querySelector('.ok'), pre = box.querySelector('pre');
+    let t;
+    btn.addEventListener('click', async () => {
+      const text = pre.textContent; let copied = false;
+      try { await navigator.clipboard.writeText(text); copied = true; }
+      catch { const a = document.createElement('textarea'); a.value = text; a.style.cssText = 'position:fixed;left:-9999px'; document.body.appendChild(a); a.select(); try { copied = document.execCommand('copy'); } catch {} a.remove(); }
+      ok.textContent = copied ? 'Copiado' : 'Selecciona y Cmd/Ctrl+C'; clearTimeout(t); t = setTimeout(() => ok.textContent = '', 3000);
+    });
+  });
+  go(0);
+})();
+</script>
+</body>
+</html>

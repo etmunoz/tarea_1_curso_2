@@ -68,3 +68,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 51 | [Interop nosotros→Gustavo (dialecto SendMessage)](51-interop-sendmessage-gustavo.md) | [respuesta](../respuestas/51-interop-sendmessage-gustavo.md) |
 | 52 | [Confirmar interop contra el repo de Gustavo + cache de método](52-confirmar-repo-gustavo-y-cache-metodo.md) | [respuesta](../respuestas/52-confirmar-repo-gustavo-y-cache-metodo.md) |
 | 53 | [Fichas automáticas (vigilante que las re-aplica solo)](53-fichas-automaticas-vigilante.md) | [respuesta](../respuestas/53-fichas-automaticas-vigilante.md) |
+| 54 | [Windows: evidencias contra el Mac con el código final (guardias)](54-windows-evidencias-con-guardias.md) | [respuesta](../respuestas/54-windows-evidencias-con-guardias.md) |

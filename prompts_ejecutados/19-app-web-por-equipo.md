@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/19-app-web-por-equipo.md`  
 > **Objetivo:** 19 · App web por equipo para probar agentes (uno a uno y vía coordinador)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2140 · **Última modificación:** 20261111 1410
+> **Creación:** 20261110 2140 · **Última modificación:** 20261111 1413
 <!--/encabezado-grupo-->
 
 # 19 · App web por equipo para probar agentes (uno a uno y vía coordinador)

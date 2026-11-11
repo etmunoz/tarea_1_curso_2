@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/40-publicar-repo-y-purgar-email.md`  
 > **Objetivo:** 40 · Hacer público el repo y purgar el email del historial  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2312 · **Última modificación:** 20261111 1410
+> **Creación:** 20261110 2312 · **Última modificación:** 20261111 1413
 <!--/encabezado-grupo-->
 
 # 40 · Hacer público el repo y purgar el email del historial

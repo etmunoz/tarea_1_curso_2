@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/48-robustecimiento-final-a2a.md`  
 > **Objetivo:** Respuesta 48 · Robustecimiento final del Taller A2A (5 correcciones)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1410 · **Última modificación:** 20261111 1410
+> **Creación:** 20261111 1410 · **Última modificación:** 20261111 1413
 <!--/encabezado-grupo-->
 
 # Respuesta 48 · Robustecimiento final del Taller A2A (5 correcciones)
@@ -79,3 +79,16 @@ $ uv run pytest -q
 - El grafo compila; imports OK; sin secretos en el diff.
 
 **Siguiente paso (requiere tu autorización):** `git push` de la rama y/o merge a `main`.
+
+## G. Decisión de entrega (documentado)
+
+- **Push:** se empuja **solo la rama `prompt-48-robustez`** a GitHub; **NO se mergea ni se
+  pushea a `main`** por decisión del grupo: hay que esperar a que Gustavo pruebe su endpoint y
+  a que **nosotros accedamos a su agente** para sacar esa evidencia antes de integrar.
+- **`main` queda intacto** sirviendo la demo con Gustavo (el puente A2A clásico y el
+  `langgraph dev` siguen corriendo desde el directorio principal).
+- **Pendiente para integrar a `main`:** (1) evidencia del sentido nosotros→Gustavo cuando su
+  `message/send` funcione; (2) merge de esta rama; (3) regenerar carpeta de entrega/zip desde
+  `main` (toman el nombre correcto `tarea_1_curso_2/`).
+- **Nota de índice:** en `main` la fila 48 de `prompts_ejecutados/README.md` se coló en el
+  commit 49 y su respuesta vive en esta rama; se resuelve al mergear.

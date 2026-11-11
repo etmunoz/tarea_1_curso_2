@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/17-redis-distribuido-cloudflare.md`  
 > **Objetivo:** 17 · Respuesta — Redis distribuido por Cloudflare (Ezequiel hospeda, Tomás usa)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2123 · **Última modificación:** 20261111 1410
+> **Creación:** 20261110 2123 · **Última modificación:** 20261111 1413
 <!--/encabezado-grupo-->
 
 # 17 · Respuesta — Redis distribuido por Cloudflare (Ezequiel hospeda, Tomás usa)

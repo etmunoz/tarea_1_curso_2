@@ -4,7 +4,7 @@
 # Objetivo: mac_tunel.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1224
+# Última modificación: 20261111 1227
 # --8<-- fin-encabezado-grupo
 
 # Mac · abre un túnel https a tu langgraph dev (:2024). Copia la URL que imprime.

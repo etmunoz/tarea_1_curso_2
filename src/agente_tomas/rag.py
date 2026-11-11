@@ -3,7 +3,7 @@
 # Objetivo: RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261111 1224
+# Última modificación: 20261111 1227
 # --8<-- fin-encabezado-grupo
 
 """RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).

@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1224
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1227
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -277,7 +277,51 @@ __start__ → guardia_entrada → enrutar → {consultar | sin_agente} → guard
 - `evidencias/09-diagramas.md` — índice con el **mermaid auténtico** del grafo (extraído
   del grafo compilado) + los dos SVG.
 
-## 12. Evidencias incluidas
+## 12. Limitaciones y trabajo futuro
+
+Este trabajo es un prototipo funcional y honesto; dejamos registradas sus limitaciones
+y cómo se extendería.
+
+**Limitaciones actuales:**
+
+- **Túneles efímeros.** Usamos *quick tunnels* de Cloudflare (`trycloudflare.com`): la
+  URL cambia en cada corrida y hay que re-compartirla, y no tienen autenticación ni DNS
+  fijo. Cualquiera con la URL puede hablarle al agente mientras el túnel vive.
+- **Fichas volátiles.** `langgraph dev` recarga en caliente y **borra las Agent Cards**;
+  hoy se recuperan corriendo `configurar_fichas.py` a mano tras cada cambio.
+- **Datos simulados.** Varios catálogos (técnicas/modelos de Ezequiel, precios de cocina)
+  son datos de ejemplo, no fuentes de producción.
+- **Guardrails heurísticos.** La detección de inyección/jailbreak y de secretos es por
+  **expresiones regulares**: cubre los casos comunes, pero no es exhaustiva; un atacante
+  decidido podría redactar algo fuera de los patrones. No hay clasificador semántico.
+- **Enrutado dependiente del LLM.** El supervisor usa Gemini para elegir agente; en
+  preguntas ambiguas puede equivocarse, y no hay reintento ni confirmación.
+- **Memoria no persistente.** El estado por hilo usa `InMemorySaver`: se pierde al
+  reiniciar el servidor.
+- **Allow-list grueso.** La lista blanca es por **agente/grafo**, no por herramienta fina
+  dentro de un agente; y no hay autenticación ni firma entre agentes A2A.
+- **Pendientes de entrega.** Número de grupo como marcador (`NN`), blueprints de Fabio y
+  Gustavo por completar, y el email del commit `4c89013` quedó en el historial por
+  decisión del grupo (ver `respuestas/40-…`).
+
+**Trabajo futuro:**
+
+- **Túnel con identidad:** *named tunnel* + dominio propio y **Cloudflare Access**
+  (autenticación) en lugar del túnel efímero.
+- **Autenticación A2A:** tokens/firmas entre agentes y allow-list **por skill/herramienta**,
+  no solo por agente.
+- **Guardrails reforzados:** clasificador LLM/ML para inyección y PII, políticas de salida
+  más ricas, *rate limiting* y **auditoría** (log de bloqueos y redacciones).
+- **Resiliencia extra:** reintentos con *circuit-breaker*, *health-check* periódico del
+  catálogo y caché de respuestas.
+- **Persistencia:** *checkpointer* en Redis/SQLite para que la memoria de los hilos
+  sobreviva reinicios.
+- **Observabilidad:** trazas (LangSmith) y métricas de enrutamiento (aciertos del supervisor).
+- **Datos reales:** reemplazar los catálogos simulados por fuentes reales (p. ej. un
+  *tracking* de experimentos para Ezequiel, una base de precios para cocina).
+- **CI:** GitHub Actions corriendo `pytest` + `aplicar_encabezados.py --check` en cada push.
+
+## 13. Evidencias incluidas
 
 Lista y cómo producir cada una: `evidencias/README.md`.
 
@@ -288,7 +332,7 @@ Lista y cómo producir cada una: `evidencias/README.md`.
 - `06-robustez-mac.md` — resiliencia + guardrails + allow-list (prompts 44-47).
 - `07-grafo-coordinador.svg`, `08-arquitectura.svg`, `09-diagramas.md` — diagramas.
 
-## 13. Convenciones y trazabilidad del grupo
+## 14. Convenciones y trazabilidad del grupo
 
 - **Encabezado de grupo** en todo archivo que admite comentarios (verificado con
   `tools/aplicar_encabezados.py --check`).

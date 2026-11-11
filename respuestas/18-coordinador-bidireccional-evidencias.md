@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/18-coordinador-bidireccional-evidencias.md`  
 > **Objetivo:** 18 · Respuesta — Coordinador bidireccional y evidencias en ambos PC  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2136 · **Última modificación:** 20261111 1224
+> **Creación:** 20261110 2136 · **Última modificación:** 20261111 1227
 <!--/encabezado-grupo-->
 
 # 18 · Respuesta — Coordinador bidireccional y evidencias en ambos PC

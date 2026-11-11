@@ -3,7 +3,7 @@
 # Objetivo: Genera la evidencia de robustez del coordinador: resiliencia + guardrails.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1224
+# Última modificación: 20261111 1227
 # --8<-- fin-encabezado-grupo
 
 """Genera la evidencia de robustez del coordinador: resiliencia + guardrails.

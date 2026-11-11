@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/40-publicar-repo-y-purgar-email.md`  
 > **Objetivo:** 40 · Respuesta — Repo público y email purgado  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2312 · **Última modificación:** 20261111 1224
+> **Creación:** 20261110 2312 · **Última modificación:** 20261111 1227
 <!--/encabezado-grupo-->
 
 # 40 · Respuesta — Repo público y email purgado

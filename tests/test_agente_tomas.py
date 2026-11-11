@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de las herramientas del agente de Tomás (Maestro Reiki). Sin API key ni servidor.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1224
+# Última modificación: 20261111 1227
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de las herramientas del agente de Tomás (Maestro Reiki). Sin API key ni servidor."""

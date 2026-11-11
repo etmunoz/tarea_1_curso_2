@@ -1,5 +1,5 @@
 <!--encabezado-grupo-->
-> **Archivo:** `entrega/tarea_1_curso_2/companeros.md`  
+> **Archivo:** `entrega/companeros.md`  
 > **Objetivo:** Compañeros · agentes ajenos sumados al coordinador  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
 > **Creación:** 20261110 1941 · **Última modificación:** 20261111 0743

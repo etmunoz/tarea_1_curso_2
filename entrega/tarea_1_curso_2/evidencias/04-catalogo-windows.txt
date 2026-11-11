@@ -1,5 +1,5 @@
 # --8<-- encabezado-grupo
-# Archivo: entrega/tarea_1_curso_2/evidencias/04-catalogo-windows.txt
+# Archivo: evidencias/04-catalogo-windows.txt
 # Objetivo: 04-catalogo-windows.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2041

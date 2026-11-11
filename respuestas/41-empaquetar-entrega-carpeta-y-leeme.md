@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/41-empaquetar-entrega-carpeta-y-leeme.md`  
 > **Objetivo:** Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2322 · **Última modificación:** 20261111 0730
+> **Creación:** 20261110 2322 · **Última modificación:** 20261111 0735
 <!--/encabezado-grupo-->
 
 # Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME

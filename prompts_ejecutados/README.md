@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 0730
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 0735
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -57,3 +57,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 42 | [Windows: capturar las evidencias finales y dejarlas en la entrega](42-windows-capturar-evidencias-finales.md) | [respuesta](../respuestas/42-windows-capturar-evidencias-finales.md) |
 | 43 | [Mac: integrar evidencias de Windows y reempaquetar la entrega final](43-mac-pull-windows-y-reempaquetar-final.md) | [respuesta](../respuestas/43-mac-pull-windows-y-reempaquetar-final.md) |
 | 44 | [Resiliencia de agentes remotos y guardrails](44-resiliencia-remota-y-guardrails.md) | [respuesta](../respuestas/44-resiliencia-remota-y-guardrails.md) |
+| 45 | [Forzar el estado controlado end-to-end (remoto caído)](45-forzar-estado-controlado-end-to-end.md) | [respuesta](../respuestas/45-forzar-estado-controlado-end-to-end.md) |

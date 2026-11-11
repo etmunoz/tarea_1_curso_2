@@ -3,7 +3,7 @@
 # Objetivo: Genera la evidencia de robustez del coordinador: resiliencia + guardrails.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 0730
+# Última modificación: 20261111 0735
 # --8<-- fin-encabezado-grupo
 
 """Genera la evidencia de robustez del coordinador: resiliencia + guardrails.
@@ -105,6 +105,40 @@ def _seccion_resiliencia(lineas: list[str], remoto: str) -> None:
         lineas.append("\n_(coordinador end-to-end omitido: sin GOOGLE_API_KEY)_\n")
 
 
+def _seccion_forzado(lineas: list[str], remoto: str) -> None:
+    """Objetivo: forzar el camino END-TO-END del estado controlado. Si la ficha del remoto
+    está en caché (CARD_TTL) de antes de caerse, el supervisor lo ELIGE y recién al consultar
+    choca con el túnel caído → consultar devuelve el estado controlado (ruta agente_no_disponible).
+    Entradas: lineas (acumulador), remoto (url caído). Salida: None."""
+    if not os.environ.get("GOOGLE_API_KEY"):
+        lineas.append("\n## 3. End-to-end forzado (omitido: sin GOOGLE_API_KEY)\n")
+        return
+
+    import time  # noqa: PLC0415
+    import uuid  # noqa: PLC0415
+
+    from langchain_core.messages import HumanMessage  # noqa: PLC0415
+
+    from src.coordinador import catalogo  # noqa: PLC0415
+    from src.coordinador.graph import graph  # noqa: PLC0415
+    from src.fichas import FICHAS  # noqa: PLC0415
+
+    os.environ["A2A_GRAFOS_LOCALES"] = "agente_ezequiel,agente_cocina"
+    os.environ["URLS_AGENTES"] = f"{remoto}#agente_tomas"
+    # Siembro la ficha de Tomás en la caché como si se hubiera leído antes de caerse:
+    # así el supervisor lo ve DISPONIBLE y lo elige, y el fallo ocurre al consultar.
+    catalogo._cards[(remoto, "agente_tomas")] = (time.monotonic(), FICHAS["agente_tomas"])
+
+    lineas.append("\n## 3. End-to-end forzado: el supervisor elige al remoto y se cae al consultar\n")
+    lineas.append(f"- Ficha de Tomás sembrada en caché (CARD_TTL) para que el supervisor la vea "
+                  f"disponible; el túnel `{remoto}` sigue caído.\n")
+    p = "¿Qué símbolos se aprenden en el nivel 2 de Reiki?"
+    hilo = {"configurable": {"thread_id": f"forz-{uuid.uuid4().hex[:8]}"}}
+    r = graph.invoke({"messages": [HumanMessage(content=p)]}, hilo)
+    ruta = " → ".join(r.get("ruta", []))
+    lineas.append(f"- **> {p}**\n  - ruta: **{ruta}**\n  - {r.get('respuesta', '')}\n")
+
+
 def _seccion_guardrails(lineas: list[str]) -> None:
     """Objetivo: evidenciar los tres guardrails. Entradas: lineas (acumulador). Salida: None."""
     lineas.append("\n## 2. Guardrails\n")
@@ -144,6 +178,7 @@ def main() -> None:
               "Resiliencia ante agente remoto caído + guardrails (entrada/salida/A2A). "
               "Prompt 44.\n"]
     _seccion_resiliencia(lineas, args.remoto.rstrip("/"))
+    _seccion_forzado(lineas, args.remoto.rstrip("/"))
     _seccion_guardrails(lineas)
 
     EV.mkdir(exist_ok=True)

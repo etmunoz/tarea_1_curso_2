@@ -3,7 +3,7 @@
 # Objetivo: System prompt del agente conversacional. Separado del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261111 0730
+# Última modificación: 20261111 0735
 # --8<-- fin-encabezado-grupo
 
 """System prompt del agente conversacional. Separado del grafo (regla de AGENTS.md)."""

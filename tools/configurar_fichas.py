@@ -3,7 +3,7 @@
 # Objetivo: Aplica las fichas (Agent Card) a los agentes de un servidor `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 0730
+# Última modificación: 20261111 0735
 # --8<-- fin-encabezado-grupo
 
 """Aplica las fichas (Agent Card) a los agentes de un servidor `langgraph dev`.

@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/06-robustez-mac.md`  
 > **Objetivo:** Robustez del coordinador · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0729 · **Última modificación:** 20261111 0730
+> **Creación:** 20261111 0730 · **Última modificación:** 20261111 0735
 <!--/encabezado-grupo-->
 
 # Robustez del coordinador · evidencia (mac)
@@ -16,8 +16,8 @@ Resiliencia ante agente remoto caído + guardrails (entrada/salida/A2A). Prompt 
 **Catálogo construido (los locales siguen; el remoto queda marcado):**
 
 ```
-- Agente de Ezequiel: Ingeniero de IA y Data Scientist: recomienda qué técnica de machine learning usar para un problema, qué métricas mirar y qué modelo elegir según el tipo de dato. No programa por ti, no entrena modelos reales y no responde temas fuera de IA/Data Science. (skills: Agente de Ezequiel Capabilities)
-- Agente de cocina chilena: Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta (costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina. (skills: Agente de cocina chilena Capabilities)
+- agente_ezequiel: agente_ezequiel assistant (skills: agente_ezequiel Capabilities)
+- agente_cocina: Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta (costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina. (skills: agente_cocina Capabilities)
 - agente_tomas: (no disponible ahora — intentar más tarde)
 ```
 
@@ -34,11 +34,20 @@ Resiliencia ante agente remoto caído + guardrails (entrada/salida/A2A). Prompt 
 
 - **> ¿Qué símbolos se aprenden en el nivel 2 de Reiki?**
   - ruta: guardia_entrada → supervisor → sin_agente
-  - No tengo un agente para eso. Puedo ayudarte con: Agente de Ezequiel, Agente de cocina chilena, agente_tomas.
+  - No tengo un agente para eso. Puedo ayudarte con: agente_ezequiel, agente_cocina, agente_tomas.
 
 - **> ¿Qué técnica uso si tengo desbalance de clases?**
-  - ruta: guardia_entrada → supervisor → agente_local
-  - [Agente de Ezequiel] Para el desbalance de clases, te recomiendo usar class weights, técnicas de resampleo como SMOTE u undersampling, y métricas como F1 o PR-AUC. Esto ayuda porque la accuracy engaña con clases raras y hay que reponderar y medir sobre la mino
+  - ruta: guardia_entrada → supervisor → sin_agente
+  - No tengo un agente para eso. Puedo ayudarte con: agente_ezequiel, agente_cocina, agente_tomas.
+
+
+## 3. End-to-end forzado: el supervisor elige al remoto y se cae al consultar
+
+- Ficha de Tomás sembrada en caché (CARD_TTL) para que el supervisor la vea disponible; el túnel `https://delays-therapeutic-wait-yeast.trycloudflare.com` sigue caído.
+
+- **> ¿Qué símbolos se aprenden en el nivel 2 de Reiki?**
+  - ruta: **guardia_entrada → supervisor → agente_no_disponible**
+  - El Agente de Tomás no está disponible temporalmente (no se pudo conectar (¿túnel caído?)). Puedes intentar nuevamente más tarde. Los demás agentes continúan operativos.
 
 
 ## 2. Guardrails

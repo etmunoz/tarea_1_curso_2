@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1413
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1429
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -287,6 +287,11 @@ __start__ → guardia_entrada → enrutar → {consultar | sin_agente} → guard
   una vez, sin bucles).
 - **Pruebas:** `tests/test_robustez_a2a_48.py`, `tests/test_guardrails_auth_48.py`.
   **Evidencia:** `evidencias/11-robustez-48-mac.md`.
+- **Ajustes finales (prompt 48a):** validación exhaustiva de respuestas A2A (sin excepciones de
+  programación ante estructuras inesperadas), autenticación uniforme en el descubrimiento
+  (`401/403` diferenciados; no se clasifica a ciegas), recuperación acotada del `assistant_id`,
+  disponibilidad por **sondeo fresco** (la ficha cacheada no prueba conectividad) y
+  ALLOW/SANITIZE/BLOCK por **acción efectiva**. Pruebas: `tests/test_ajustes_48a.py`.
 
 ## 11. Arquitectura y diagramas
 

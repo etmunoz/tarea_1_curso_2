@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -84,14 +84,20 @@ class AgenteRemoto:
         return _ultima_card.get(self._clave)
 
     def estado(self) -> tuple[bool, str]:
-        """Objetivo: decir si el agente responde AHORA (con caché corta para no sondear de más).
+        """Objetivo: VERIFICAR conectividad AHORA (sondeo fresco), con una caché corta propia
+        (`_disp`, TTL `A2A_DISP_TTL`) para no sondear en cada rearmado del catálogo. OJO: NO se
+        infiere de la ficha cacheada (una ficha vigente en `_cards` no prueba que el endpoint
+        siga vivo); se pide la card al servidor (bypassando el TTL largo de capacidad) y el
+        RESULTADO de conectividad es lo que se cachea aquí.
         Entradas: ninguna. Salida: (disponible (bool), motivo (str) vacío si está bien)."""
         clave = self._clave
         guardado = _disp.get(clave)
         if guardado and time.monotonic() - guardado[0] < DISP_TTL:
             return guardado[1], guardado[2]
         try:
-            self.card()
+            card = a2a.agent_card(self.base_url, self.graph)  # sondeo de conectividad FRESCO
+            _cards[clave] = (time.monotonic(), card)
+            _ultima_card[clave] = card
             disp, motivo = True, ""
         except a2a.ErrorA2A as exc:
             disp, motivo = False, exc.motivo
@@ -99,6 +105,14 @@ class AgenteRemoto:
             disp, motivo = False, str(exc)[:80]
         _disp[clave] = (time.monotonic(), disp, motivo)
         return disp, motivo
+
+    def disponibilidad(self) -> str:
+        """Objetivo: estado estimado en TRES valores explícitos: 'disponible' (sondeo ok),
+        'no_disponible' (sondeo falla pero SÍ conocemos sus capacidades → especialista caído) o
+        'desconocido' (sondeo falla y nunca se descubrió). Salida: str."""
+        if self.estado()[0]:
+            return "disponible"
+        return "no_disponible" if self.conocido() else "desconocido"
 
     def disponible(self) -> bool:
         """Objetivo: azúcar de `estado()` — True si responde ahora. Salida: bool."""

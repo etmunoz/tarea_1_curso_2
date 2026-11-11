@@ -4,7 +4,7 @@
 # Objetivo: mac_puente.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1342
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 # Mac · levanta el PUENTE A2A clásico para que un cliente A2A estándar (p. ej. el de

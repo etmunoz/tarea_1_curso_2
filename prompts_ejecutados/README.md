@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1413
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1429
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -62,3 +62,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 47 | [Guardrail de salida completo + allow-list de agentes](47-guardrail-salida-y-allowlist.md) | [respuesta](../respuestas/47-guardrail-salida-y-allowlist.md) |
 | 48 | [Robustecimiento final del Taller A2A (5 correcciones)](48-robustecimiento-final-a2a.md) | [respuesta](../respuestas/48-robustecimiento-final-a2a.md) |
 | 49 | [Interoperabilidad A2A clásico: cliente generalizado + puente](49-interop-a2a-clasico-y-puente.md) | [respuesta](../respuestas/49-interop-a2a-clasico-y-puente.md) |
+| 48a | [Ajustes finales de robustez (continuación del 48)](48a-ajustes-finales-robustez.md) | [respuesta](../respuestas/48a-ajustes-finales-robustez.md) |

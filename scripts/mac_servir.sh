@@ -4,7 +4,7 @@
 # Objetivo: mac_servir.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 # Mac · levanta el agente Ezequiel (langgraph dev) y configura su ficha cuando esté arriba.

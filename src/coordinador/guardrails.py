@@ -3,7 +3,7 @@
 # Objetivo: Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 """Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
@@ -178,22 +178,27 @@ def evaluar_respuesta_remota(texto, agente: str = "-", correlacion: str = "-") -
     solo la etiqueta [Nombre]. Entradas: texto, agente, correlacion (id).
     Salida: (decision (str ALLOW/SANITIZE/BLOCK), texto_final (str), motivo (str))."""
     if not isinstance(texto, str):
-        registrar_evento("a2a", BLOCK, agente, correlacion, "respuesta malformada (no texto)")
-        return BLOCK, "La respuesta del agente llegó malformada y se descartó.", "no es texto"
+        registrar_evento("a2a", BLOCK, agente, correlacion, f"politica={POLITICA_A2A} malformada")
+        return BLOCK, "La respuesta del agente llegó malformada y se descartó.", "malformada"
 
     saneado, flags = sanear_respuesta_remota(texto)
     sospechosa = flags["inyeccion"] or bool(flags["secretos"])
 
-    if POLITICA_A2A == BLOCK and sospechosa:
+    # La DECISIÓN refleja la ACCIÓN EFECTIVA, no la política configurada:
+    #  - sin hallazgos y sin cambios → ALLOW (aunque la política sea SANITIZE).
+    #  - política BLOCK ante algo sospechoso → BLOCK (se descarta).
+    #  - política ALLOW ante algo sospechoso → ALLOW (el operador asume el riesgo).
+    #  - resto (SANITIZE ante algo sospechoso) → SANITIZE (se transforma de verdad).
+    if not sospechosa:
+        registrar_evento("a2a", ALLOW, agente, correlacion, f"politica={POLITICA_A2A} sin hallazgos")
+        return ALLOW, texto, "sin hallazgos"
+    if POLITICA_A2A == BLOCK:
         registrar_evento("a2a", BLOCK, agente, correlacion,
-                         f"inyeccion={flags['inyeccion']} secretos={bool(flags['secretos'])}")
-        return BLOCK, "La respuesta del agente se bloqueó por contenido sospechoso.", "politica=block"
-
-    if POLITICA_A2A == ALLOW and not sospechosa:
-        registrar_evento("a2a", ALLOW, agente, correlacion, "sin hallazgos")
-        return ALLOW, texto, "limpia"
-
-    # Por defecto (SANITIZE), y también ALLOW-con-hallazgos: se entrega saneada.
+                         f"politica={POLITICA_A2A} inyeccion={flags['inyeccion']} secretos={bool(flags['secretos'])}")
+        return BLOCK, "La respuesta del agente se bloqueó por contenido sospechoso.", "bloqueada por politica=BLOCK"
+    if POLITICA_A2A == ALLOW:
+        registrar_evento("a2a", ALLOW, agente, correlacion, f"politica={POLITICA_A2A} riesgo asumido")
+        return ALLOW, texto, "entregada sin cambios por politica=ALLOW (riesgo asumido)"
     registrar_evento("a2a", SANITIZE, agente, correlacion,
-                     f"inyeccion={flags['inyeccion']} secretos={flags['secretos']}")
+                     f"politica={POLITICA_A2A} inyeccion={flags['inyeccion']} secretos={flags['secretos']}")
     return SANITIZE, saneado, "saneada"

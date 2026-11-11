@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/11-robustez-48-mac.md`  
 > **Objetivo:** Robustecimiento final (prompt 48) · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1413
+> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1429
 <!--/encabezado-grupo-->
 
 # Robustecimiento final (prompt 48) · evidencia (mac)
@@ -79,3 +79,38 @@ $ uv run pytest -q    (suite completa)
 ```
 
 Archivos de prueba nuevos: `tests/test_robustez_a2a_48.py` (11), `tests/test_guardrails_auth_48.py` (19).
+
+---
+
+## Ajustes finales (prompt 48a)
+
+Cinco refinamientos verificados contra el código:
+
+1. **Validación exhaustiva de respuestas A2A:** `_texto_de_resultado` y `_endpoint_clasico`
+   toleran `result`/`status`/`history`/`supportedInterfaces` como listas, cadenas o null sin
+   escapar `AttributeError/TypeError/IndexError/KeyError`; una respuesta sin texto ya **no** se
+   devuelve como `str(result)`: lanza `RespuestaA2AInvalida`.
+2. **Autenticación uniforme en descubrimiento:** `dialecto()` pasa por la capa HTTP central
+   (auth + timeouts); `401/403` → `AccesoDenegadoA2A` (no es "otro dialecto"); lo que no es card
+   clásica ni error langgraph reconocible → `RespuestaA2AInvalida` (no se asume langgraph).
+3. **Recuperación precisa del assistant_id:** solo langgraph + 404; re-busca e intenta **una**
+   vez; si el id no cambia, la búsqueda queda vacía/inválida o el 404 persiste → error controlado
+   `IdentificadorAsistenteObsoleto`/`AgenteNoDisponible`, sin bucles.
+4. **Disponibilidad vs caché:** `estado()` hace un **sondeo fresco** (no infiere de la ficha
+   cacheada); tres estados explícitos: `disponible` / `no_disponible` (conocido, caído) /
+   `desconocido` (nunca descubierto).
+5. **ALLOW/SANITIZE/BLOCK por acción efectiva** (no por política):
+
+```
+ALLOW/SANITIZE/BLOCK por acción efectiva:
+  limpia                           -> ALLOW (sin hallazgos)
+  secreto                          -> SANITIZE (saneada)
+  inyección (política SANITIZE)    -> SANITIZE (saneada)
+```
+
+**Pruebas (prompt 48a):** `tests/test_ajustes_48a.py`
+```
+$ uv run pytest tests/test_ajustes_48a.py -q
+23 passed in 0.26s
+```
+Suite completa: 133 passed, 1 skipped.

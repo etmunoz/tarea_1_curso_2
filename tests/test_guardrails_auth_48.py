@@ -3,7 +3,7 @@
 # Objetivo: Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1405
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 """Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).
@@ -55,7 +55,9 @@ def test_evaluar_remota_politica_block(monkeypatch):
 
 
 def test_evaluar_remota_limpia():
+    """Una respuesta limpia se registra como ALLOW (acción efectiva), no SANITIZE (prompt 48a)."""
     dec, texto, _ = guardrails.evaluar_respuesta_remota("Los cinco principios del Reiki son…")
+    assert dec == guardrails.ALLOW
     assert texto == "Los cinco principios del Reiki son…"
 
 

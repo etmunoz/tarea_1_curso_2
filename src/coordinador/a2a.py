@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1413
+# Última modificación: 20261111 1429
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -16,6 +16,7 @@ un UUID, y la respuesta remota es un dato (no una instrucción).
 """
 from __future__ import annotations
 
+import json
 import os
 import uuid
 
@@ -67,6 +68,11 @@ class RespuestaA2AInvalida(ErrorProtocoloA2A):
 class IdentificadorAsistenteObsoleto(ErrorProtocoloA2A):
     """El `assistant_id` cacheado ya no existe en el servidor (404): se recarga y se reintenta
     una sola vez (la operación no llegó a ejecutarse, por eso es seguro reintentar)."""
+
+
+class AccesoDenegadoA2A(ErrorProtocoloA2A):
+    """El servidor respondió 401/403: el agente existe pero requiere autenticación/autorización.
+    NO es un dialecto distinto ni indisponibilidad de transporte."""
 
 
 def _motivo(exc: Exception) -> str:
@@ -127,16 +133,24 @@ def dialecto(base_url: str, timeout: float = 10) -> str:
     Salida: str — 'clasico' o 'langgraph'. Lanza AgenteNoDisponible si no hay red."""
     base = base_url.rstrip("/")
     if base not in _cache_dialecto:
-        try:
-            r = httpx.get(f"{base}/.well-known/agent-card.json", timeout=timeout)
-        except httpx.HTTPError as exc:
-            raise AgenteNoDisponible(base, _motivo(exc)) from exc
+        # Misma capa HTTP que el resto (auth, timeouts, transporte → AgenteNoDisponible).
+        r = _pedir(httpx.get, f"{base}/.well-known/agent-card.json", base, timeout=timeout)
+        if r.status_code in (401, 403):
+            raise AccesoDenegadoA2A(base, f"acceso denegado al descubrir (HTTP {r.status_code})")
         try:
             data = r.json()
         except ValueError:
             data = None
-        es_clasico = r.status_code == 200 and isinstance(data, dict) and bool(data.get("name"))
-        _cache_dialecto[base] = "clasico" if es_clasico else "langgraph"
+        pide_assistant_id = isinstance(data, dict) and "assistant_id" in json.dumps(data)
+        if r.status_code == 200 and isinstance(data, dict) and bool(data.get("name")):
+            _cache_dialecto[base] = "clasico"
+        elif pide_assistant_id:
+            # langgraph responde un error pidiendo el assistant_id (típicamente 4xx).
+            _cache_dialecto[base] = "langgraph"
+        else:
+            # NO se clasifica a ciegas como langgraph: dialecto desconocido.
+            raise RespuestaA2AInvalida(
+                base, f"no es una Agent Card clásica ni un error langgraph reconocible (HTTP {r.status_code})")
     return _cache_dialecto[base]
 
 
@@ -148,12 +162,13 @@ def _card_clasica(base: str, timeout: float) -> dict:
 def _endpoint_clasico(card: dict, base: str) -> str:
     """Objetivo: sacar la URL del endpoint de mensajes de una card clásica.
     Usa `url` o la primera `supportedInterfaces[].url`; si no hay, la base. Salida: str."""
+    card = card if isinstance(card, dict) else {}
     url = card.get("url")
     if not url:
         interfaces = card.get("supportedInterfaces") or card.get("additionalInterfaces") or []
-        if interfaces and isinstance(interfaces, list):
-            url = (interfaces[0] or {}).get("url")
-    return (url or base).rstrip("/")
+        if isinstance(interfaces, list) and interfaces and isinstance(interfaces[0], dict):
+            url = interfaces[0].get("url")
+    return (url if isinstance(url, str) and url else base).rstrip("/")
 
 
 def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
@@ -226,25 +241,35 @@ def _textos(o) -> list[str]:
     return []
 
 
-def _texto_de_resultado(result: dict) -> str:
+def _texto_de_resultado(result, destino: str = "") -> str:
     """Objetivo: extraer la RESPUESTA del agente de un resultado A2A (sin repetir nada).
     El resultado trae la respuesta en `artifacts` y además el `history` completo (la
     pregunta del usuario y la misma respuesta otra vez). Por eso se toma, en orden:
     1) los `artifacts`; 2) el mensaje de `status`; 3) el último mensaje del agente en
     `history`; 4) como último recurso, todos los textos.
-    Entradas: result (dict) del resultado A2A.
-    Salida: str — el texto de la respuesta (o str(result) si no hay partes de texto)."""
+    Validación ESTRICTA: tolera que `result`, `status`, `history` o sus elementos vengan como
+    listas, cadenas o null sin lanzar AttributeError/TypeError/IndexError/KeyError. Si no hay
+    NINGÚN texto extraíble, NO devuelve `str(result)` como si fuera válido: lanza
+    RespuestaA2AInvalida (resultado sin texto). Entradas: result (cualquier tipo), destino (str
+    etiqueta). Salida: str — el texto de la respuesta."""
+    def _d(o):
+        return o if isinstance(o, dict) else {}
+
+    historial = _d(result).get("history")
+    historial = historial if isinstance(historial, list) else []
+    ultimo_agente = next((m for m in reversed(historial)
+                          if isinstance(m, dict) and m.get("role") == "agent"), None)
     candidatos = [
-        result.get("artifacts"),
-        (result.get("status") or {}).get("message"),
-        next((m for m in reversed(result.get("history") or []) if m.get("role") == "agent"), None),
+        _d(result).get("artifacts"),
+        _d(_d(result).get("status")).get("message"),
+        ultimo_agente,
         result,
     ]
     for c in candidatos:
         textos = _textos(c) if c else []
         if textos:
             return "\n".join(textos)
-    return str(result)
+    raise RespuestaA2AInvalida(destino, "la respuesta A2A no contiene texto")
 
 
 def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeout: float = 90) -> str:
@@ -280,14 +305,23 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
         return _pedir(httpx.post, endpoint, destino, json=cuerpo, _lectura=timeout)
 
     r = _una_vez()
-    # Recuperación de assistant_id obsoleto: un 404 en el endpoint langgraph significa que el
-    # asistente ya no existe (servidor reiniciado). La operación NO se ejecutó, así que es seguro
-    # recargar el id y reintentar UNA sola vez.
+    # Recuperación ACOTADA de assistant_id obsoleto: solo en langgraph y solo ante 404 (el
+    # endpoint no existe ⇒ la operación NO se ejecutó, es seguro reintentar). Se invalida SOLO
+    # esta entrada, se re-busca y se reintenta como MÁXIMO una vez. Si el id no cambió, la
+    # búsqueda queda vacía/ inválida o el 404 persiste, se termina con error controlado y SIN
+    # bucles. Un 404 "clásico" o uno no relacionado no dispara reintento de operaciones no
+    # idempotentes.
     if r.status_code == 404 and not es_clasico:
+        viejo = _cache_aid.get((base, graph))
         invalidar_assistant_id(base, graph)
-        r = _una_vez()
+        nuevo = assistant_id(base, graph, timeout)  # re-búsqueda (lanza si vacía/malformada)
+        if nuevo == viejo:
+            raise IdentificadorAsistenteObsoleto(destino, "el assistant_id no cambió tras recargar")
+        r = _pedir(httpx.post, f"{base}/a2a/{nuevo}", destino, json=cuerpo, _lectura=timeout)
         if r.status_code == 404:
-            raise IdentificadorAsistenteObsoleto(destino, "el asistente no existe tras recargar el id")
+            raise IdentificadorAsistenteObsoleto(destino, "el asistente sigue sin existir tras recargar")
+    if r.status_code in (401, 403):
+        raise AccesoDenegadoA2A(destino, f"acceso denegado (HTTP {r.status_code})")
     try:
         r.raise_for_status()
     except httpx.HTTPStatusError as exc:
@@ -299,4 +333,4 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     if isinstance(datos, dict) and datos.get("error"):
         # Error JSON-RPC del servidor remoto: es un error de PROTOCOLO (no de transporte).
         raise ErrorProtocoloA2A(destino, f"error del agente remoto: {datos['error']}")
-    return _texto_de_resultado(datos.get("result", datos) if isinstance(datos, dict) else datos)
+    return _texto_de_resultado(datos.get("result", datos) if isinstance(datos, dict) else datos, destino)

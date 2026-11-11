@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/04-crear-agente-ezequiel.md`  
 > **Objetivo:** 01 · Respuesta — Crear el agente de Ezequiel  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1205
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1210
 <!--/encabezado-grupo-->
 
 # 01 · Respuesta — Crear el agente de Ezequiel

@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/01-extraer-taller-a-markdown.md`  
 > **Objetivo:** 01 · Extraer el taller A2A a Markdown  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1620 · **Última modificación:** 20261111 1205
+> **Creación:** 20261110 1620 · **Última modificación:** 20261111 1210
 <!--/encabezado-grupo-->
 
 # 01 · Extraer el taller A2A a Markdown

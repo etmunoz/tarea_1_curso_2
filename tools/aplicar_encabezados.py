@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261111 1205
+# Última modificación: 20261111 1210
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).

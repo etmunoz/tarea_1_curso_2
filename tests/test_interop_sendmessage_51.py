@@ -3,7 +3,7 @@
 # Objetivo: Interoperabilidad con el dialecto `SendMessage` del compañero (prompt 51).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1737
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 
 """Interoperabilidad con el dialecto `SendMessage` del compañero (prompt 51).
@@ -24,11 +24,11 @@ from src.coordinador import a2a
 
 @pytest.fixture(autouse=True)
 def _limpiar():
-    a2a._cache_aid.clear()
-    a2a._cache_dialecto.clear()
+    for d in (a2a._cache_aid, a2a._cache_dialecto, a2a._cache_metodo):
+        d.clear()
     yield
-    a2a._cache_aid.clear()
-    a2a._cache_dialecto.clear()
+    for d in (a2a._cache_aid, a2a._cache_dialecto, a2a._cache_metodo):
+        d.clear()
 
 
 class _R:
@@ -103,3 +103,26 @@ def test_sin_fallback_cuando_message_send_funciona(monkeypatch):
     r = a2a.enviar_mensaje("https://comp.example", "agente", "hola", "ctx")
     assert r == "ok directo"
     assert metodos == ["message/send"]                         # sin reintento
+
+
+def test_cache_metodo_evita_reintento(monkeypatch):
+    """Tras aprender que un host usa SendMessage, la 2ª llamada va directa (sin message/send)."""
+    a2a._cache_metodo.clear()
+    card = {"name": "agente_meteorologo", "supportedInterfaces": [{"url": "https://comp.example"}]}
+    monkeypatch.setattr(a2a.httpx, "get", lambda *a, **k: _R(card))
+    metodos = []
+
+    def post(url, **k):
+        m = (k.get("json") or {}).get("method")
+        metodos.append(m)
+        if m == "message/send":
+            return _R({"error": {"code": -32601, "message": "Method not found"}})
+        return _R({"result": {"message": {"parts": [{"text": "[{'type':'text','text':'ok'}]"}]}}})
+
+    monkeypatch.setattr(a2a.httpx, "post", post)
+    a2a.enviar_mensaje("https://comp.example", "agente", "1ra", "ctx-1")   # aprende
+    assert a2a._cache_metodo.get("https://comp.example") == "SendMessage"
+    metodos.clear()
+    a2a.enviar_mensaje("https://comp.example", "agente", "2da", "ctx-2")   # directo
+    assert metodos == ["SendMessage"]
+    a2a._cache_metodo.clear()

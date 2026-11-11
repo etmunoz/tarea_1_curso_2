@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1857
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1957
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -66,3 +66,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 48b | [Refuerzos de seguridad sobre la interoperabilidad (49 + Gustavo)](48b-seguridad-interop-puente.md) | [respuesta](../respuestas/48b-seguridad-interop-puente.md) |
 | 50 | [Backoffice de accesos al puente A2A (log + app Tkinter)](50-backoffice-monitor-accesos-puente.md) | [respuesta](../respuestas/50-backoffice-monitor-accesos-puente.md) |
 | 51 | [Interop nosotros→Gustavo (dialecto SendMessage)](51-interop-sendmessage-gustavo.md) | [respuesta](../respuestas/51-interop-sendmessage-gustavo.md) |
+| 52 | [Confirmar interop contra el repo de Gustavo + cache de método](52-confirmar-repo-gustavo-y-cache-metodo.md) | [respuesta](../respuestas/52-confirmar-repo-gustavo-y-cache-metodo.md) |

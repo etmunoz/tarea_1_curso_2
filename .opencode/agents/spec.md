@@ -4,7 +4,7 @@
 # Objetivo: Agente creador de especificaciones (tareas en plan.json)
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 description: Agente creador de especificaciones (tareas en plan.json)
 mode: subagent

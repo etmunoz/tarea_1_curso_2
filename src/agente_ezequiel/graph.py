@@ -3,7 +3,7 @@
 # Objetivo: Agente de Ezequiel (IA Engineer & Data Scientist) · expuesto por A2A NATIVO.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1603
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 
 """Agente de Ezequiel (IA Engineer & Data Scientist) · expuesto por A2A NATIVO.

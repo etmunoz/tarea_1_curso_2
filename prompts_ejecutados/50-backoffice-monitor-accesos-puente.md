@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/50-backoffice-monitor-accesos-puente.md`  
 > **Objetivo:** Prompt 50 · Backoffice de accesos al puente A2A (log + app Tkinter)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1723 · **Última modificación:** 20261111 1857
+> **Creación:** 20261111 1723 · **Última modificación:** 20261111 1957
 <!--/encabezado-grupo-->
 
 # Prompt 50 · Backoffice de accesos al puente A2A (log + app Tkinter)

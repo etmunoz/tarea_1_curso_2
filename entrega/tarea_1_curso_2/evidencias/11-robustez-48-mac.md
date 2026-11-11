@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `evidencias/11-robustez-48-mac.md`  
+> **Archivo:** `entrega/tarea_1_curso_2/evidencias/11-robustez-48-mac.md`  
 > **Objetivo:** Robustecimiento final (prompt 48) · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1857
+> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1957
 <!--/encabezado-grupo-->
 
 # Robustecimiento final (prompt 48) · evidencia (mac)

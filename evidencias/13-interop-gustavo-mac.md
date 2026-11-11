@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/13-interop-gustavo-mac.md`  
 > **Objetivo:** Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1737 · **Última modificación:** 20261111 1857
+> **Creación:** 20261111 1737 · **Última modificación:** 20261111 1957
 <!--/encabezado-grupo-->
 
 # Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)
@@ -75,3 +75,14 @@ Gustavo, por Cloudflare). Corrida real:
 El supervisor eligió al `agente_meteorologo` de Gustavo por su ficha y lo consultó por A2A
 (dialecto `SendMessage`, desanidado). Pasa por los guardrails (`guardia_entrada`/`guardia_salida`)
 como cualquier otro. Interoperabilidad A2A **en ambos sentidos**, end-to-end.
+
+## Confirmación contra el repo de Gustavo (prompt 52)
+
+Repo: https://github.com/guswolf-007/taller_A2A_uai · su servidor (`src/comun/servidor.py`) usa
+**FastAPI + SDK a2a-protocol.org** (`create_jsonrpc_routes(manejador, rpc_url="/")`), con el método
+**`SendMessage`** y respuesta en *content blocks* (`[{'type':'text','text':…}]`). Esto confirma que
+nuestro fallback (prompt 51) y el desanidado coinciden con su implementación real.
+
+**Mejora (prompt 52):** `a2a._cache_metodo` recuerda, por host, que un servidor necesita
+`SendMessage`, para **no gastar el `message/send` fallido en cada llamada** (la 2ª consulta va
+directa). Probado en `tests/test_interop_sendmessage_51.py::test_cache_metodo_evita_reintento`.

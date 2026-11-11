@@ -3,7 +3,7 @@
 # Objetivo: Autenticación y autorización A2A — alcance académico (prompt 48, Corrección 3).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1405
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 
 """Autenticación y autorización A2A — alcance académico (prompt 48, Corrección 3).

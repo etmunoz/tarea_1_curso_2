@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `blueprint-fabio.md`  
+> **Archivo:** `entrega/tarea_1_curso_2/blueprint-fabio.md`  
 > **Objetivo:** Blueprint · Agente de Fabio  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2334 · **Última modificación:** 20261111 1857
+> **Creación:** 20261110 2334 · **Última modificación:** 20261111 1957
 <!--/encabezado-grupo-->
 
 # Blueprint · Agente de Fabio

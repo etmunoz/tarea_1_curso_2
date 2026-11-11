@@ -3,7 +3,7 @@
 # Objetivo: win_tunel.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 
 # Windows · abre un túnel https a tu langgraph dev (:2024). Copia la URL que imprime y pásala al Mac.

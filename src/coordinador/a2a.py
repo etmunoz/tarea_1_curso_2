@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1857
+# Última modificación: 20261111 1957
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -28,6 +28,11 @@ _cache_aid: dict[tuple[str, str], str] = {}
 # cache del "dialecto" A2A por base_url: 'langgraph' (nuestro, requiere assistant_id) o
 # 'clasico' (SDK a2a-protocol.org: card sin assistant_id, mensajes en la URL base).
 _cache_dialecto: dict[str, str] = {}
+
+# cache del método clásico por base_url: algunos servidores (p. ej. el SDK a2a-protocol.org
+# de un compañero) no implementan `message/send` sino `SendMessage`. Tras el primer fallback se
+# recuerda, para no gastar el `message/send` fallido en cada llamada.
+_cache_metodo: dict[str, str] = {}
 
 
 # Timeouts configurables (segundos): conexión y lectura por separado.
@@ -332,12 +337,18 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     cuerpo = _cuerpo_message_send(texto, context_id)
     destino = f"{base} ({graph})"
     es_clasico = dialecto(base, timeout) == "clasico"
+    metodo_clasico = _cache_metodo.get(base)  # 'SendMessage' si ya aprendimos que lo necesita
+
+    def _post_clasico(cuerpo_: dict, cabeceras: dict | None = None) -> httpx.Response:
+        endpoint = _endpoint_clasico(_card_clasica(base, timeout), base)
+        return _pedir(httpx.post, endpoint, destino, json=cuerpo_, headers=cabeceras, _lectura=timeout)
 
     def _una_vez() -> httpx.Response:
         if es_clasico:
-            endpoint = _endpoint_clasico(_card_clasica(base, timeout), base)
-        else:
-            endpoint = f"{base}/a2a/{assistant_id(base, graph, timeout)}"
+            if metodo_clasico == "SendMessage":  # sin reintento: ya sabíamos su método
+                return _post_clasico(_cuerpo_sendmessage(texto, context_id), {"A2A-Version": "1.0"})
+            return _post_clasico(cuerpo)  # message/send estándar
+        endpoint = f"{base}/a2a/{assistant_id(base, graph, timeout)}"
         return _pedir(httpx.post, endpoint, destino, json=cuerpo, _lectura=timeout)
 
     r = _una_vez()
@@ -369,14 +380,14 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     # Fallback de interoperabilidad: algunos servidores A2A clásicos no implementan
     # `message/send` (responden -32601) sino `SendMessage` (role ROLE_USER, parts sin kind,
     # header A2A-Version). Se reintenta UNA vez con esa variante.
-    if es_clasico and _codigo_error(datos) == -32601:
-        endpoint = _endpoint_clasico(_card_clasica(base, timeout), base)
-        r = _pedir(httpx.post, endpoint, destino, json=_cuerpo_sendmessage(texto, context_id),
-                   headers={"A2A-Version": "1.0"}, _lectura=timeout)
+    if es_clasico and metodo_clasico != "SendMessage" and _codigo_error(datos) == -32601:
+        r = _post_clasico(_cuerpo_sendmessage(texto, context_id), {"A2A-Version": "1.0"})
         try:
             datos = r.json()
         except ValueError as exc:
             raise RespuestaA2AInvalida(destino, "respuesta ilegible del servidor") from exc
+        if _codigo_error(datos) is None:   # el fallback funcionó: recordar el método del host
+            _cache_metodo[base] = "SendMessage"
 
     if isinstance(datos, dict) and datos.get("error"):
         # Error JSON-RPC del servidor remoto: es un error de PROTOCOLO (no de transporte).

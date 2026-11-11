@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/07-swarm-agente-actividades.md`  
 > **Objetivo:** 07 · Swarm con el agente de actividades  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1920 · **Última modificación:** 20261110 2147
+> **Creación:** 20261110 1920 · **Última modificación:** 20261110 2227
 <!--/encabezado-grupo-->
 
 # 07 · Swarm con el agente de actividades

@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/tarea_1_curso_2/evidencias/06-robustez-mac.md`  
 > **Objetivo:** Robustez del coordinador · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0730 · **Última modificación:** 20261111 1343
+> **Creación:** 20261111 0730 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # Robustez del coordinador · evidencia (mac)

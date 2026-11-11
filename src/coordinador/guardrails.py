@@ -3,7 +3,7 @@
 # Objetivo: Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1343
+# Última modificación: 20261111 1406
 # --8<-- fin-encabezado-grupo
 
 """Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
@@ -23,9 +23,18 @@ Todo es determinista (regex) para poder probarlo con pytest sin LLM ni red.
 """
 from __future__ import annotations
 
+import logging
 import os
 import re
 from dataclasses import dataclass
+
+_log = logging.getLogger("coordinador.guardrails")
+
+# Política configurable para una respuesta remota sospechosa (Corrección 2.D del prompt 48).
+ALLOW, SANITIZE, BLOCK = "ALLOW", "SANITIZE", "BLOCK"
+POLITICA_A2A = os.environ.get("GUARDRAIL_POLITICA_A2A", SANITIZE).upper()
+# Caracteres de control que se quitan al normalizar (salvo \n y \t).
+_CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
 # Tamaño máximo de una pregunta (configurable por entorno).
 LIMITE_ENTRADA = int(os.environ.get("GUARDRAIL_MAX_ENTRADA", "4000"))
@@ -70,12 +79,32 @@ _SECRETOS: list[tuple[str, re.Pattern]] = [
 ]
 
 
-def revisar_entrada(texto: str) -> Veredicto:
-    """Objetivo (guardrail de ENTRADA): decidir si una pregunta puede procesarse.
-    Rechaza vacías, excesivamente largas o con patrones de inyección/jailbreak.
-    (El "fuera de dominio" lo resuelve el supervisor enrutando a 'sin_agente'.)
-    Entradas: texto (str) la pregunta. Salida: Veredicto."""
-    t = (texto or "").strip()
+def normalizar(texto: str) -> str:
+    """Objetivo: normalización prudente de la entrada — quita caracteres de control (salvo
+    salto de línea y tab) y colapsa espacios. No altera el contenido legítimo.
+    Entradas: texto (str). Salida: str."""
+    limpio = _CONTROL.sub("", texto or "")
+    return re.sub(r"[ \t]+", " ", limpio).strip()
+
+
+def registrar_evento(tipo: str, resultado: str, agente: str = "-", correlacion: str = "-",
+                     motivo: str = "") -> None:
+    """Objetivo (observabilidad): registrar un evento de seguridad SIN guardar el contenido
+    sensible de la solicitud. Entradas: tipo (entrada/salida/a2a), resultado (allow/sanitize/
+    block/bloqueada/ok), agente, correlacion (id), motivo (resumen técnico). Salida: None."""
+    _log.info("guardrail tipo=%s resultado=%s agente=%s correlacion=%s motivo=%s",
+              tipo, resultado, agente, correlacion, motivo or "-")
+
+
+def revisar_entrada(texto) -> Veredicto:
+    """Objetivo (guardrail de ENTRADA): decidir si una pregunta puede procesarse. Valida el
+    TIPO (debe ser str), normaliza, y rechaza vacías, excesivamente largas o con patrones de
+    inyección/jailbreak. (El "fuera de dominio" lo resuelve el supervisor enrutando a
+    'sin_agente'.) Entradas: texto. Salida: Veredicto."""
+    if not isinstance(texto, str):
+        return Veredicto(False, f"tipo inválido ({type(texto).__name__})",
+                         "No pude leer tu pregunta. Envíala como texto, por favor.")
+    t = normalizar(texto)
     if not t:
         return Veredicto(False, "entrada vacía",
                          "No recibí ninguna pregunta. ¿En qué te puedo ayudar?")
@@ -108,7 +137,9 @@ def revisar_salida(texto: str) -> tuple[str, dict]:
     control pasan también `sin_agente` y los avisos del guardrail de entrada.
     Entradas: texto (str) respuesta final cruda.
     Salida: (texto_saneado (str), flags (dict) con 'secretos', 'recortado')."""
-    saneado, secretos = redactar_secretos(texto or "")
+    if not isinstance(texto, str):
+        texto = "" if texto is None else str(texto)  # tolera respuestas malformadas
+    saneado, secretos = redactar_secretos(texto)
     recortado = False
     if len(saneado) > LIMITE_SALIDA:
         saneado = saneado[:LIMITE_SALIDA].rstrip() + " […respuesta truncada]"
@@ -135,3 +166,34 @@ def sanear_respuesta_remota(texto: str) -> tuple[str, dict]:
         saneado = ("⚠️ (el agente remoto incluyó texto que parece una instrucción; "
                    "se muestra como dato y NO se obedece)\n" + saneado)
     return saneado, {"secretos": secretos, "inyeccion": inyeccion}
+
+
+def evaluar_respuesta_remota(texto, agente: str = "-", correlacion: str = "-") -> tuple[str, str, str]:
+    """Objetivo (guardrail A2A por capas, Corrección 2.D): decidir qué hacer con la respuesta de
+    un agente remoto según una POLÍTICA configurable (GUARDRAIL_POLITICA_A2A):
+      - BLOCK: respuesta malformada (no texto) o política=block ante inyección → se descarta.
+      - SANITIZE (def.): se redactan secretos y se neutraliza la instrucción incrustada (dato).
+      - ALLOW: se acepta tal cual (solo si política=allow y no hay inyección ni secreto).
+    La separación instrucción/dato es por FLUJO: el coordinador nunca ejecuta esta respuesta,
+    solo la etiqueta [Nombre]. Entradas: texto, agente, correlacion (id).
+    Salida: (decision (str ALLOW/SANITIZE/BLOCK), texto_final (str), motivo (str))."""
+    if not isinstance(texto, str):
+        registrar_evento("a2a", BLOCK, agente, correlacion, "respuesta malformada (no texto)")
+        return BLOCK, "La respuesta del agente llegó malformada y se descartó.", "no es texto"
+
+    saneado, flags = sanear_respuesta_remota(texto)
+    sospechosa = flags["inyeccion"] or bool(flags["secretos"])
+
+    if POLITICA_A2A == BLOCK and sospechosa:
+        registrar_evento("a2a", BLOCK, agente, correlacion,
+                         f"inyeccion={flags['inyeccion']} secretos={bool(flags['secretos'])}")
+        return BLOCK, "La respuesta del agente se bloqueó por contenido sospechoso.", "politica=block"
+
+    if POLITICA_A2A == ALLOW and not sospechosa:
+        registrar_evento("a2a", ALLOW, agente, correlacion, "sin hallazgos")
+        return ALLOW, texto, "limpia"
+
+    # Por defecto (SANITIZE), y también ALLOW-con-hallazgos: se entrega saneada.
+    registrar_evento("a2a", SANITIZE, agente, correlacion,
+                     f"inyeccion={flags['inyeccion']} secretos={flags['secretos']}")
+    return SANITIZE, saneado, "saneada"

@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1343
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -267,6 +267,26 @@ __start__ → guardia_entrada → enrutar → {consultar | sin_agente} → guard
   `tests/test_salida_y_allowlist.py`.
 - **Evidencia:** `evidencias/06-robustez-mac.md` (resiliencia con túnel caído, batería de
   ataques de entrada detenidos, redacción de salida y allow-list excluyendo un intruso).
+
+### Robustecimiento final (prompt 48, rama `prompt-48-robustez`)
+
+- **Inexistente vs desconectado:** el catálogo conserva las capacidades de un agente desde su
+  última ficha conocida, así el supervisor distingue "no hay agente para esto" (`sin_agente`) de
+  "el especialista existe pero está temporalmente caído" (`agente_no_disponible`).
+- **Guardrails por capas:** validación de tipos (entrada y salida), normalización, y una política
+  configurable para respuestas remotas (`GUARDRAIL_POLITICA_A2A`: ALLOW / SANITIZE / BLOCK), con
+  observabilidad (eventos sin guardar contenido sensible). *No se promete protección infalible:*
+  la detección es heurística y puede tener falsos positivos/negativos.
+- **Autenticación/autorización A2A (`src/coordinador/auth.py`):** autorización por mínimo
+  privilegio (grafo + operación) y token Bearer en el cliente. **Honesto:** un allow-list **no es
+  autenticación**; la validación efectiva del token requiere habilitarla en el receptor (se deja
+  como referencia + modo demo). Límite registrado.
+- **Robustez del cliente A2A:** jerarquía de excepciones (`ErrorA2A` → `AgenteNoDisponible`,
+  `ErrorProtocoloA2A`, `RespuestaA2AInvalida`, `IdentificadorAsistenteObsoleto`), validación
+  estructural del JSON y **recuperación de `assistant_id` obsoleto** (404 → recargar → reintentar
+  una vez, sin bucles).
+- **Pruebas:** `tests/test_robustez_a2a_48.py`, `tests/test_guardrails_auth_48.py`.
+  **Evidencia:** `evidencias/11-robustez-48-mac.md`.
 
 ## 11. Arquitectura y diagramas
 

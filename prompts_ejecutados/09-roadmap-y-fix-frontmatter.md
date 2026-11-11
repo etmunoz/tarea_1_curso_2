@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/09-roadmap-y-fix-frontmatter.md`  
 > **Objetivo:** 09 · ROADMAP del taller + encabezado en archivos con frontmatter  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1928 · **Última modificación:** 20261111 1343
+> **Creación:** 20261110 1928 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # 09 · ROADMAP del taller + encabezado en archivos con frontmatter

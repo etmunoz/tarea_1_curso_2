@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1343
+# Última modificación: 20261111 1406
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.
@@ -45,12 +45,12 @@ class _Resp:
 
 @pytest.fixture(autouse=True)
 def _limpiar_caches():
-    """Limpia las cachés de a2a entre pruebas (assistant_id y dialecto)."""
-    a2a._cache_aid.clear()
-    a2a._cache_dialecto.clear()
+    """Limpia las cachés de a2a y catalogo entre pruebas."""
+    for d in (a2a._cache_aid, a2a._cache_dialecto, catalogo._cards, catalogo._ultima_card, catalogo._disp):
+        d.clear()
     yield
-    a2a._cache_aid.clear()
-    a2a._cache_dialecto.clear()
+    for d in (a2a._cache_aid, a2a._cache_dialecto, catalogo._cards, catalogo._ultima_card, catalogo._disp):
+        d.clear()
 
 
 def test_connect_error_es_agente_no_disponible(monkeypatch):
@@ -80,11 +80,13 @@ def test_http_500_es_agente_no_disponible(monkeypatch):
     assert "500" in e.value.motivo
 
 
-def test_json_invalido_es_agente_no_disponible(monkeypatch):
-    """Cuerpo que no es JSON → AgenteNoDisponible (no ValueError crudo)."""
+def test_json_invalido_es_respuesta_invalida(monkeypatch):
+    """Cuerpo que no es JSON → RespuestaA2AInvalida (no ValueError crudo). Es un error de
+    protocolo, distinto del de transporte (AgenteNoDisponible)."""
     monkeypatch.setattr(a2a.httpx, "post", lambda *a, **k: _Resp(bad_json=True))
-    with pytest.raises(a2a.AgenteNoDisponible):
+    with pytest.raises(a2a.RespuestaA2AInvalida):
         a2a.assistant_id("https://raro.example", "agente_x")
+    assert issubclass(a2a.RespuestaA2AInvalida, a2a.ErrorA2A)
 
 
 def test_grafo_desconocido_es_agente_no_disponible(monkeypatch):
@@ -111,11 +113,14 @@ def test_catalogo_se_construye_con_un_agente_caido(monkeypatch):
     cat = catalogo.construir_catalogo()
     texto = catalogo.texto_catalogo(cat)  # no debe lanzar
     assert "Agente de Ezequiel" in texto
-    assert "no disponible ahora" in texto
+    # El agente caído que NUNCA se descubrió aparece como no elegible (sin ficha), distinto de
+    # uno "temporalmente no disponible" (que sí tendría capacidades conocidas).
+    assert "sin ficha" in texto
     vivo = next(a for a in cat if a.graph == "agente_ezequiel")
     caido = next(a for a in cat if a.graph == "agente_fabio")
     assert vivo.disponible() is True
     assert caido.disponible() is False
+    assert caido.conocido() is False  # nunca se supo qué hace → inexistente, no "desconectado"
     assert caido.nombre == "agente_fabio"  # fallback al id del grafo
 
 
@@ -129,7 +134,11 @@ def test_consultar_devuelve_estado_controlado(monkeypatch):
 
     class FakeAgente:
         nombre = "Agente de Fabio"
+        graph = "agente_fabio"
         local = False
+
+        def conocido(self):
+            return True  # sí sabemos qué hace (es el especialista), pero está caído
 
         def preguntar(self, texto, ctx):
             raise a2a.AgenteNoDisponible("Agente de Fabio", "no se pudo conectar (¿túnel caído?)")
@@ -138,5 +147,6 @@ def test_consultar_devuelve_estado_controlado(monkeypatch):
     estado = {"messages": [HumanMessage(content="¿Qué símbolos hay en Reiki?")], "elegido": "Agente de Fabio"}
     out = graph.consultar(estado, {"configurable": {"thread_id": "t1"}})
     assert out["ruta"] == ["agente_no_disponible"]
-    assert "no está disponible temporalmente" in out["respuesta"]
+    assert "es el especialista" in out["respuesta"]
+    assert "no está disponible" in out["respuesta"]
     assert "continúan operativos" in out["respuesta"]

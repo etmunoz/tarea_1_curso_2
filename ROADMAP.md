@@ -2,7 +2,7 @@
 > **Archivo:** `ROADMAP.md`  
 > **Objetivo:** ROADMAP · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1928 · **Última modificación:** 20261111 1343
+> **Creación:** 20261110 1928 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # ROADMAP · Taller A2A (Curso 2 · Sesión 1)

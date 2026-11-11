@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/18-coordinador-bidireccional-evidencias.md`  
 > **Objetivo:** 18 · Coordinador bidireccional y evidencias en ambos PC (todo por túnel HTTP)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2136 · **Última modificación:** 20261111 1343
+> **Creación:** 20261110 2136 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # 18 · Coordinador bidireccional y evidencias en ambos PC (todo por túnel HTTP)

@@ -3,7 +3,7 @@
 # Objetivo: Exporta entrega/documento-entrega.md a entrega/documento-entrega.pdf.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2334
-# Última modificación: 20261111 1343
+# Última modificación: 20261111 1406
 # --8<-- fin-encabezado-grupo
 
 """Exporta entrega/documento-entrega.md a entrega/documento-entrega.pdf.

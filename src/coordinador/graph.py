@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1343
+# Última modificación: 20261111 1406
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
@@ -35,7 +35,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 
-from src.coordinador import a2a, guardrails
+from src.coordinador import a2a, auth, guardrails
 from src.coordinador.catalogo import construir_catalogo, texto_catalogo
 from src.coordinador.prompts import SYSTEM_SUPERVISOR
 
@@ -117,19 +117,33 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
     elegido = next((a for a in catalogo if a.nombre == estado["elegido"]), None)
     if elegido is None:
         return {"respuesta": f"(no encontré al agente '{estado['elegido']}')", "ruta": ["sin_agente"]}
+    # Autorización (mínimo privilegio): defensa en profundidad además del allow-list del catálogo.
+    autorizado, motivo_auth = auth.autorizar(elegido.graph, "message_send")
+    if not autorizado:
+        guardrails.registrar_evento("autorizacion", "BLOCK", elegido.nombre, str(elegido.graph), motivo_auth)
+        return {"respuesta": f"No estás autorizado a consultar a {elegido.nombre}.", "ruta": ["no_autorizado"]}
     thread = (config or {}).get("configurable", {}).get("thread_id") or "sin-hilo"
     clave = (thread, elegido.nombre)
     _ctx.setdefault(clave, a2a.nuevo_context_id())
     try:
         bruto = elegido.preguntar(pregunta, _ctx[clave])
-    except a2a.AgenteNoDisponible as exc:
-        # Estado controlado: el remoto no respondió; los demás agentes siguen operativos.
-        texto = (f"El {elegido.nombre} no está disponible temporalmente ({exc.motivo}). "
-                 "Puedes intentar nuevamente más tarde. Los demás agentes continúan operativos.")
+    except a2a.ErrorA2A:
+        # Estado controlado (sin exponer trazas/URLs internas). Se distingue "el especialista
+        # existe pero está desconectado" de un agente desconocido: aquí el agente ESTÁ
+        # registrado (fue elegido), así que es indisponibilidad, no ausencia de capacidad.
+        if elegido.conocido():
+            texto = (f"El {elegido.nombre} es el especialista para esta consulta, pero actualmente "
+                     "no está disponible. Puedes intentar nuevamente más tarde. Los demás agentes "
+                     "continúan operativos.")
+        else:
+            texto = (f"El {elegido.nombre} no está disponible temporalmente. Puedes intentar "
+                     "nuevamente más tarde. Los demás agentes continúan operativos.")
         return {"respuesta": texto, "ruta": ["agente_no_disponible"]}
-    # Guardrail A2A: la respuesta del agente es un DATO (no se obedece como instrucción).
-    saneado, _flags = guardrails.sanear_respuesta_remota(bruto)
-    texto = f"[{elegido.nombre}] {saneado}"
+    # Guardrail A2A por capas: la respuesta del agente es un DATO (nunca se ejecuta). Según la
+    # política (ALLOW/SANITIZE/BLOCK) se acepta, sanea o descarta.
+    correlacion = str(thread)[:12]
+    _decision, contenido, _motivo = guardrails.evaluar_respuesta_remota(bruto, elegido.nombre, correlacion)
+    texto = f"[{elegido.nombre}] {contenido}"
     paso = "agente_local" if elegido.local else "agente_remoto"
     # La redacción/restricciones de salida las aplica el nodo guardia_salida (común a todo camino).
     return {"respuesta": texto, "ruta": [paso]}

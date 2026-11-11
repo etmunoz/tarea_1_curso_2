@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/35-windows-arreglar-detalles-coordinador.md`  
 > **Objetivo:** 35 · Respuesta — Windows: arreglar los detalles del coordinador y de las herramientas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2253 · **Última modificación:** 20261111 1343
+> **Creación:** 20261110 2253 · **Última modificación:** 20261111 1406
 <!--/encabezado-grupo-->
 
 # 35 · Respuesta — Windows: arreglar los detalles del coordinador y de las herramientas

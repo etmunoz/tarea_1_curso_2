@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/43-mac-pull-windows-y-reempaquetar-final.md`  
 > **Objetivo:** Prompt 43 · Mac: integrar evidencias de Windows y reempaquetar la entrega final  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2349 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 2349 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # Prompt 43 · Mac: integrar evidencias de Windows y reempaquetar la entrega final

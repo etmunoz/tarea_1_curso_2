@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `evidencias/README.md`  
+> **Archivo:** `entrega/tarea_1_curso_2/evidencias/README.md`  
 > **Objetivo:** Evidencias  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # Evidencias

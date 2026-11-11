@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/11-esqueleto-entrega.md`  
 > **Objetivo:** 11 · Respuesta — Esqueleto de entrega y empaquetador  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # 11 · Respuesta — Esqueleto de entrega y empaquetador

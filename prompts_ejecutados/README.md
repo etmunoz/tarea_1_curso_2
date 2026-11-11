@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -58,3 +58,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 43 | [Mac: integrar evidencias de Windows y reempaquetar la entrega final](43-mac-pull-windows-y-reempaquetar-final.md) | [respuesta](../respuestas/43-mac-pull-windows-y-reempaquetar-final.md) |
 | 44 | [Resiliencia de agentes remotos y guardrails](44-resiliencia-remota-y-guardrails.md) | [respuesta](../respuestas/44-resiliencia-remota-y-guardrails.md) |
 | 45 | [Forzar el estado controlado end-to-end (remoto caído)](45-forzar-estado-controlado-end-to-end.md) | [respuesta](../respuestas/45-forzar-estado-controlado-end-to-end.md) |
+| 46 | [Diagramas: grafo del coordinador y arquitectura](46-diagramas-grafo-y-arquitectura.md) | [respuesta](../respuestas/46-diagramas-grafo-y-arquitectura.md) |

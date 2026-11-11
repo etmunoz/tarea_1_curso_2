@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/26-windows-levantar-y-verificar-agente-tunel.md`  
 > **Objetivo:** 26 · Windows: el usuario levanta agente y túnel; Claude verifica  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2215 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 2215 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # 26 · Windows: el usuario levanta agente y túnel; Claude verifica

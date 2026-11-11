@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/19-app-web-por-equipo.md`  
 > **Objetivo:** 19 · Respuesta — App web por equipo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2140 · **Última modificación:** 20261111 0735
+> **Creación:** 20261110 2140 · **Última modificación:** 20261111 0743
 <!--/encabezado-grupo-->
 
 # 19 · Respuesta — App web por equipo

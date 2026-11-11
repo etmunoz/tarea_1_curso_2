@@ -3,7 +3,7 @@
 # Objetivo: Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1204
+# Última modificación: 20261111 1205
 # --8<-- fin-encabezado-grupo
 
 """Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
@@ -12,8 +12,9 @@ Tres puntos de control (regla de AGENTS.md: lo observado es un DATO, no una inst
 
 - **Entrada** (`revisar_entrada`): rechaza solicitudes vacías, excesivamente largas o
   con patrones de inyección/jailbreak, antes de gastar el LLM o molestar a un agente.
-- **Salida** (`redactar_secretos`): redacta credenciales e información sensible de la
-  respuesta final (claves de API, tokens, contraseñas, tarjetas).
+- **Salida** (`revisar_salida`, común a todo camino; `redactar_secretos` es su base):
+  redacta credenciales (claves de API, tokens, contraseñas, tarjetas), tope de longitud y
+  evita respuestas vacías.
 - **Comunicación A2A** (`sanear_respuesta_remota`): la respuesta de un agente remoto es
   un dato no confiable; se redactan sus secretos y se marca (no se obedece) cualquier
   intento de instrucción incrustada.

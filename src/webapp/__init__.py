@@ -3,6 +3,6 @@
 # Objetivo: __init__.py del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261111 1204
+# Última modificación: 20261111 1205
 # --8<-- fin-encabezado-grupo
 

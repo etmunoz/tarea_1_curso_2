@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de la base SQLite de modelos de ciencia de datos. Sin API key ni servidor.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261111 1204
+# Última modificación: 20261111 1205
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de la base SQLite de modelos de ciencia de datos. Sin API key ni servidor."""

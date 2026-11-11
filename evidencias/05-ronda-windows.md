@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/05-ronda-windows.md`  
 > **Objetivo:** Ronda de preguntas · evidencia (windows)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2137 · **Última modificación:** 20261111 1204
+> **Creación:** 20261110 2137 · **Última modificación:** 20261111 1205
 <!--/encabezado-grupo-->
 
 # Ronda de preguntas · evidencia (windows)

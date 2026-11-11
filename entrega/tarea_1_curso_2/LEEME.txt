@@ -1,9 +1,9 @@
 # --8<-- encabezado-grupo
-# Archivo: entrega/tarea_1_curso_2/LEEME.txt
+# Archivo: entrega/LEEME.txt
 # Objetivo: LEEME.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2321
-# Última modificación: 20261111 1204
+# Última modificación: 20261111 1205
 # --8<-- fin-encabezado-grupo
 
 ================================================================================

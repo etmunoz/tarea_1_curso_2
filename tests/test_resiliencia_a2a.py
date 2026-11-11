@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1204
+# Última modificación: 20261111 1205
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.

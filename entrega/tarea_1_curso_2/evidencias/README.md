@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `entrega/tarea_1_curso_2/evidencias/README.md`  
+> **Archivo:** `evidencias/README.md`  
 > **Objetivo:** Evidencias  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1204
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1205
 <!--/encabezado-grupo-->
 
 # Evidencias
@@ -18,7 +18,7 @@ Las que requieren el agente vivo necesitan `GOOGLE_API_KEY` + `uv run langgraph 
 | `04-catalogo.png` | el coordinador con los agentes de otros computadores en el catálogo | correr `notebooks/coordinador_paso_a_paso.ipynb` (paso 1) o `uv run python -m src.coordinador.graph` con `URLS_AGENTES` cargado |
 | `05-ronda.png` | las 3 preguntas de la ronda con el agente elegido, el motivo y la respuesta `[Agente de …]` | `uv run python -m src.coordinador.graph` (muestra `ruta:` y `[Nombre] …`) |
 
-| `06-robustez-mac.md` | resiliencia ante agente remoto caído + guardrails (ataques detenidos) | `uv run python tools/evidencia_robustez.py --remoto <url-caida> --etiqueta mac` |
+| `06-robustez-mac.md` | resiliencia (remoto caído) + guardrails de entrada/salida/A2A + allow-list de agentes | `uv run python tools/evidencia_robustez.py --remoto <url-caida> --etiqueta mac` |
 | `07-grafo-coordinador.svg` | grafo del coordinador (guardia_entrada → enrutar → consultar/sin_agente) | `graph.get_graph().draw_mermaid()` + SVG |
 | `08-arquitectura.svg` | arquitectura A2A de todos los agentes (2 equipos por Cloudflare) | diagrama del grupo |
 | `09-diagramas.md` | índice de los diagramas (mermaid auténtico + SVG) | — |

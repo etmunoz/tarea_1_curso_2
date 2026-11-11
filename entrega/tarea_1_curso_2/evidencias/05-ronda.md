@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `entrega/tarea_1_curso_2/evidencias/05-ronda.md`  
+> **Archivo:** `evidencias/05-ronda.md`  
 > **Objetivo:** Ronda de preguntas · evidencia  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2041 · **Última modificación:** 20261111 1204
+> **Creación:** 20261110 2041 · **Última modificación:** 20261111 1205
 <!--/encabezado-grupo-->
 
 # Ronda de preguntas · evidencia

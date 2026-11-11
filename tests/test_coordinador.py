@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del coordinador (supervisor).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del coordinador (supervisor).
@@ -37,10 +37,62 @@ def test_catalogo_local_desde_env(monkeypatch):
     ]
 
 
+def test_catalogo_marca_locales_y_remotos(monkeypatch):
+    """Prueba: los grafos de A2A_GRAFOS_LOCALES quedan local=True y los de URLS_AGENTES local=False."""
+    monkeypatch.setenv("A2A_BASE", "http://127.0.0.1:2024")
+    monkeypatch.setenv("A2A_GRAFOS_LOCALES", "agente_tomas")
+    monkeypatch.setenv("URLS_AGENTES", "https://mac.example#agente_ezequiel")
+    cat = catalogo.construir_catalogo()
+    assert [(a.graph, a.local) for a in cat] == [("agente_tomas", True), ("agente_ezequiel", False)]
+
+
+def test_ficha_se_pide_una_vez_y_nombre_consistente(monkeypatch):
+    """Prueba: aunque el catálogo se rearme, la ficha se pide UNA vez; si luego el remoto
+    fallara, el nombre sigue siendo el de la ficha (no el id del grafo)."""
+    llamadas = []
+
+    def falsa_card(base, graph, timeout=10):
+        llamadas.append((base, graph))
+        if len(llamadas) > 1:
+            raise RuntimeError("el túnel no respondió")
+        return {"name": "Agente de Ezequiel", "description": "IA"}
+
+    monkeypatch.setattr(catalogo, "_cards", {})
+    monkeypatch.setattr(catalogo.a2a, "agent_card", falsa_card)
+    monkeypatch.setenv("A2A_GRAFOS_LOCALES", "")
+    monkeypatch.setenv("URLS_AGENTES", "https://mac.example#agente_ezequiel")
+    nombres = [a.nombre for _ in range(3) for a in catalogo.construir_catalogo()]
+    assert nombres == ["Agente de Ezequiel"] * 3
+    assert len(llamadas) == 1
+
+
 def test_texto_de_resultado_recorre_artifacts():
     """Prueba: texto de resultado recorre artifacts."""
     res = {"status": {"state": "completed"}, "artifacts": [{"parts": [{"kind": "text", "text": "ok"}]}]}
     assert a2a._texto_de_resultado(res) == "ok"
+
+
+def test_texto_de_resultado_no_duplica_ni_repite_la_pregunta():
+    """Prueba: con history + artifacts (forma real de langgraph dev) sale la respuesta UNA vez."""
+    res = {
+        "kind": "task",
+        "history": [
+            {"role": "user", "parts": [{"kind": "text", "text": "¿Cuáles son los principios?"}]},
+            {"role": "agent", "parts": [{"kind": "text", "text": "Solo por hoy…"}]},
+        ],
+        "status": {"state": "completed"},
+        "artifacts": [{"parts": [{"kind": "text", "text": "Solo por hoy…"}]}],
+    }
+    assert a2a._texto_de_resultado(res) == "Solo por hoy…"
+
+
+def test_texto_de_resultado_sin_artifacts_usa_ultimo_mensaje_del_agente():
+    """Prueba: sin artifacts, toma el último mensaje del agente en history (no la pregunta)."""
+    res = {"history": [
+        {"role": "user", "parts": [{"kind": "text", "text": "pregunta"}]},
+        {"role": "agent", "parts": [{"kind": "text", "text": "respuesta"}]},
+    ]}
+    assert a2a._texto_de_resultado(res) == "respuesta"
 
 
 @pytest.mark.skipif(not os.environ.get("GOOGLE_API_KEY"), reason="requiere GOOGLE_API_KEY")

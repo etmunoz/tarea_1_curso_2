@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -21,7 +21,8 @@ que el supervisor decida a quién enrutar. Las cards se piden una vez (lazy + ca
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+import time
+from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
@@ -29,22 +30,35 @@ from src.coordinador import a2a
 
 load_dotenv()
 
+# Caché de fichas compartida por todo el proceso: (base, graph) → (instante, card).
+# El grafo arma el catálogo varias veces por pregunta (enrutar, _rama, consultar,
+# sin_agente); sin esta caché cada vez pedía las fichas otra vez por el túnel, y si una
+# fallaba a mitad de camino el agente aparecía con su id de grafo en vez de su nombre.
+# Solo se guardan las respuestas exitosas; se renuevan cada CARD_TTL segundos.
+CARD_TTL = float(os.environ.get("A2A_CARD_TTL", "120"))
+_cards: dict[tuple[str, str], tuple[float, dict]] = {}
+
 
 @dataclass
 class AgenteRemoto:
     """Objetivo: representar un agente del catálogo (local o remoto) y hablar con él.
-    Atributos: base_url (str) del servidor, graph (str) id del grafo, _card (dict) caché de la ficha."""
+    Atributos: base_url (str) del servidor, graph (str) id del grafo,
+    local (bool) True si corre en el servidor propio (A2A_BASE), False si es de un compañero."""
 
     base_url: str
     graph: str
-    _card: dict | None = field(default=None, repr=False)
+    local: bool = False
 
     def card(self) -> dict:
-        """Objetivo: devolver la Agent Card del agente (cacheada).
-        Entradas: ninguna. Salida: dict — la tarjeta A2A."""
-        if self._card is None:
-            self._card = a2a.agent_card(self.base_url, self.graph)
-        return self._card
+        """Objetivo: devolver la Agent Card del agente (con la caché compartida y TTL).
+        Entradas: ninguna. Salida: dict — la tarjeta A2A. Lanza excepción si no responde."""
+        clave = (self.base_url.rstrip("/"), self.graph)
+        guardada = _cards.get(clave)
+        if guardada and time.monotonic() - guardada[0] < CARD_TTL:
+            return guardada[1]
+        card = a2a.agent_card(self.base_url, self.graph)
+        _cards[clave] = (time.monotonic(), card)
+        return card
 
     @property
     def nombre(self) -> str:
@@ -94,9 +108,9 @@ def construir_catalogo() -> list[AgenteRemoto]:
     """Arma el catálogo desde el entorno: grafos locales + agentes de compañeros."""
     base = os.environ.get("A2A_BASE", "http://127.0.0.1:2024").rstrip("/")
     locales = os.environ.get("A2A_GRAFOS_LOCALES", "agente_viajes,agente_ezequiel,agente_cocina,agente_tomas")
-    catalogo = [AgenteRemoto(base, g.strip()) for g in locales.split(",") if g.strip()]
+    catalogo = [AgenteRemoto(base, g.strip(), local=True) for g in locales.split(",") if g.strip()]
     for url, graph in _parse_urls_agentes(os.environ.get("URLS_AGENTES", "")):
-        catalogo.append(AgenteRemoto(url, graph))
+        catalogo.append(AgenteRemoto(url, graph, local=False))
     return catalogo
 
 

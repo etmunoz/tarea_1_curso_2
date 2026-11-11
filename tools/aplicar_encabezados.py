@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261110 2230
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
@@ -37,7 +37,7 @@ HASH_FILES = {".gitignore", ".env.example", ".dockerignore"}
 
 EXCLUIR_EXT = {".json", ".lock", ".bru", ".woff2", ".png", ".jpg", ".svg", ".ipynb"}
 EXCLUIR_NOMBRE = {"uv.lock", ".python-version"}
-EXCLUIR_DIR = {".git", ".venv", "__pycache__", ".langgraph_api", ".ipynb_checkpoints"}
+EXCLUIR_DIR = {".git", ".venv", "__pycache__", ".langgraph_api", ".ipynb_checkpoints", ".pytest_cache"}
 
 # Centinelas. En almohadilla (.py, etc.) el encabezado es texto visible.
 _TAG = "--8<-- encabezado-grupo"
@@ -210,7 +210,7 @@ def procesar(path: Path, check: bool) -> bool:
     """Objetivo: insertar/actualizar el encabezado de un archivo (o verificarlo con check).
     Entradas: path (Path), check (bool) solo verifica si True.
     Salida: bool — en check, True si tiene encabezado; al aplicar, True."""
-    rel = str(path.relative_to(RAIZ))
+    rel = path.relative_to(RAIZ).as_posix()
     ext = path.suffix.lower()
     markup = ext in MARKUP_EXT
     texto = path.read_text(encoding="utf-8")
@@ -255,7 +255,7 @@ def _notebooks(check: bool) -> list[str]:
     for path in RAIZ.rglob("*.ipynb"):
         if any(d in path.parts for d in EXCLUIR_DIR):
             continue
-        rel = str(path.relative_to(RAIZ))
+        rel = path.relative_to(RAIZ).as_posix()
         nb = nbformat.read(str(path), 4)
         celdas = nb.cells
         tiene = bool(celdas) and celdas[0].cell_type == "markdown" and (
@@ -296,7 +296,7 @@ def main() -> int:
         ok = procesar(path, check)
         n += 1
         if check and not ok:
-            faltan.append(str(path.relative_to(RAIZ)))
+            faltan.append(path.relative_to(RAIZ).as_posix())
     faltan += _notebooks(check)
 
     if check:

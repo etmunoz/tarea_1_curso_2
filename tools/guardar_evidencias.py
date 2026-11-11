@@ -3,7 +3,7 @@
 # Objetivo: Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
@@ -43,6 +43,19 @@ PREGUNTAS_DEF = [
 ]
 
 
+def _con_encabezado(path: Path) -> None:
+    """Objetivo: poner el encabezado del grupo (CONVENCIONES.md) a una evidencia recién escrita.
+    Antes se escribían sin encabezado y `aplicar_encabezados.py --check` fallaba.
+    Entradas: path (Path) del archivo. Salida: None (si la herramienta falla, solo avisa)."""
+    try:
+        sys.path.insert(0, str(RAIZ / "tools"))
+        import aplicar_encabezados  # noqa: PLC0415
+
+        aplicar_encabezados.procesar(path, check=False)
+    except Exception as exc:  # noqa: BLE001 - la evidencia ya está escrita
+        print(f"  (aviso: no se pudo poner el encabezado a {path.name}: {exc})")
+
+
 def _suf(etiqueta: str) -> str:
     """Objetivo: sufijo de archivo según la etiqueta. Entradas: etiqueta (str). Salida: str ('-mac', '')."""
     return f"-{etiqueta}" if etiqueta else ""
@@ -55,6 +68,7 @@ def guardar_catalogo(etiqueta: str = "") -> None:
     texto = texto_catalogo(construir_catalogo())
     nombre = f"04-catalogo{_suf(etiqueta)}.txt"
     (EV / nombre).write_text(texto + "\n", encoding="utf-8")
+    _con_encabezado(EV / nombre)
     print(f"✓ evidencias/{nombre}")
     print(texto)
 
@@ -87,6 +101,7 @@ def guardar_ronda(preguntas: list[str], etiqueta: str = "") -> None:
     EV.mkdir(exist_ok=True)
     nombre = f"05-ronda{_suf(etiqueta)}.md"
     (EV / nombre).write_text("\n".join(lineas), encoding="utf-8")
+    _con_encabezado(EV / nombre)
     print(f"✓ evidencias/{nombre}")
 
 

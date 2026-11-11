@@ -46,3 +46,5 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 31 | [Windows: codificación de los .ps1 (UTF-8 con BOM)](31-windows-bom-en-ps1.md) | [respuesta](../respuestas/31-windows-bom-en-ps1.md) |
 | 32 | [Windows: coordinador contra el túnel del Mac](32-windows-coordinador-contra-mac.md) | [respuesta](../respuestas/32-windows-coordinador-contra-mac.md) |
 | 33 | [Windows: corrida real entre 2 PC (lado Windows)](33-windows-corrida-real-2-pc.md) | [respuesta](../respuestas/33-windows-corrida-real-2-pc.md) |
+| 34 | [Windows: commit y push de la corrida real](34-windows-commit-push-corrida-real.md) | [respuesta](../respuestas/34-windows-commit-push-corrida-real.md) |
+| 35 | [Windows: arreglar detalles del coordinador y herramientas](35-windows-arreglar-detalles-coordinador.md) | [respuesta](../respuestas/35-windows-arreglar-detalles-coordinador.md) |

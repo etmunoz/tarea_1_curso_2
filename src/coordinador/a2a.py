@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -52,26 +52,37 @@ def nuevo_context_id() -> str:
     return str(uuid.uuid4())
 
 
+def _textos(o) -> list[str]:
+    """Objetivo: juntar los `text` de las partes A2A dentro de un dict/list (recursivo).
+    Entradas: o (dict | list | otro). Salida: list[str] — textos no vacíos, en orden."""
+    if isinstance(o, dict):
+        if o.get("kind") == "text" and isinstance(o.get("text"), str):
+            return [o["text"]] if o["text"].strip() else []
+        return [t for v in o.values() for t in _textos(v)]
+    if isinstance(o, list):
+        return [t for v in o for t in _textos(v)]
+    return []
+
+
 def _texto_de_resultado(result: dict) -> str:
-    """Objetivo: extraer el texto de una respuesta A2A recorriendo sus partes.
-    Entradas: result (dict) con artifacts/status del resultado A2A.
-    Salida: str — el texto concatenado (o str(result) si no hay partes de texto)."""
-    textos: list[str] = []
-
-    def _walk(o):
-        """Recorre recursivamente dict/list acumulando los `text` de las partes."""
-        if isinstance(o, dict):
-            if o.get("kind") == "text" and isinstance(o.get("text"), str):
-                textos.append(o["text"])
-            else:
-                for v in o.values():
-                    _walk(v)
-        elif isinstance(o, list):
-            for v in o:
-                _walk(v)
-
-    _walk(result)
-    return "\n".join(t for t in textos if t.strip()) or str(result)
+    """Objetivo: extraer la RESPUESTA del agente de un resultado A2A (sin repetir nada).
+    El resultado trae la respuesta en `artifacts` y además el `history` completo (la
+    pregunta del usuario y la misma respuesta otra vez). Por eso se toma, en orden:
+    1) los `artifacts`; 2) el mensaje de `status`; 3) el último mensaje del agente en
+    `history`; 4) como último recurso, todos los textos.
+    Entradas: result (dict) del resultado A2A.
+    Salida: str — el texto de la respuesta (o str(result) si no hay partes de texto)."""
+    candidatos = [
+        result.get("artifacts"),
+        (result.get("status") or {}).get("message"),
+        next((m for m in reversed(result.get("history") or []) if m.get("role") == "agent"), None),
+        result,
+    ]
+    for c in candidatos:
+        textos = _textos(c) if c else []
+        if textos:
+            return "\n".join(textos)
+    return str(result)
 
 
 def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeout: float = 90) -> str:

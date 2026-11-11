@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2252
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
@@ -52,7 +52,7 @@ class Decision(BaseModel):
 
 class Estado(TypedDict):
     """Objetivo: estado del grafo coordinador. Campos: messages (conversación), elegido (agente),
-    motivo, respuesta final, ruta (pasos recorridos: supervisor/agente_remoto/sin_agente)."""
+    motivo, respuesta final, ruta (pasos recorridos: supervisor/agente_local/agente_remoto/sin_agente)."""
 
     messages: Annotated[list, operator.add]
     elegido: str
@@ -90,7 +90,9 @@ def enrutar(estado: Estado) -> dict:
 def consultar(estado: Estado, config: RunnableConfig) -> dict:
     """Objetivo (nodo): reenviar la pregunta al agente elegido por A2A y etiquetar la respuesta.
     Entradas: estado (Estado) con 'elegido'; config (RunnableConfig) con el thread_id.
-    Salida: dict — {respuesta '[Nombre] …', messages, ruta:['agente_remoto']}."""
+    Salida: dict — {respuesta '[Nombre] …', messages, ruta:['agente_local'|'agente_remoto']}:
+    'agente_local' si el agente corre en el servidor propio (A2A_BASE), 'agente_remoto' si
+    es de un compañero (llega por su túnel)."""
     pregunta = _ultimo_texto(estado["messages"])
     catalogo = construir_catalogo()
     elegido = next((a for a in catalogo if a.nombre == estado["elegido"]), None)
@@ -101,7 +103,8 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
     _ctx.setdefault(clave, a2a.nuevo_context_id())
     respuesta = elegido.preguntar(pregunta, _ctx[clave])
     texto = f"[{elegido.nombre}] {respuesta}"
-    return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": ["agente_remoto"]}
+    paso = "agente_local" if elegido.local else "agente_remoto"
+    return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": [paso]}
 
 
 def sin_agente(estado: Estado) -> dict:

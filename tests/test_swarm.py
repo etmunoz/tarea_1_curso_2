@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del swarm (vuelos + hoteles + actividades).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1920
-# Última modificación: 20261110 2113
+# Última modificación: 20261110 2124
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del swarm (vuelos + hoteles + actividades).

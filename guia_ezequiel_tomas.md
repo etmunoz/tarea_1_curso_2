@@ -1,202 +1,174 @@
 <!--encabezado-grupo-->
 > **Archivo:** `guia_ezequiel_tomas.md`  
-> **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)  
+> **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — todo por Cloudflare  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2113
+> **Creación:** 20261110 1953 · **Última modificación:** 20261110 2124
 <!--/encabezado-grupo-->
 
-# Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)
+# Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — todo por Cloudflare
 
-Prueba de A2A **entre tus dos computadores**, antes de hacerlo con los compañeros:
+Prueba de A2A **entre dos computadores en redes distintas** (sin LAN): todo el tráfico
+entre equipos pasa por **Cloudflare**. Pensada para ser **plug-and-play**: sigue los
+pasos en orden y funciona.
 
-- **MacOS** corre el agente **Ezequiel** (IA Engineer & Data Scientist).
-- **Windows** corre el agente **Tomás** (Maestro Reiki).
-- El **coordinador** (en el Mac) suma a los dos y enruta cada pregunta al que corresponde.
+## Reparto (quién hace qué)
+
+- **MacOS = Ezequiel**: corre el agente **Ezequiel** (IA/Data Science), **hospeda el Redis**
+  (dockerizado) y corre el **coordinador** que enruta las preguntas.
+- **Windows = Tomás**: corre el agente **Tomás** (Maestro Reiki) y su **RAG**, que usa el
+  **Redis del Mac** de forma remota.
+
+Todo entre equipos va por Cloudflare:
 
 ```
-   MacOS                                   Windows
- ┌─────────────────────────┐            ┌─────────────────────────┐
- │ langgraph dev :2024      │            │ langgraph dev :2024      │
- │  · agente_ezequiel (local)│           │  · agente_tomas          │
- │ coordinador ─────────────┼──A2A──────▶│  (expuesto por cloudflared│
- │  local: ezequiel          │  túnel     │   https://…trycloudflare) │
- │  remoto: tomas (túnel win)│            │                          │
- └─────────────────────────┘            └─────────────────────────┘
-        IA/Data Science → Ezequiel (local)
-        Reiki           → Tomás (remoto, en el Windows)
+   MacOS (Ezequiel)                               Windows (Tomás)
+ ┌───────────────────────────────┐             ┌───────────────────────────────┐
+ │ langgraph dev :2024            │             │ langgraph dev :2024            │
+ │   · agente_ezequiel (local)    │             │   · agente_tomas              │
+ │ Redis :6379 (Docker)           │             │ RAG de Tomás → usa el Redis   │
+ │   └─ túnel TCP Cloudflare ─────┼──TCP CF────▶│      del Mac (forwarder local) │
+ │ coordinador:                   │             │ túnel HTTP Cloudflare de Tomás │
+ │   local: ezequiel              │◀──HTTP CF───┼──── (trycloudflare.com)        │
+ │   remoto: tomas (túnel HTTP)   │             │                               │
+ └───────────────────────────────┘             └───────────────────────────────┘
+      IA/Data Science → Ezequiel (local)
+      Reiki           → Tomás (remoto, Windows) · responde con el RAG sobre el Redis del Mac
 ```
 
-## Modo automatizado (scripts)
+## Requisitos
 
-Para no pegar comandos a mano, cada lado tiene sus scripts (`.sh` en Mac, `.ps1` en
-Windows). El único paso manual inevitable es **intercambiar la URL del túnel**.
+| | Mac (Ezequiel) | Windows (Tomás) |
+|---|---|---|
+| uv + Python 3.13 | sí | sí (lo instala el setup) |
+| cloudflared | `brew install cloudflared` | lo instala el setup |
+| Docker Desktop | **sí** (para Redis) | no |
+| GOOGLE_API_KEY (Gemini, con saldo) | sí | sí (la misma) |
+| **Cuenta Cloudflare + un DOMINIO en Cloudflare** | **sí** (para el túnel TCP de Redis) | no |
 
-**MacOS (Ezequiel):**
+> **Importante (único prerrequisito especial):** exponer Redis por Cloudflare entre redes
+> distintas necesita un **túnel con nombre (TCP)**, y eso exige un **dominio gestionado en
+> tu cuenta de Cloudflare** (sus nameservers apuntando a Cloudflare). Elige un host, p. ej.
+> `redis-tomas.TU-DOMINIO.com`. Los agentes (HTTP) usan túneles gratis `trycloudflare.com`
+> y no necesitan dominio.
+
+---
+
+## A · MacOS (Ezequiel) — desde cero
+
 ```bash
-./scripts/mac_servir.sh                                   # terminal 1: langgraph dev + ficha de Ezequiel
-./scripts/mac_tunel.sh                                     # terminal 2: (opcional) túnel del Mac
-./scripts/mac_coordinador.sh "https://<tunel-win>#agente_tomas"   # terminal 3: enruta y guarda evidencias
+# 1) Clonar (si no está)
+mkdir -p ~/proyectos && cd ~/proyectos
+gh repo clone etmunoz/tarea_1_curso_2 2>/dev/null || true
+cd tarea_1_curso_2
+uv sync
+cp .env.example .env            # pega tu GOOGLE_API_KEY en .env
+uv run python tools/probar_gemini.py   # debe decir: ✓ Gemini respondió 'OK'
 ```
 
-**Windows (Tomás) · PowerShell:**
-```powershell
-.\scripts\win_servir.ps1          # terminal 1: langgraph dev + ficha de Tomás
-.\scripts\win_tunel.ps1           # terminal 2: túnel -> copia la URL y pásala al Mac
-# (si el coordinador lo corres en el Windows):
-.\scripts\win_coordinador.ps1 "https://<tunel-mac>#agente_ezequiel"
+```bash
+# 2) Terminal 1 — agente Ezequiel (langgraph dev) + su ficha
+./scripts/mac_servir.sh
 ```
 
-Los scripts hacen `uv sync`, crean `.env` si falta (te avisan de la `GOOGLE_API_KEY`),
-sacan cualquier conda activo, levantan el servidor y configuran la ficha sola cuando
-el servidor responde. El detalle de cada paso está abajo.
+```bash
+# 3) Terminal 2 — Redis + túnel TCP de Cloudflare (reemplaza por tu host real)
+./scripts/mac_redis_cloudflare.sh redis-tomas.TU-DOMINIO.com
+# La primera vez abre el navegador (cloudflared tunnel login): elige tu dominio.
+# Deja esta terminal ABIERTA. Pásale al Windows el host: redis-tomas.TU-DOMINIO.com
+```
 
-## Preparar el Windows DESDE CERO (automático)
+---
 
-Si el otro computador no tiene nada, en **PowerShell**:
+## B · Windows (Tomás) — desde cero (PowerShell)
 
 ```powershell
-# 1) GitHub CLI para clonar el repo privado
+# 1) Clonar el repo privado
 winget install -e --id GitHub.cli --accept-source-agreements --accept-package-agreements
-# (reabre PowerShell para refrescar el PATH)
-gh auth login                      # GitHub.com → HTTPS → Login with a web browser
-
-# 2) Clonar el repo
+#    (cierra y reabre PowerShell para refrescar el PATH)
+gh auth login                        # GitHub.com → HTTPS → Login with a web browser
 mkdir "$env:USERPROFILE\proyectos" -ErrorAction SilentlyContinue
 cd "$env:USERPROFILE\proyectos"
 gh repo clone etmunoz/tarea_1_curso_2
 cd tarea_1_curso_2
 
-# 3) Setup automático (instala uv, Python 3.13, cloudflared; uv sync; .env + clave; valida)
-.\scripts\setup_windows.ps1
-# …o con RAG de Reiki (instala/arranca Docker + Redis y carga los documentos):
-.\scripts\setup_windows.ps1 -ConRedis
+# 2) Setup (instala uv, Python 3.13, cloudflared; uv sync; .env + clave; apunta REDIS_URL al forwarder local)
+.\scripts\setup_windows.ps1 -RedisUrl redis://localhost:6379
 ```
-
-`setup_windows.ps1` te pide la `GOOGLE_API_KEY` (la misma del Mac) y la valida con
-`probar_gemini.py`. Al terminar te indica los pasos 1-2-3 (servir, túnel, coordinador).
-Si un `.ps1` no corre por permisos: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
-
-> Nota: Redis en el Windows es **opcional**. Sin él, Tomás igual responde (principios,
-> posiciones, símbolos); el RAG `buscar_reiki` solo se activa con `-ConRedis`.
-
-## 0. Requisitos en CADA computador (si lo haces a mano)
-
-- El repo clonado: `git clone https://github.com/etmunoz/tarea_1_curso_2`
-- **uv** y **Python 3.13** (uv lo instala: `uv python install 3.13`)
-- Una **`GOOGLE_API_KEY`** (Gemini) en `.env` — la clave va solo en `.env` (ignorado), nunca al repo.
-- **cloudflared** instalado (para el túnel):
-  - Mac: `brew install cloudflared`
-  - Windows: `winget install --id Cloudflare.cloudflared` (o descarga el `.exe`)
-
----
-
-## Parte A · MacOS — agente Ezequiel
-
-```bash
-cd ~/proyectos/tarea_1_curso_2
-uv sync
-cp .env.example .env            # pega tu GOOGLE_API_KEY en .env
-uv run langgraph dev            # publica agente_viajes, agente_ezequiel, agente_tomas en :2024
-```
-
-En **otra terminal** del Mac, configura la ficha de Ezequiel y guárdala como evidencia:
-
-```bash
-uv run python tools/configurar_fichas.py --grafos agente_ezequiel --guardar-evidencia
-# → evidencias/02-ficha-agente_ezequiel.json
-```
-
-> El Mac corre también el coordinador (Parte C), así que **no necesita túnel**: el
-> coordinador llega a Ezequiel por `http://127.0.0.1:2024`.
-
----
-
-## Parte B · Windows — agente Tomás (PowerShell)
 
 ```powershell
-cd $env:USERPROFILE\proyectos\tarea_1_curso_2
-uv sync
-Copy-Item .env.example .env     # pon tu GOOGLE_API_KEY en .env
-uv run langgraph dev            # :2024  (la 1ª vez, el firewall pregunta → permitir redes privadas)
+# 3) Terminal A — acceso al Redis del Mac por Cloudflare (deja ABIERTA)
+.\scripts\win_redis_cloudflare.ps1 redis-tomas.TU-DOMINIO.com
 ```
-
-En **otra terminal** (PowerShell), la ficha de Tomás + evidencia:
 
 ```powershell
-uv run python tools/configurar_fichas.py --grafos agente_tomas --guardar-evidencia
-# → evidencias/02-ficha-agente_tomas.json
+# 4) Terminal B — ingesta del RAG (ahora que el Redis del Mac es accesible en localhost:6379)
+uv run python tools/cargar_rag_reiki.py        # debe decir: ✓ N fragmentos indexados
 ```
-
-En **otra terminal**, abre el túnel y copia la URL pública de Tomás:
 
 ```powershell
-cloudflared tunnel --url http://127.0.0.1:2024
-# ... imprime algo como:  https://reiki-azul-123.trycloudflare.com
+# 5) Terminal C — agente Tomás + su ficha
+.\scripts\win_servir.ps1
 ```
 
-Comparte esa URL con el Mac (chat, mensaje, etc.). Verifica desde el Mac que se ve:
-
-```bash
-curl -s "https://reiki-azul-123.trycloudflare.com/.well-known/agent-card.json?assistant_id=$(curl -s -X POST https://reiki-azul-123.trycloudflare.com/assistants/search -H 'Content-Type: application/json' -d '{"graph_id":"agente_tomas"}' | python3 -c 'import json,sys;print(json.load(sys.stdin)[0]["assistant_id"])')" | python3 -m json.tool
+```powershell
+# 6) Terminal D — túnel HTTP de Tomás; COPIA la URL https y pásala al Mac
+.\scripts\win_tunel.ps1
+# imprime algo como: https://reiki-azul-123.trycloudflare.com
 ```
-
-> Deja el `langgraph dev` y el `cloudflared` abiertos en el Windows mientras dure la prueba.
 
 ---
 
-## Parte C · MacOS — el coordinador enruta a los dos
-
-En el **`.env` del Mac**, define el catálogo (Ezequiel local + Tomás remoto por su túnel):
+## C · MacOS (Ezequiel) — el coordinador enruta a los dos
 
 ```bash
-A2A_BASE=http://127.0.0.1:2024
-A2A_GRAFOS_LOCALES=agente_ezequiel
-URLS_AGENTES=https://reiki-azul-123.trycloudflare.com#agente_tomas
+# Terminal 3 — con la URL del túnel de Tomás (Windows)
+./scripts/mac_coordinador.sh "https://<tunel-win>#agente_tomas"
 ```
 
-Corre el coordinador y guarda las evidencias:
+Esperado (enrutamiento correcto):
 
-```bash
-uv run python -m src.coordinador.graph        # ves la ruta y la respuesta [Nombre] …
-uv run python tools/guardar_evidencias.py     # → evidencias/04-catalogo.txt y 05-ronda.md
-```
+- *"¿Qué técnica uso si tengo desbalance de clases?"* → **[Agente de Ezequiel]** (local, Mac)
+- *"¿Qué símbolos se aprenden en el nivel 2 de Reiki?"* → **[Agente de Tomás]** (remoto, Windows; responde con el RAG sobre el Redis del Mac)
+- *"¿Cuánto cuesta un pastel de choclo para 4?"* → **[Agente de cocina chilena]** (local, Mac)
+- *"¿Quién ganó el mundial de 1962?"* → **sin_agente** (rechazado)
 
-Esperado:
-
-- *"¿Qué técnica uso si tengo desbalance de clases?"* → `supervisor → agente_remoto` · **[Agente de Ezequiel]** (local, Mac)
-- *"¿Para qué sirve el símbolo Cho Ku Rei en Reiki?"* → `supervisor → agente_remoto` · **[Agente de Tomás]** (remoto, Windows)
-- *"¿Quién ganó el mundial de 1962?"* → `supervisor → sin_agente` · **ninguno**
+El coordinador guarda `evidencias/04-catalogo.txt` y `evidencias/05-ronda.md`.
 
 ---
 
-## Evidencias a guardar (Paso 7–8 del taller)
+## Evidencias (Paso 7–8 del taller)
 
 | Archivo | Cómo se genera | Dónde |
 |---|---|---|
-| `02-ficha-agente_ezequiel.json` | `configurar_fichas.py` en el Mac | automático |
-| `02-ficha-agente_tomas.json` | `configurar_fichas.py` en el Windows | automático |
-| `04-catalogo.txt` | `guardar_evidencias.py` en el Mac | automático |
-| `05-ronda.md` | `guardar_evidencias.py` en el Mac | automático |
-| `01-saltos.png` | captura del notebook/A2A de un agente usando su herramienta y rechazando lo ajeno | manual |
-| `03-tunel.png` | captura de la terminal de `cloudflared` (Windows) + la ficha de Tomás vista desde el Mac | manual |
+| `02-ficha-agente_ezequiel.json` | `mac_servir.sh` (configura la ficha) | Mac, automático |
+| `02-ficha-agente_tomas.json` | `win_servir.ps1` (configura la ficha) | Windows, automático |
+| `04-catalogo.txt` · `05-ronda.md` | `mac_coordinador.sh` | Mac, automático |
+| `01-saltos.png` | captura de un agente usando su herramienta y rechazando lo ajeno | manual |
+| `03-tunel.png` | captura de `cloudflared` (túnel de Tomás) + su ficha vista desde el Mac | manual |
 
-Todas se juntan corriendo, al final, el empaquetador:
+Empaquetar la entrega al final (en el Mac):
 
 ```bash
-uv run python tools/empaquetar_entrega.py --grupo N   # arma dist/grupo-N-taller-a2a.zip con las evidencias
+uv run python tools/empaquetar_entrega.py --grupo N
 ```
 
 ---
 
 ## Problemas típicos
 
-- **"Connection refused" / el coordinador no ve a Tomás:** revisa que en el Windows sigan abiertos `langgraph dev` y `cloudflared`, y que la URL del `.env` del Mac sea la actual (cloudflared **cambia la URL** cada vez que se reinicia).
-- **El firewall de Windows:** la primera vez, permitir `langgraph`/Python en redes privadas.
-- **`curl` en PowerShell** es otro comando: usa `curl.exe` o `Invoke-RestMethod`.
-- **`assistant_id`:** cada servidor asigna un UUID por grafo; el cliente lo resuelve solo con `POST /assistants/search {"graph_id": ...}`.
-- **La ficha no cambia en el catálogo:** reinicia el `langgraph dev` tras `configurar_fichas.py` si hace falta; el supervisor lee las fichas al construir el catálogo.
+- **cloudflared tunnel login no abre / dominio no aparece:** tu dominio debe estar **agregado y
+  activo en Cloudflare** (nameservers apuntando a Cloudflare). Revisa el panel de Cloudflare.
+- **Windows: el RAG no conecta (`Redis no responde`):** verifica que la Terminal A
+  (`win_redis_cloudflare.ps1`) siga abierta y que `.env` tenga `REDIS_URL=redis://localhost:6379`.
+- **El coordinador no ve a Tomás:** revisa que en el Windows sigan abiertos `win_servir.ps1` y
+  `win_tunel.ps1`, y que la URL que le pasaste al Mac sea la actual (el túnel HTTP **cambia la URL**
+  al reiniciarse).
+- **Firewall de Windows:** la 1ª vez permite `langgraph`/Python en redes privadas.
+- **Permisos de `.ps1`:** `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **402 / sin saldo al usar Gemini:** la clave necesita saldo/cuota (ver `tools/probar_gemini.py`).
 
-## Al terminar
+## Al terminar (teardown)
 
-- `Ctrl+C` en los túneles de `cloudflared` (mientras estén abiertos, cualquiera con la URL usa tu agente y gasta tu clave).
-- Las URLs de `trycloudflare.com` son temporales: no las dejes en el `.env` versionado.
+- `Ctrl+C` en: `win_tunel.ps1`, `win_redis_cloudflare.ps1`, `mac_redis_cloudflare.sh`, `win_servir.ps1`, `mac_servir.sh`.
+- En el Mac, si quieres bajar Redis: `docker compose down`.
+- Las URLs `trycloudflare.com` son temporales: no las dejes en `.env` versionado.

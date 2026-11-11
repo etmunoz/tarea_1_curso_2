@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2113
+# Última modificación: 20261110 2124
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.

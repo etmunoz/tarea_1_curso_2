@@ -2,7 +2,7 @@
 > **Archivo:** `data/reiki/nivel-1-shoden.md`  
 > **Objetivo:** Reiki Nivel 1 (Shoden) · "El principio"  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2113
+> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2124
 <!--/encabezado-grupo-->
 
 # Reiki Nivel 1 (Shoden) · "El principio"

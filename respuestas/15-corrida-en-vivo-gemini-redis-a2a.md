@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/15-corrida-en-vivo-gemini-redis-a2a.md`  
 > **Objetivo:** 15 · Respuesta — Corrida en vivo y correcciones  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2113
+> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2124
 <!--/encabezado-grupo-->
 
 # 15 · Respuesta — Corrida en vivo y correcciones

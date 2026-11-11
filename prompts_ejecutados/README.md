@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2113
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2124
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -29,3 +29,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 14 | [Agente de cocina chilena con costeo](14-agente-cocina-recetas-chilenas.md) | [respuesta](../respuestas/14-agente-cocina-recetas-chilenas.md) |
 | 15 | [Corrida en vivo (Gemini + Redis + A2A) y correcciones](15-corrida-en-vivo-gemini-redis-a2a.md) | [respuesta](../respuestas/15-corrida-en-vivo-gemini-redis-a2a.md) |
 | 16 | [Prueba 2 computadores: setup del Windows](16-prueba-2-pc-setup-windows.md) | [respuesta](../respuestas/16-prueba-2-pc-setup-windows.md) |
+| 17 | [Redis distribuido por Cloudflare (Ezequiel hospeda, Tomás usa)](17-redis-distribuido-cloudflare.md) | [respuesta](../respuestas/17-redis-distribuido-cloudflare.md) |

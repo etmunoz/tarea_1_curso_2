@@ -48,4 +48,5 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 33 | [Windows: corrida real entre 2 PC (lado Windows)](33-windows-corrida-real-2-pc.md) | [respuesta](../respuestas/33-windows-corrida-real-2-pc.md) |
 | 34 | [Windows: commit y push de la corrida real](34-windows-commit-push-corrida-real.md) | [respuesta](../respuestas/34-windows-commit-push-corrida-real.md) |
 | 35 | [Windows: arreglar detalles del coordinador y herramientas](35-windows-arreglar-detalles-coordinador.md) | [respuesta](../respuestas/35-windows-arreglar-detalles-coordinador.md) |
+| 36 | [Windows: el Mac actualizado; verificación de fichas](36-windows-mac-actualizado.md) | [respuesta](../respuestas/36-windows-mac-actualizado.md) |
 | 37 | [Mac: verificar arreglos de Tomás y regenerar la ronda](37-mac-verificar-arreglos-y-ronda.md) | [respuesta](../respuestas/37-mac-verificar-arreglos-y-ronda.md) |

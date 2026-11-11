@@ -2,7 +2,7 @@
 > **Archivo:** `guia_ezequiel_tomas.md`  
 > **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2041
+> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2113
 <!--/encabezado-grupo-->
 
 # Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows)
@@ -50,7 +50,36 @@ Los scripts hacen `uv sync`, crean `.env` si falta (te avisan de la `GOOGLE_API_
 sacan cualquier conda activo, levantan el servidor y configuran la ficha sola cuando
 el servidor responde. El detalle de cada paso está abajo.
 
-## 0. Requisitos en CADA computador
+## Preparar el Windows DESDE CERO (automático)
+
+Si el otro computador no tiene nada, en **PowerShell**:
+
+```powershell
+# 1) GitHub CLI para clonar el repo privado
+winget install -e --id GitHub.cli --accept-source-agreements --accept-package-agreements
+# (reabre PowerShell para refrescar el PATH)
+gh auth login                      # GitHub.com → HTTPS → Login with a web browser
+
+# 2) Clonar el repo
+mkdir "$env:USERPROFILE\proyectos" -ErrorAction SilentlyContinue
+cd "$env:USERPROFILE\proyectos"
+gh repo clone etmunoz/tarea_1_curso_2
+cd tarea_1_curso_2
+
+# 3) Setup automático (instala uv, Python 3.13, cloudflared; uv sync; .env + clave; valida)
+.\scripts\setup_windows.ps1
+# …o con RAG de Reiki (instala/arranca Docker + Redis y carga los documentos):
+.\scripts\setup_windows.ps1 -ConRedis
+```
+
+`setup_windows.ps1` te pide la `GOOGLE_API_KEY` (la misma del Mac) y la valida con
+`probar_gemini.py`. Al terminar te indica los pasos 1-2-3 (servir, túnel, coordinador).
+Si un `.ps1` no corre por permisos: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
+> Nota: Redis en el Windows es **opcional**. Sin él, Tomás igual responde (principios,
+> posiciones, símbolos); el RAG `buscar_reiki` solo se activa con `-ConRedis`.
+
+## 0. Requisitos en CADA computador (si lo haces a mano)
 
 - El repo clonado: `git clone https://github.com/etmunoz/tarea_1_curso_2`
 - **uv** y **Python 3.13** (uv lo instala: `uv python install 3.13`)

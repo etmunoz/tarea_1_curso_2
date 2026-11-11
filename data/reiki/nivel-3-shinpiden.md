@@ -2,7 +2,7 @@
 > **Archivo:** `data/reiki/nivel-3-shinpiden.md`  
 > **Objetivo:** Reiki Nivel 3 (Shinpiden) · "La verdad interior" / grado maestro  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2041
+> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2113
 <!--/encabezado-grupo-->
 
 # Reiki Nivel 3 (Shinpiden) · "La verdad interior" / grado maestro

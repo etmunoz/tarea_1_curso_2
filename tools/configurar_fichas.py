@@ -3,7 +3,7 @@
 # Objetivo: Aplica las fichas (Agent Card) a los agentes de un servidor `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Aplica las fichas (Agent Card) a los agentes de un servidor `langgraph dev`.
@@ -36,6 +36,9 @@ from src.fichas import FICHAS  # noqa: E402
 
 
 def configurar(base: str, grafos: list[str], guardar: bool) -> None:
+    """Objetivo: aplicar la ficha (PATCH name+description) a cada grafo y, opcional, guardar evidencia.
+    Entradas: base (str) servidor, grafos (list[str]), guardar (bool) para volcar la card a evidencias/.
+    Salida: None (imprime el resultado por grafo)."""
     base = base.rstrip("/")
     ev = RAIZ / "evidencias"
     for graph in grafos:
@@ -58,6 +61,7 @@ def configurar(base: str, grafos: list[str], guardar: bool) -> None:
 
 
 def main() -> None:
+    """Objetivo: CLI para configurar fichas. Entradas: --base, --grafos, --guardar-evidencia. Salida: None."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--base", default=os.environ.get("A2A_BASE", "http://127.0.0.1:2024"))
     ap.add_argument("--grafos", default=",".join(FICHAS), help="Grafos a configurar, separados por comas.")

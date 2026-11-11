@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -32,23 +32,32 @@ load_dotenv()
 
 @dataclass
 class AgenteRemoto:
+    """Objetivo: representar un agente del catálogo (local o remoto) y hablar con él.
+    Atributos: base_url (str) del servidor, graph (str) id del grafo, _card (dict) caché de la ficha."""
+
     base_url: str
     graph: str
     _card: dict | None = field(default=None, repr=False)
 
     def card(self) -> dict:
+        """Objetivo: devolver la Agent Card del agente (cacheada).
+        Entradas: ninguna. Salida: dict — la tarjeta A2A."""
         if self._card is None:
             self._card = a2a.agent_card(self.base_url, self.graph)
         return self._card
 
     @property
     def nombre(self) -> str:
+        """Objetivo: nombre legible del agente (de la ficha, o el id del grafo si no responde).
+        Entradas: ninguna. Salida: str."""
         try:
             return self.card().get("name") or self.graph
         except Exception:  # noqa: BLE001 - si el agente no responde, usamos el grafo
             return self.graph
 
     def descripcion(self) -> str:
+        """Objetivo: descripción + skills del agente para el prompt del supervisor.
+        Entradas: ninguna. Salida: str — descripción (o '(ficha no disponible)')."""
         try:
             c = self.card()
             skills = "; ".join(s.get("name", "") for s in c.get("skills", []) if s.get("name"))
@@ -58,10 +67,16 @@ class AgenteRemoto:
             return "(ficha no disponible)"
 
     def preguntar(self, texto: str, context_id: str) -> str:
+        """Objetivo: enviar una pregunta a este agente por A2A.
+        Entradas: texto (str), context_id (str) UUID de la conversación.
+        Salida: str — la respuesta del agente."""
         return a2a.enviar_mensaje(self.base_url, self.graph, texto, context_id)
 
 
 def _parse_urls_agentes(valor: str) -> list[tuple[str, str]]:
+    """Objetivo: parsear la variable URLS_AGENTES en pares (url, grafo).
+    Entradas: valor (str) lista separada por comas de `url` o `url#grafo`.
+    Salida: list[tuple[str, str]] — (url, grafo); grafo por defecto 'agente'."""
     salida = []
     for item in valor.split(","):
         item = item.strip()

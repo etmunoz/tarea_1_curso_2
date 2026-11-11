@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/04-probarlo-solo-antes-de-conectarlo.md`  
 > **Objetivo:** Probarlo solo, antes de conectarlo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2140
+> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2147
 <!--/encabezado-grupo-->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 4/10 · Parte 1 · Tu agente -->

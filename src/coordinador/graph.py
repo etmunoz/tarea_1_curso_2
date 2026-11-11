@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
@@ -43,11 +43,17 @@ _ctx: dict[tuple[str, str], str] = {}
 
 
 class Decision(BaseModel):
+    """Objetivo: salida estructurada del supervisor. Campos: agente (str) elegido o 'ninguno';
+    motivo (str) una frase con la razón."""
+
     agente: str = Field(description="Nombre EXACTO del catálogo, o 'ninguno'.")
     motivo: str = Field(description="Una frase: por qué ese agente.")
 
 
 class Estado(TypedDict):
+    """Objetivo: estado del grafo coordinador. Campos: messages (conversación), elegido (agente),
+    motivo, respuesta final, ruta (pasos recorridos: supervisor/agente_remoto/sin_agente)."""
+
     messages: Annotated[list, operator.add]
     elegido: str
     motivo: str
@@ -56,6 +62,9 @@ class Estado(TypedDict):
 
 
 def _ultimo_texto(messages: list) -> str:
+    """Objetivo: obtener el texto del último mensaje del usuario.
+    Entradas: messages (list) de mensajes (objetos o dicts).
+    Salida: str — el contenido de texto (o '')."""
     for m in reversed(messages):
         contenido = getattr(m, "content", None) if not isinstance(m, dict) else m.get("content")
         if contenido:
@@ -66,6 +75,9 @@ def _ultimo_texto(messages: list) -> str:
 
 
 def enrutar(estado: Estado) -> dict:
+    """Objetivo (nodo): el supervisor decide a qué agente mandar la pregunta leyendo el catálogo.
+    Entradas: estado (Estado) con los messages.
+    Salida: dict — {elegido, motivo, ruta:['supervisor']}."""
     pregunta = _ultimo_texto(estado["messages"])
     catalogo = construir_catalogo()
     d = modelo.with_structured_output(Decision).invoke([
@@ -76,6 +88,9 @@ def enrutar(estado: Estado) -> dict:
 
 
 def consultar(estado: Estado, config: RunnableConfig) -> dict:
+    """Objetivo (nodo): reenviar la pregunta al agente elegido por A2A y etiquetar la respuesta.
+    Entradas: estado (Estado) con 'elegido'; config (RunnableConfig) con el thread_id.
+    Salida: dict — {respuesta '[Nombre] …', messages, ruta:['agente_remoto']}."""
     pregunta = _ultimo_texto(estado["messages"])
     catalogo = construir_catalogo()
     elegido = next((a for a in catalogo if a.nombre == estado["elegido"]), None)
@@ -90,17 +105,24 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
 
 
 def sin_agente(estado: Estado) -> dict:
+    """Objetivo (nodo): responder cuando ningún agente cubre la pregunta, listando los disponibles.
+    Entradas: estado (Estado). Salida: dict — {respuesta, messages, ruta:['sin_agente']}."""
     nombres = ", ".join(a.nombre for a in construir_catalogo())
     texto = f"No tengo un agente para eso. Puedo ayudarte con: {nombres}."
     return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": ["sin_agente"]}
 
 
 def _rama(estado: Estado) -> str:
+    """Objetivo: arista condicional tras enrutar.
+    Entradas: estado (Estado) con 'elegido'.
+    Salida: str — 'consultar' si el elegido está en el catálogo, si no 'sin_agente'."""
     nombres = {a.nombre for a in construir_catalogo()}
     return "consultar" if estado.get("elegido") in nombres else "sin_agente"
 
 
 def _construir_grafo():
+    """Objetivo: construir y compilar el grafo supervisor (enrutar → consultar/sin_agente).
+    Entradas: ninguna. Salida: grafo LangGraph compilado con InMemorySaver."""
     g = StateGraph(Estado)
     g.add_node("enrutar", enrutar)
     g.add_node("consultar", consultar)

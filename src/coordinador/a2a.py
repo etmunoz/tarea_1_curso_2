@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -25,6 +25,9 @@ _cache_aid: dict[tuple[str, str], str] = {}
 
 
 def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
+    """Objetivo: obtener el assistant_id (UUID) que el servidor asigna a un grafo (con caché).
+    Entradas: base_url (str) del servidor; graph (str) id del grafo; timeout (float) segundos.
+    Salida: str — el assistant_id. Lanza RuntimeError si el servidor no conoce el grafo."""
     base = base_url.rstrip("/")
     clave = (base, graph)
     if clave not in _cache_aid:
@@ -36,19 +39,27 @@ def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
 
 
 def agent_card(base_url: str, graph: str, timeout: float = 10) -> dict:
+    """Objetivo: leer la Agent Card (tarjeta A2A) de un agente.
+    Entradas: base_url (str), graph (str), timeout (float).
+    Salida: dict — la tarjeta (name, description, skills, url…)."""
     base = base_url.rstrip("/")
     aid = assistant_id(base, graph, timeout)
     return httpx.get(f"{base}/.well-known/agent-card.json", params={"assistant_id": aid}, timeout=timeout).json()
 
 
 def nuevo_context_id() -> str:
+    """Objetivo: generar un contextId A2A nuevo. Entradas: ninguna. Salida: str — un UUID."""
     return str(uuid.uuid4())
 
 
 def _texto_de_resultado(result: dict) -> str:
+    """Objetivo: extraer el texto de una respuesta A2A recorriendo sus partes.
+    Entradas: result (dict) con artifacts/status del resultado A2A.
+    Salida: str — el texto concatenado (o str(result) si no hay partes de texto)."""
     textos: list[str] = []
 
     def _walk(o):
+        """Recorre recursivamente dict/list acumulando los `text` de las partes."""
         if isinstance(o, dict):
             if o.get("kind") == "text" and isinstance(o.get("text"), str):
                 textos.append(o["text"])
@@ -64,7 +75,10 @@ def _texto_de_resultado(result: dict) -> str:
 
 
 def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeout: float = 90) -> str:
-    """Manda `texto` al agente (base_url, graph) en la conversación `context_id`."""
+    """Objetivo: enviar `texto` a un agente por A2A (message/send) y devolver su respuesta.
+    Entradas: base_url (str), graph (str), texto (str) la pregunta, context_id (str) UUID de la
+    conversación (memoria del remoto), timeout (float).
+    Salida: str — el texto de la respuesta del agente (o un aviso de error entre corchetes)."""
     base = base_url.rstrip("/")
     aid = assistant_id(base, graph, timeout)
     cuerpo = {

@@ -3,7 +3,7 @@
 # Objetivo: Carga los documentos de Reiki (`data/reiki/`) al RAG en Redis.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Carga los documentos de Reiki (`data/reiki/`) al RAG en Redis.
@@ -26,6 +26,8 @@ from src.agente_tomas import rag  # noqa: E402
 
 
 def main() -> int:
+    """Objetivo: cargar los documentos de Reiki (data/reiki) al RAG en Redis.
+    Entradas: ninguna (usa REDIS_URL del entorno). Salida: int — 0 si indexó, 1 si falló."""
     if not rag.disponible():
         print(f"✗ Redis no responde en {rag.REDIS_URL}. Levántalo con: docker compose up -d")
         return 1

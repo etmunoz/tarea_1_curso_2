@@ -3,7 +3,7 @@
 # Objetivo: App web simple para probar los agentes: uno a uno (A2A) y vía el coordinador.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """App web simple para probar los agentes: uno a uno (A2A) y vía el coordinador.
@@ -40,6 +40,8 @@ PORT = int(os.environ.get("WEBAPP_PORT", "8800"))
 
 
 def _agentes() -> list[dict]:
+    """Objetivo: listar los agentes del catálogo para el selector de la app.
+    Entradas: ninguna. Salida: list[dict] — {nombre, graph, base_url, tipo: local|remoto}."""
     salida = []
     for ag in construir_catalogo():
         salida.append({"nombre": ag.nombre, "graph": ag.graph, "base_url": ag.base_url,
@@ -48,6 +50,9 @@ def _agentes() -> list[dict]:
 
 
 def _preguntar(destino: str, texto: str, context_id: str) -> dict:
+    """Objetivo: responder una consulta, vía el coordinador o directo a un agente por A2A.
+    Entradas: destino (str) '__coordinador__' o 'base_url#graph'; texto (str); context_id (str).
+    Salida: dict — {respuesta, ruta}."""
     if destino == "__coordinador__":
         from langchain_core.messages import HumanMessage  # import tardío (requiere key)
 
@@ -123,7 +128,11 @@ cargar();
 
 
 class Handler(BaseHTTPRequestHandler):
+    """Objetivo: handler HTTP de la app web (sirve la página y los endpoints /api/*)."""
+
     def _send(self, code, body, ctype="application/json; charset=utf-8"):
+        """Objetivo: enviar una respuesta HTTP.
+        Entradas: code (int), body (str|bytes), ctype (str). Salida: None."""
         data = body if isinstance(body, bytes) else body.encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", ctype)
@@ -131,7 +140,9 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
-    def do_GET(self):
+    def do_GET(self):  # noqa: N802
+        """Objetivo: servir la página (/) y el listado de agentes (/api/agentes).
+        Entradas: usa self.path. Salida: None (escribe la respuesta)."""
         if self.path in ("/", "/index.html"):
             self._send(200, PAGINA, "text/html; charset=utf-8")
         elif self.path == "/api/agentes":
@@ -142,7 +153,9 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self._send(404, json.dumps({"error": "no encontrado"}))
 
-    def do_POST(self):
+    def do_POST(self):  # noqa: N802
+        """Objetivo: atender /api/preguntar (JSON {destino, texto, context_id}) y responder.
+        Entradas: cuerpo JSON de la petición. Salida: None (escribe JSON {respuesta, ruta} o {error})."""
         if self.path != "/api/preguntar":
             self._send(404, json.dumps({"error": "no encontrado"}))
             return
@@ -154,11 +167,14 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as exc:  # noqa: BLE001
             self._send(200, json.dumps({"error": str(exc)}, ensure_ascii=False))
 
-    def log_message(self, *_a):  # silencioso
+    def log_message(self, *_a):  # noqa: D401 - silencioso (sin logs por request)
+        """Objetivo: silenciar el log por request. Entradas: ignoradas. Salida: None."""
         pass
 
 
 def main() -> None:
+    """Objetivo: arrancar el servidor web y abrir el navegador.
+    Entradas: ninguna (lee ROL/PORT del entorno). Salida: None (bloquea hasta Ctrl+C)."""
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     url = f"http://127.0.0.1:{PORT}"
     print(f"App web «{ROL}» en {url}  (Ctrl+C para parar)")

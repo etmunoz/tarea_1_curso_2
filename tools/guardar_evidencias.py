@@ -3,7 +3,7 @@
 # Objetivo: Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
@@ -44,10 +44,13 @@ PREGUNTAS_DEF = [
 
 
 def _suf(etiqueta: str) -> str:
+    """Objetivo: sufijo de archivo según la etiqueta. Entradas: etiqueta (str). Salida: str ('-mac', '')."""
     return f"-{etiqueta}" if etiqueta else ""
 
 
 def guardar_catalogo(etiqueta: str = "") -> None:
+    """Objetivo: guardar el catálogo de agentes del coordinador como evidencia.
+    Entradas: etiqueta (str) sufijo por equipo. Salida: None (escribe 04-catalogo[-etiqueta].txt)."""
     EV.mkdir(exist_ok=True)
     texto = texto_catalogo(construir_catalogo())
     nombre = f"04-catalogo{_suf(etiqueta)}.txt"
@@ -57,6 +60,8 @@ def guardar_catalogo(etiqueta: str = "") -> None:
 
 
 def guardar_ronda(preguntas: list[str], etiqueta: str = "") -> None:
+    """Objetivo: correr una ronda de preguntas por el coordinador y guardar la evidencia.
+    Entradas: preguntas (list[str]), etiqueta (str). Salida: None (escribe 05-ronda[-etiqueta].md)."""
     try:
         from langchain_core.messages import HumanMessage  # noqa: PLC0415
 
@@ -86,6 +91,7 @@ def guardar_ronda(preguntas: list[str], etiqueta: str = "") -> None:
 
 
 def main() -> None:
+    """Objetivo: CLI de evidencias. Entradas: --preguntas, --etiqueta. Salida: None (escribe en evidencias/)."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--preguntas", nargs="*", default=None)
     ap.add_argument("--etiqueta", default="", help="Sufijo para las evidencias (p. ej. mac / windows).")

@@ -3,7 +3,7 @@
 # Objetivo: Base de conocimiento (SQLite) de modelos de ciencia de datos.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Base de conocimiento (SQLite) de modelos de ciencia de datos.
@@ -138,6 +138,8 @@ COLUMNAS = ["nombre", "tipo", "para_que", "como_se_utiliza", "librerias", "ejemp
 
 
 def _conectar() -> sqlite3.Connection:
+    """Objetivo: abrir la conexión SQLite con filas tipo dict.
+    Entradas: ninguna. Salida: sqlite3.Connection."""
     con = sqlite3.connect(BD_PATH)
     con.row_factory = sqlite3.Row
     return con

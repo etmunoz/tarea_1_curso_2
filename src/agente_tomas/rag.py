@@ -3,7 +3,7 @@
 # Objetivo: RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """RAG del agente de Tomás · documentos de Reiki en un Redis (vector store).
@@ -34,12 +34,17 @@ CARPETA_DOCS = Path(os.environ.get("REIKI_DOCS", RAIZ / "data" / "reiki"))
 
 
 def _embeddings():
+    """Objetivo: crear el modelo de embeddings de Gemini (import tardío; requiere GOOGLE_API_KEY).
+    Entradas: ninguna. Salida: GoogleGenerativeAIEmbeddings."""
     from langchain_google_genai import GoogleGenerativeAIEmbeddings  # import tardío (requiere key)
 
     return GoogleGenerativeAIEmbeddings(model=os.environ.get("MODELO_EMBEDDINGS", "models/gemini-embedding-001"))
 
 
 def _vector_store(from_existing: bool):
+    """Objetivo: crear el vector store Redis del RAG.
+    Entradas: from_existing (bool) True para abrir el índice ya creado.
+    Salida: RedisVectorStore."""
     from langchain_redis import RedisConfig, RedisVectorStore  # import tardío
 
     config = RedisConfig(index_name=REDIS_INDEX, redis_url=REDIS_URL, from_existing=from_existing)
@@ -99,6 +104,8 @@ def cargar(carpeta: Path | None = None, reiniciar: bool = True) -> int:
 
 
 def _borrar_indice() -> None:
+    """Objetivo: borrar el índice del RAG en Redis (si existe), para re-ingestar limpio.
+    Entradas: ninguna. Salida: None."""
     try:
         from redis import Redis
 

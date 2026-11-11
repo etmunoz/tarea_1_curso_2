@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024)."""
@@ -20,6 +20,7 @@ def assistant_id() -> str:
 
 
 def _servidor_arriba():
+    """Objetivo: decir si el servidor langgraph dev responde. Salida: bool."""
     try:
         return httpx.get(f"{BASE}/ok", timeout=3).status_code == 200
     except Exception:
@@ -30,6 +31,7 @@ pytestmark = pytest.mark.skipif(not _servidor_arriba(), reason="langgraph dev no
 
 
 def test_agent_card():
+    """Prueba: agent card."""
     aid = assistant_id()
     card = httpx.get(f"{BASE}/.well-known/agent-card.json", params={"assistant_id": aid}, timeout=10).json()
     # El nombre puede ser el id del grafo (por defecto) o el de la ficha personalizada
@@ -40,6 +42,7 @@ def test_agent_card():
 
 
 def test_message_send():
+    """Prueba: message send."""
     cuerpo = {"jsonrpc": "2.0", "id": "1", "method": "message/send", "params": {"message": {
         "role": "user", "messageId": uuid.uuid4().hex, "contextId": str(uuid.uuid4()),
         "parts": [{"kind": "text", "text": "Quiero un vuelo de Santiago a Lima el 2026-11-10"}]}}}

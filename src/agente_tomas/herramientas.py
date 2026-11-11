@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de Tomás · Maestro Reiki.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de Tomás · Maestro Reiki.
@@ -23,6 +23,8 @@ from src.agente_tomas import rag
 
 
 def _norm(texto: str) -> str:
+    """Objetivo: normalizar texto (minúsculas, sin acentos) para comparar.
+    Entradas: texto (str). Salida: str normalizado."""
     t = unicodedata.normalize("NFKD", texto.lower())
     return "".join(c for c in t if not unicodedata.combining(c))
 
@@ -62,6 +64,8 @@ NIVELES = {
 
 
 def _buscar(catalogo: dict, consulta: str) -> str | None:
+    """Objetivo: encontrar la clave de un catálogo que casa con la consulta (sin acentos).
+    Entradas: catalogo (dict), consulta (str). Salida: str (clave) | None."""
     q = _norm(consulta)
     for clave in catalogo:
         if _norm(clave) in q or q in _norm(clave):

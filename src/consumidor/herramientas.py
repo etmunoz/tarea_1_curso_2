@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.
@@ -28,6 +28,8 @@ _contextos: dict[str, str] = {}
 
 
 def _context_id_para(config: RunnableConfig | None) -> str:
+    """Objetivo: dar un contextId A2A fijo por cada thread_id (memoria del remoto por conversación).
+    Entradas: config (RunnableConfig) con el thread_id. Salida: str — un UUID estable por hilo."""
     thread = (config or {}).get("configurable", {}).get("thread_id") or "sin-hilo"
     if thread not in _contextos:
         _contextos[thread] = a2a_cliente.nuevo_context_id()

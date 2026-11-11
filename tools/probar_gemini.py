@@ -3,7 +3,7 @@
 # Objetivo: Prueba mínima y directa de la GOOGLE_API_KEY contra Gemini.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2030
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Prueba mínima y directa de la GOOGLE_API_KEY contra Gemini.
@@ -31,6 +31,8 @@ load_dotenv(RAIZ / ".env")  # ruta explícita: funciona aunque se ejecute desde 
 
 
 def main() -> int:
+    """Objetivo: validar la GOOGLE_API_KEY con una llamada simple a Gemini, con diagnóstico.
+    Entradas: ninguna (lee .env). Salida: int — 0 si responde, 1 si falla (con el motivo)."""
     clave = os.environ.get("GOOGLE_API_KEY", "")
     modelo = os.environ.get("MODELO", "gemini-3.5-flash-lite")
     print(f"GOOGLE_API_KEY presente: {bool(clave)} · longitud: {len(clave)} · modelo: {modelo}")

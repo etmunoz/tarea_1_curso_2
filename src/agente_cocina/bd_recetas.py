@@ -3,7 +3,7 @@
 # Objetivo: Base de conocimiento (SQLite) de recetas chilenas clásicas + costeo.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Base de conocimiento (SQLite) de recetas chilenas clásicas + costeo.
@@ -93,12 +93,16 @@ RECETAS: dict[str, tuple[int, str, list[tuple[str, float]]]] = {
 
 
 def _conectar() -> sqlite3.Connection:
+    """Objetivo: abrir la conexión SQLite con filas tipo dict.
+    Entradas: ninguna. Salida: sqlite3.Connection."""
     con = sqlite3.connect(BD_PATH)
     con.row_factory = sqlite3.Row
     return con
 
 
 def asegurar_bd(forzar: bool = False) -> Path:
+    """Objetivo: crear y poblar la BD de recetas si no existe (o si `forzar`).
+    Entradas: forzar (bool) para recrearla. Salida: Path — ruta del archivo .sqlite."""
     BD_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = _conectar()
     try:
@@ -125,6 +129,8 @@ def asegurar_bd(forzar: bool = False) -> Path:
 
 
 def listar_recetas() -> list[dict]:
+    """Objetivo: listar las recetas disponibles.
+    Entradas: ninguna. Salida: list[dict] — {nombre, porciones_base, descripcion}."""
     asegurar_bd()
     con = _conectar()
     try:
@@ -134,6 +140,8 @@ def listar_recetas() -> list[dict]:
 
 
 def _buscar_receta(con: sqlite3.Connection, nombre: str) -> sqlite3.Row | None:
+    """Objetivo: buscar una receta por nombre exacto o parcial.
+    Entradas: con (Connection), nombre (str). Salida: sqlite3.Row | None."""
     row = con.execute("SELECT * FROM recetas WHERE nombre = ?", (nombre,)).fetchone()
     if row:
         return row
@@ -141,6 +149,9 @@ def _buscar_receta(con: sqlite3.Connection, nombre: str) -> sqlite3.Row | None:
 
 
 def ver_receta(nombre: str) -> dict:
+    """Objetivo: devolver una receta con sus ingredientes (cantidad y unidad).
+    Entradas: nombre (str) exacto o parcial. Salida: dict — {nombre, porciones_base,
+    descripcion, ingredientes:[...]} o {nota} si no existe."""
     asegurar_bd()
     con = _conectar()
     try:

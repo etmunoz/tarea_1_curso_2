@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
@@ -50,6 +50,8 @@ INI_MK_VIEJO, FIN_MK_VIEJO = "<!-- --8<-- encabezado-grupo", "--8<-- fin-encabez
 
 
 def _git_creacion(rel: str) -> str | None:
+    """Objetivo: fecha de alta del archivo en git (yyyymmdd HHMM).
+    Entradas: rel (str) ruta relativa. Salida: str | None si no está versionado."""
     try:
         out = subprocess.run(
             ["git", "-C", str(RAIZ), "log", "--diff-filter=A", "--follow",
@@ -62,6 +64,8 @@ def _git_creacion(rel: str) -> str | None:
 
 
 def _objetivo(path: Path, ext: str, cuerpo: str) -> str:
+    """Objetivo: deducir el "Objetivo" del encabezado (1ª línea del docstring/H1, o genérico).
+    Entradas: path (Path), ext (str), cuerpo (str) sin encabezado. Salida: str."""
     if ext == ".py":
         m = re.search(r'"""(.+?)(?:\n|""")', cuerpo, re.S)
         if m:
@@ -83,6 +87,8 @@ def _objetivo(path: Path, ext: str, cuerpo: str) -> str:
 
 
 def _construir(rel: str, objetivo: str, creacion: str, markup: bool) -> str:
+    """Objetivo: construir el bloque de encabezado (markup=blockquote visible, o hash con #).
+    Entradas: rel (str), objetivo (str), creacion (str), markup (bool). Salida: str — el encabezado."""
     if markup:
         # Blockquote visible al renderizar, entre centinelas HTML.
         return "\n".join([
@@ -104,6 +110,8 @@ def _construir(rel: str, objetivo: str, creacion: str, markup: bool) -> str:
 
 
 def _split_shebang(texto: str) -> tuple[str, str]:
+    """Objetivo: separar un posible shebang del resto del archivo.
+    Entradas: texto (str). Salida: (shebang, resto) — shebang '' si no hay."""
     if texto.startswith("#!"):
         nl = texto.find("\n")
         if nl != -1:
@@ -112,6 +120,8 @@ def _split_shebang(texto: str) -> tuple[str, str]:
 
 
 def _tiene_encabezado_inicio(cuerpo: str, markup: bool) -> bool:
+    """Objetivo: decir si el cuerpo empieza con el encabezado (formato nuevo o viejo).
+    Entradas: cuerpo (str), markup (bool). Salida: bool."""
     c = cuerpo.lstrip("\n")
     if markup:
         return c.startswith(INI_MK) or c.startswith(INI_MK_VIEJO)
@@ -119,6 +129,8 @@ def _tiene_encabezado_inicio(cuerpo: str, markup: bool) -> bool:
 
 
 def _quitar_encabezado_inicio(cuerpo: str, markup: bool) -> str:
+    """Objetivo: quitar el encabezado del inicio del cuerpo (formato nuevo o viejo).
+    Entradas: cuerpo (str), markup (bool). Salida: str — cuerpo sin encabezado."""
     c = cuerpo.lstrip("\n")
     if markup:
         # Quita el encabezado al inicio, en formato nuevo (visible) o viejo (comentario).
@@ -137,11 +149,15 @@ def _quitar_encabezado_inicio(cuerpo: str, markup: bool) -> str:
 
 
 def _creacion_previa(texto: str) -> str | None:
+    """Objetivo: recuperar la fecha de Creación ya presente en un encabezado.
+    Entradas: texto (str). Salida: str (yyyymmdd HHMM) | None."""
     m = re.search(r"Creaci[oó]n:\s*\**\s*(\d{8} \d{4})", texto)
     return m.group(1) if m else None
 
 
 def _header_hash_lines(rel: str, objetivo: str, creacion: str) -> list[str]:
+    """Objetivo: construir las líneas `#` del encabezado (para archivos con frontmatter YAML).
+    Entradas: rel, objetivo, creacion (str). Salida: list[str] — líneas del encabezado."""
     campos = [
         f"Archivo: {rel}",
         f"Objetivo: {objetivo}",
@@ -153,7 +169,8 @@ def _header_hash_lines(rel: str, objetivo: str, creacion: str) -> list[str]:
 
 
 def _frontmatter(cuerpo: str) -> tuple[list[str], str] | None:
-    """Si el cuerpo empieza con frontmatter YAML (--- … ---), devuelve (líneas internas, resto)."""
+    """Objetivo: detectar frontmatter YAML al inicio (--- … ---).
+    Entradas: cuerpo (str). Salida: (líneas internas, resto) | None si no hay frontmatter."""
     c = cuerpo.lstrip("\n")
     lines = c.split("\n")
     if not lines or lines[0].strip() != "---":
@@ -165,6 +182,8 @@ def _frontmatter(cuerpo: str) -> tuple[list[str], str] | None:
 
 
 def _strip_header_inner(inner: list[str]) -> list[str]:
+    """Objetivo: quitar el encabezado `#` de dentro de un frontmatter YAML.
+    Entradas: inner (list[str]) líneas del frontmatter. Salida: list[str] sin el encabezado."""
     out, skip = [], False
     for ln in inner:
         if ln.strip() == INI_HASH:
@@ -179,6 +198,8 @@ def _strip_header_inner(inner: list[str]) -> list[str]:
 
 
 def _tiene_encabezado(cuerpo: str, markup: bool) -> bool:
+    """Objetivo: decir si hay encabezado al inicio o dentro del frontmatter.
+    Entradas: cuerpo (str), markup (bool). Salida: bool."""
     if _tiene_encabezado_inicio(cuerpo, markup):
         return True
     fm = _frontmatter(cuerpo)
@@ -186,6 +207,9 @@ def _tiene_encabezado(cuerpo: str, markup: bool) -> bool:
 
 
 def procesar(path: Path, check: bool) -> bool:
+    """Objetivo: insertar/actualizar el encabezado de un archivo (o verificarlo con check).
+    Entradas: path (Path), check (bool) solo verifica si True.
+    Salida: bool — en check, True si tiene encabezado; al aplicar, True."""
     rel = str(path.relative_to(RAIZ))
     ext = path.suffix.lower()
     markup = ext in MARKUP_EXT
@@ -218,6 +242,8 @@ def procesar(path: Path, check: bool) -> bool:
 
 
 def _notebooks(check: bool) -> list[str]:
+    """Objetivo: poner/actualizar el encabezado como 1ª celda Markdown en cada .ipynb.
+    Entradas: check (bool). Salida: list[str] — notebooks sin encabezado (en modo check)."""
     import nbformat
 
     faltan = []
@@ -245,6 +271,8 @@ def _notebooks(check: bool) -> list[str]:
 
 
 def iter_archivos():
+    """Objetivo: iterar los archivos del repo que admiten encabezado de almohadilla/markup.
+    Entradas: ninguna. Salida: generador de Path."""
     for path in sorted(RAIZ.rglob("*")):
         if not path.is_file() or any(d in path.parts for d in EXCLUIR_DIR):
             continue
@@ -255,6 +283,8 @@ def iter_archivos():
 
 
 def main() -> int:
+    """Objetivo: aplicar/actualizar (o verificar con --check) el encabezado en todo el repo.
+    Entradas: argv (--check opcional). Salida: int — código de salida (0 ok)."""
     check = "--check" in sys.argv[1:]
     faltan, n = [], 0
     for path in iter_archivos():

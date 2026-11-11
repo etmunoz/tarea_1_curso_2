@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.
@@ -62,6 +62,7 @@ def _texto_de_resultado(result: dict) -> str:
     textos: list[str] = []
 
     def _walk(o):
+        """Recorre recursivamente dict/list acumulando los `text` de las partes A2A."""
         if isinstance(o, dict):
             if o.get("kind") == "text" and isinstance(o.get("text"), str):
                 textos.append(o["text"])

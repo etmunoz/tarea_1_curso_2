@@ -3,7 +3,7 @@
 # Objetivo: Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1941
-# Última modificación: 20261110 2140
+# Última modificación: 20261110 2147
 # --8<-- fin-encabezado-grupo
 
 """Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.
@@ -34,11 +34,15 @@ RAIZ = Path(__file__).resolve().parent.parent
 
 
 def _git_ls_files() -> list[str]:
+    """Objetivo: listar los archivos versionados (así el zip nunca incluye .env/.venv).
+    Entradas: ninguna. Salida: list[str] — rutas relativas."""
     out = subprocess.run(["git", "-C", str(RAIZ), "ls-files"], capture_output=True, text=True, check=True)
     return [l for l in out.stdout.splitlines() if l.strip()]
 
 
 def empaquetar(grupo: str) -> Path:
+    """Objetivo: armar el zip de entrega del grupo con la estructura del Paso 9.
+    Entradas: grupo (str) número/identificador. Salida: Path — ruta del .zip creado."""
     dist = RAIZ / "dist"
     dist.mkdir(exist_ok=True)
     destino = dist / f"grupo-{grupo}-taller-a2a.zip"
@@ -96,6 +100,7 @@ def empaquetar(grupo: str) -> Path:
 
 
 def main() -> None:
+    """Objetivo: CLI del empaquetador. Entradas: --grupo. Salida: None (crea dist/grupo-N-….zip)."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--grupo", default="N", help="Número del grupo (p. ej. 1).")
     empaquetar(ap.parse_args().grupo)

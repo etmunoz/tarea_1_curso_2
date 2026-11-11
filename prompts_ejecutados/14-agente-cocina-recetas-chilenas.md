@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/14-agente-cocina-recetas-chilenas.md`  
 > **Objetivo:** 14 · Agente de cocina chilena con costeo de recetas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2013 · **Última modificación:** 20261111 1210
+> **Creación:** 20261110 2013 · **Última modificación:** 20261111 1224
 <!--/encabezado-grupo-->
 
 # 14 · Agente de cocina chilena con costeo de recetas

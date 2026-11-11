@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/33-windows-corrida-real-2-pc.md`  
 > **Objetivo:** 33 · Respuesta — Windows: corrida real entre 2 PC (lado Windows), con las fichas reaplicadas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2244 · **Última modificación:** 20261111 1210
+> **Creación:** 20261110 2244 · **Última modificación:** 20261111 1224
 <!--/encabezado-grupo-->
 
 # 33 · Respuesta — Windows: corrida real entre 2 PC (lado Windows), con las fichas reaplicadas

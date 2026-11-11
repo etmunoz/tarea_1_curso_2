@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/23-windows-puerto-redis.md`  
 > **Objetivo:** 23 · Respuesta — Windows: cambiar el puerto de Redis (6379 ocupado)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261111 1210
+> **Creación:** 20261110 2208 · **Última modificación:** 20261111 1224
 <!--/encabezado-grupo-->
 
 # 23 · Respuesta — Windows: cambiar el puerto de Redis (6379 ocupado)

@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/25-windows-commit-push-y-siguientes-pasos.md`  
 > **Objetivo:** 25 · Respuesta — Windows: commit + push y qué sigue  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2215 · **Última modificación:** 20261111 1210
+> **Creación:** 20261110 2215 · **Última modificación:** 20261111 1224
 <!--/encabezado-grupo-->
 
 # 25 · Respuesta — Windows: commit + push y qué sigue

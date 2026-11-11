@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/34-windows-commit-push-corrida-real.md`  
 > **Objetivo:** 34 · Respuesta — Windows: commit y push de la corrida real (evidencias y registros 32–33)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2250 · **Última modificación:** 20261111 1210
+> **Creación:** 20261110 2250 · **Última modificación:** 20261111 1224
 <!--/encabezado-grupo-->
 
 # 34 · Respuesta — Windows: commit y push de la corrida real (evidencias y registros 32–33)

@@ -3,7 +3,7 @@
 # Objetivo: Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1405
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).

@@ -3,7 +3,7 @@
 # Objetivo: Ajustes finales de robustez (prompt 48a) — pruebas de regresión.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1429
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """Ajustes finales de robustez (prompt 48a) — pruebas de regresión.

@@ -3,7 +3,7 @@
 # Objetivo: Refuerzos de seguridad sobre la interoperabilidad (prompt 48b).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1437
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """Refuerzos de seguridad sobre la interoperabilidad (prompt 48b).

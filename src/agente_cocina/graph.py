@@ -3,7 +3,7 @@
 # Objetivo: Agente de cocina chilena · expuesto por A2A NATIVO (molde de viajes/Ezequiel).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """Agente de cocina chilena · expuesto por A2A NATIVO (molde de viajes/Ezequiel)."""

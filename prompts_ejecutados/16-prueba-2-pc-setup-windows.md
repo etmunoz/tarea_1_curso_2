@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/16-prueba-2-pc-setup-windows.md`  
 > **Objetivo:** 16 · Prueba entre 2 computadores: setup del Windows  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2113 · **Última modificación:** 20261111 1957
+> **Creación:** 20261110 2113 · **Última modificación:** 20261111 2016
 <!--/encabezado-grupo-->
 
 # 16 · Prueba entre 2 computadores: setup del Windows

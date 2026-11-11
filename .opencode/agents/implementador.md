@@ -4,7 +4,7 @@
 # Objetivo: Implementador de agentes con LangChain y LangGraph (toma tareas de plan.json)
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 description: Implementador de agentes con LangChain y LangGraph (toma tareas de plan.json)
 mode: subagent

@@ -3,7 +3,7 @@
 # Objetivo: System prompt del agente de cocina chilena. Separado del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """System prompt del agente de cocina chilena. Separado del grafo (regla de AGENTS.md)."""

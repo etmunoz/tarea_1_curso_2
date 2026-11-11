@@ -3,7 +3,7 @@
 # Objetivo: Interoperabilidad con el dialecto `SendMessage` del compañero (prompt 51).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1737
-# Última modificación: 20261111 1957
+# Última modificación: 20261111 2016
 # --8<-- fin-encabezado-grupo
 
 """Interoperabilidad con el dialecto `SendMessage` del compañero (prompt 51).

@@ -3,7 +3,7 @@
 # Objetivo: Base de conocimiento (SQLite) de modelos de ciencia de datos.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2340
+# Última modificación: 20261110 2349
 # --8<-- fin-encabezado-grupo
 
 """Base de conocimiento (SQLite) de modelos de ciencia de datos.

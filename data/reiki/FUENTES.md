@@ -2,7 +2,7 @@
 > **Archivo:** `data/reiki/FUENTES.md`  
 > **Objetivo:** Fuentes  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # Fuentes

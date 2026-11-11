@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/22-windows-ejecutar-setup.md`  
 > **Objetivo:** 22 · Windows: ejecutar `setup_windows.ps1` (clave Gemini y AVG)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # 22 · Windows: ejecutar `setup_windows.ps1` (clave Gemini y AVG)

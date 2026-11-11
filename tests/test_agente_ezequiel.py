@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de las herramientas del agente de Ezequiel. No requieren API key ni servidor.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1603
-# Última modificación: 20261110 2340
+# Última modificación: 20261110 2349
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de las herramientas del agente de Ezequiel. No requieren API key ni servidor."""

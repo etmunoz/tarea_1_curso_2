@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/10-tres-ideas-para-seguir.md`  
 > **Objetivo:** Tres ideas para seguir  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 10/10 · Parte 3 · Hablar entre agentes · extra -->

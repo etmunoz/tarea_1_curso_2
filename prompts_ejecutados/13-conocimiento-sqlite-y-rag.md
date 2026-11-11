@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/13-conocimiento-sqlite-y-rag.md`  
 > **Objetivo:** 13 · Conocimiento conectado: SQLite (Ezequiel) y RAG Redis (Tomás)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # 13 · Conocimiento conectado: SQLite (Ezequiel) y RAG Redis (Tomás)

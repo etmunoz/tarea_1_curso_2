@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/42-windows-capturar-evidencias-finales.md`  
 > **Objetivo:** 42 · Windows: capturar las evidencias finales y dejarlas en la entrega  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2346 · **Última modificación:** 20261110 2346
+> **Creación:** 20261110 2346 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # 42 · Windows: capturar las evidencias finales y dejarlas en la entrega

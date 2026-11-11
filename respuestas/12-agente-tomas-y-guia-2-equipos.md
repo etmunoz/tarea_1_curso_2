@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/12-agente-tomas-y-guia-2-equipos.md`  
 > **Objetivo:** 12 · Respuesta — Agente Tomás + guía y scripts 2 computadores  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 1952 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # 12 · Respuesta — Agente Tomás + guía y scripts 2 computadores

@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/37-mac-verificar-arreglos-y-ronda.md`  
 > **Objetivo:** 37 · Respuesta — Mac: verificar arreglos de Tomás y regenerar la ronda  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2259 · **Última modificación:** 20261110 2340
+> **Creación:** 20261110 2259 · **Última modificación:** 20261110 2349
 <!--/encabezado-grupo-->
 
 # 37 · Respuesta — Mac: verificar arreglos de Tomás y regenerar la ronda

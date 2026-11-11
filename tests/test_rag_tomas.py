@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del RAG de Tomás que no requieren Redis ni API key.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2340
+# Última modificación: 20261110 2349
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del RAG de Tomás que no requieren Redis ni API key.

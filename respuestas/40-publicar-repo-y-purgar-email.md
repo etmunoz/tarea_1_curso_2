@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/40-publicar-repo-y-purgar-email.md`  
 > **Objetivo:** 40 · Respuesta — Repo público y email purgado  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2312 · **Última modificación:** 20261111 0829
+> **Creación:** 20261110 2312 · **Última modificación:** 20261111 0835
 <!--/encabezado-grupo-->
 
 # 40 · Respuesta — Repo público y email purgado
@@ -39,12 +39,13 @@ Causa: el commit `4c89013` (prompt 42) se hizo en el **Windows**, cuyo git aún 
 historial público. La purga del prompt 40 fue correcta para todo lo anterior; esto se
 reintrodujo por configuración del otro equipo.
 
-## Corrección pendiente (requiere decisión)
+## Decisión tomada
 
-Para quitarlo hay que reescribir el historial otra vez (mailmap + force-push), lo que
-cambia los hashes y **obliga a re-clonar en el Windows**. Además, el git del Windows debe
-fijar `git config user.email "noreply@tarea1-curso2.invalid"` para no reintroducirlo.
+Se evaluó purgarlo de nuevo (mailmap + force-push), pero eso cambia los hashes y obliga a
+re-clonar en el Windows. **El grupo decidió dejarlo como está**: el email queda visible en
+el commit `4c89013` del repo público y no se reescribe el historial.
 
-## Acción requerida en el Windows (tras cualquier reescritura)
-
-Re-clonar el repo (el historial cambia de hashes).
+Si en el futuro se quiere quitar: reescribir con `git-filter-repo --mailmap`
+(`etmunoz@gmail.com` → `noreply@tarea1-curso2.invalid`) + force-push, y en el Windows fijar
+`git config user.email "noreply@tarea1-curso2.invalid"` antes de volver a commitear, y
+re-clonar el repo.

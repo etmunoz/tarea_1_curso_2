@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/44-resiliencia-remota-y-guardrails.md`  
 > **Objetivo:** Respuesta 44 · Resiliencia de agentes remotos y guardrails  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0730 · **Última modificación:** 20261111 0829
+> **Creación:** 20261111 0730 · **Última modificación:** 20261111 0835
 <!--/encabezado-grupo-->
 
 # Respuesta 44 · Resiliencia de agentes remotos y guardrails

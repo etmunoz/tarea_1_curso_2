@@ -3,7 +3,7 @@
 # Objetivo: win_app.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261111 0829
+# Última modificación: 20261111 0835
 # --8<-- fin-encabezado-grupo
 
 # Windows (Tomás) · app web para probar agentes uno a uno y vía coordinador.

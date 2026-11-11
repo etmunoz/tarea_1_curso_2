@@ -50,3 +50,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 35 | [Windows: arreglar detalles del coordinador y herramientas](35-windows-arreglar-detalles-coordinador.md) | [respuesta](../respuestas/35-windows-arreglar-detalles-coordinador.md) |
 | 36 | [Windows: el Mac actualizado; verificación de fichas](36-windows-mac-actualizado.md) | [respuesta](../respuestas/36-windows-mac-actualizado.md) |
 | 37 | [Mac: verificar arreglos de Tomás y regenerar la ronda](37-mac-verificar-arreglos-y-ronda.md) | [respuesta](../respuestas/37-mac-verificar-arreglos-y-ronda.md) |
+| 38 | [Windows: commit/push del 36 e integración del 37 del Mac](38-windows-commit-push-36-y-pull-37-mac.md) | [respuesta](../respuestas/38-windows-commit-push-36-y-pull-37-mac.md) |

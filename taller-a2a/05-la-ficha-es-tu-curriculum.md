@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/05-la-ficha-es-tu-curriculum.md`  
 > **Objetivo:** La ficha es tu currículum  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 1450 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 5/10 · Parte 1 · Tu agente -->

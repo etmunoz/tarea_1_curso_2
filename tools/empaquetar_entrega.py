@@ -3,7 +3,7 @@
 # Objetivo: Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1941
-# Última modificación: 20261110 2325
+# Última modificación: 20261110 2335
 # --8<-- fin-encabezado-grupo
 
 """Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.
@@ -88,15 +88,17 @@ def construir_carpeta_entrega() -> tuple[Path, list[str]]:
     else:
         avisos.append("falta entrega/documento-entrega.(md|pdf)")
 
-    # Blueprints y companeros
-    for src, nombre in [
-        (RAIZ / "blueprint-ezequiel.md", "blueprint-ezequiel.md"),
-        (RAIZ / "entrega" / "companeros.md", "companeros.md"),
-    ]:
-        if src.exists():
-            shutil.copy2(src, base / nombre)
-        else:
-            avisos.append(f"falta {src.relative_to(RAIZ)}")
+    # Blueprints (todos los blueprint-*.md del repo) y companeros
+    blueprints = sorted(RAIZ.glob("blueprint-*.md"))
+    if not blueprints:
+        avisos.append("no hay ningún blueprint-*.md")
+    for src in blueprints:
+        shutil.copy2(src, base / src.name)
+    companeros = RAIZ / "entrega" / "companeros.md"
+    if companeros.exists():
+        shutil.copy2(companeros, base / "companeros.md")
+    else:
+        avisos.append("falta entrega/companeros.md")
 
     # Evidencias (todo lo que haya en evidencias/, menos su README)
     ev_dir = RAIZ / "evidencias"

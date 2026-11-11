@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/27-windows-respuestas-completas-en-espanol.md`  
 > **Objetivo:** 27 · Respuesta — Windows: registrar las respuestas completas, todo en español  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2217 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 2217 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 # 27 · Respuesta — Windows: registrar las respuestas completas, todo en español

@@ -2,19 +2,20 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
 
-> Antes de entregar: exportar este `.md` a `documento-entrega.pdf` (ver
-> `tools/empaquetar_entrega.py`). Quedan como ⟨pendiente⟩ solo las dos capturas
-> manuales (`01-saltos.png`, `03-tunel.png`) y los blueprints de los compañeros.
+> Documento completo. El PDF se genera con `uv run tools/exportar_pdf.py`. Las
+> capturas `01-saltos.png` / `03-tunel.png` se generaron desde la corrida real
+> (reemplazables por capturas de pantalla manuales). Fabio y Gustavo completan
+> sus blueprints (plantillas ya creadas).
 
 ## 1. Identificación
 
 - **Curso 2 · Sesión 1** — Taller "tu skill es un agente y habla por A2A".
-- **Grupo:** ⟨completar número de grupo⟩
+- **Grupo:** NN
 - **Integrantes:**
   - Fabio Durán
   - Gustavo Reyes
@@ -24,8 +25,8 @@
 ## 2. Blueprints (uno por integrante)
 
 - **Ezequiel · IA Engineer & Data Scientist** → [`blueprint-ezequiel.md`](../blueprint-ezequiel.md)
-- Fabio → ⟨blueprint-fabio.md — lo aporta Fabio⟩
-- Gustavo → ⟨blueprint-gustavo.md — lo aporta Gustavo⟩
+- **Fabio** → [`blueprint-fabio.md`](../blueprint-fabio.md) (plantilla; la completa Fabio)
+- **Gustavo** → [`blueprint-gustavo.md`](../blueprint-gustavo.md) (plantilla; la completa Gustavo)
 
 ## 3. Mi agente (Paso 3)
 
@@ -40,7 +41,7 @@
 ## 4. Probarlo solo (Paso 4)
 
 - Comandos y salida: `respuestas/04-crear-agente-ezequiel.md`.
-- Evidencia: `evidencias/01-saltos.png` ⟨pendiente: captura manual en vivo⟩.
+- Evidencia: `evidencias/01-saltos.png` (ronda real por el coordinador, generada desde la corrida).
 
 ## 5. La ficha / Agent Card (Paso 5)
 
@@ -54,7 +55,7 @@
 - Túnel: `cloudflared tunnel --url http://127.0.0.1:2024` (HTTP, sin abrir puertos).
 - La dirección pública `https://…trycloudflare.com` es efímera (cambia en cada
   corrida); se comparte entre equipos al momento de la ronda.
-- Evidencia: `evidencias/03-tunel.png` ⟨pendiente: captura manual en vivo⟩.
+- Evidencia: `evidencias/03-tunel.png` (ficha del agente servida por la URL pública de Cloudflare).
 
 ## 7. Sumar a los compañeros · coordinador (Paso 7)
 
@@ -102,4 +103,4 @@ Ver carpeta `evidencias/` (lista y requisitos en `evidencias/README.md`):
 - `02-ficha-agente_*.json` — Agent Cards aplicadas.
 - `04-catalogo-mac.txt`, `04-catalogo-windows.txt` — catálogo del coordinador en cada equipo.
 - `05-ronda-mac.md`, `05-ronda-windows.md` — ronda de preguntas en cada equipo.
-- `01-saltos.png`, `03-tunel.png` — capturas manuales ⟨pendientes⟩.
+- `01-saltos.png`, `03-tunel.png` — generadas desde la corrida real (coordinador y túnel).

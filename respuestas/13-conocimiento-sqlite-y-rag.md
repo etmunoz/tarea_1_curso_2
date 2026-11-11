@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/13-conocimiento-sqlite-y-rag.md`  
 > **Objetivo:** 13 · Respuesta — Conocimiento SQLite (Ezequiel) y RAG Redis (Tomás)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 # 13 · Respuesta — Conocimiento SQLite (Ezequiel) y RAG Redis (Tomás)

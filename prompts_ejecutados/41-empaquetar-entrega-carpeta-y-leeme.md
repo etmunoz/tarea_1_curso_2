@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/41-empaquetar-entrega-carpeta-y-leeme.md`  
 > **Objetivo:** Prompt 41 · Empaquetar la entrega como carpeta en la repo + LEEME  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 # Prompt 41 · Empaquetar la entrega como carpeta en la repo + LEEME

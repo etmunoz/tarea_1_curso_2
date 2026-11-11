@@ -3,7 +3,7 @@
 # Objetivo: Carga los documentos de Reiki (`data/reiki/`) al RAG en Redis.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2009
-# Última modificación: 20261110 2325
+# Última modificación: 20261110 2335
 # --8<-- fin-encabezado-grupo
 
 """Carga los documentos de Reiki (`data/reiki/`) al RAG en Redis.

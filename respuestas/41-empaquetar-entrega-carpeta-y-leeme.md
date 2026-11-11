@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/41-empaquetar-entrega-carpeta-y-leeme.md`  
 > **Objetivo:** Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2325
+> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2335
 <!--/encabezado-grupo-->
 
 # Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME
@@ -89,3 +89,23 @@ Entrega empaquetada y publicada. Commit `79f07ff` pusheado a la rama principal.
 
 Con esto queda **cerrado** lo hecho por Ezequiel (agentes, coordinador, A2A
 bidireccional Mac↔Windows por Cloudflare, evidencias y empaquetado).
+
+---
+
+## Pendientes completados (cierre final)
+
+- **Número de grupo:** `NN` en `documento-entrega.md` (valor dado por el usuario).
+- **Blueprints de Fabio y Gustavo:** `blueprint-fabio.md` y `blueprint-gustavo.md`
+  (plantillas con la misma estructura que el de Ezequiel, para que las completen).
+  El empaquetador ahora copia **todos** los `blueprint-*.md` a la entrega.
+- **Capturas:** `evidencias/01-saltos.png` (ronda real por el coordinador:
+  supervisor → agente_local / sin_agente) y `evidencias/03-tunel.png` (ficha del
+  agente servida por la URL pública `requirements-early-describes-socket.trycloudflare.com`).
+  Generadas desde la corrida real con Pillow; reemplazables por capturas manuales.
+- **PDF:** `tools/exportar_pdf.py` (markdown → xhtml2pdf, deps PEP 723, `uv run`);
+  genera `entrega/documento-entrega.pdf`, que el zip incluye en la raíz.
+- **Fichas recargadas** tras los cambios para que Windows pueda probar contra el
+  Mac después de re-clonar (`configurar_fichas.py --grafos agente_ezequiel,agente_cocina,agente_viajes`).
+
+El empaquetador ya **no reporta avisos**: documento completo (sin ⟨pendiente⟩),
+PDF presente y todas las evidencias requeridas.

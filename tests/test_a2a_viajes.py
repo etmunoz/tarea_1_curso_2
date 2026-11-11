@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2325
+# Última modificación: 20261110 2335
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del agente de viajes expuesto por A2A nativo. Requiere `langgraph dev` corriendo (puerto 2024)."""

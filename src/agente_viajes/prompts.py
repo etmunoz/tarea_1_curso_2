@@ -3,7 +3,7 @@
 # Objetivo: System prompts del agente de viajes. Separados del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261111 1738
+# Última modificación: 20261111 1741
 # --8<-- fin-encabezado-grupo
 
 """System prompts del agente de viajes. Separados del grafo (regla de AGENTS.md)."""

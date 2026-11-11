@@ -2,7 +2,7 @@
 > **Archivo:** `CONVENCIONES.md`  
 > **Objetivo:** Convenciones de desarrollo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1746 · **Última modificación:** 20261111 1738
+> **Creación:** 20261110 1746 · **Última modificación:** 20261111 1741
 <!--/encabezado-grupo-->
 
 # Convenciones de desarrollo

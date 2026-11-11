@@ -3,7 +3,7 @@
 # Objetivo: App web simple para probar los agentes: uno a uno (A2A) y vía el coordinador.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261111 1738
+# Última modificación: 20261111 1741
 # --8<-- fin-encabezado-grupo
 
 """App web simple para probar los agentes: uno a uno (A2A) y vía el coordinador.

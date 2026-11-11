@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/39-chequeo-seguridad-antes-de-publicar.md`  
 > **Objetivo:** 39 · Respuesta — Chequeo de seguridad antes de publicar  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2306 · **Última modificación:** 20261111 1738
+> **Creación:** 20261110 2306 · **Última modificación:** 20261111 1741
 <!--/encabezado-grupo-->
 
 # 39 · Respuesta — Chequeo de seguridad antes de publicar

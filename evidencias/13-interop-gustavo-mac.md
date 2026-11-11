@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/13-interop-gustavo-mac.md`  
 > **Objetivo:** Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1737 · **Última modificación:** 20261111 1738
+> **Creación:** 20261111 1737 · **Última modificación:** 20261111 1741
 <!--/encabezado-grupo-->
 
 # Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)
@@ -48,3 +48,30 @@ Suite completa: 146 passed, 1 skipped.
 
 Interoperabilidad A2A **en ambos sentidos**: Gustavo → nosotros (por el puente, prompt 49) y
 **nosotros → Gustavo** (por este fallback). Implementado en la rama `prompt-48-robustez`.
+
+## Ronda end-to-end (coordinador con Gustavo en el catálogo)
+
+Catálogo: `agente_ezequiel` (local) + `agente_cocina` (local) + `agente_meteorologo` (remoto,
+Gustavo, por Cloudflare). Corrida real:
+
+```
+> ¿Qué técnica uso si tengo desbalance de clases?
+  ruta: guardia_entrada → supervisor → agente_local → guardia_salida
+  [Agente de Ezequiel] … class weights, resampleo (SMOTE/undersampling), F1/PR-AUC …
+
+> ¿Cuánto cuesta un pastel de choclo para 4 personas?
+  ruta: guardia_entrada → supervisor → agente_local → guardia_salida
+  [Agente de cocina chilena] … detalle por ingrediente … total CLP …
+
+> ¿Qué clima hará mañana en Valdivia?
+  ruta: guardia_entrada → supervisor → agente_remoto → guardia_salida
+  [agente_meteorologo] Mañana en Valdivia se esperan chubascos con una máxima de 15 °C y una mínima de 6 °C.
+
+> ¿Quién ganó el mundial de 1962?
+  ruta: guardia_entrada → supervisor → sin_agente → guardia_salida
+  No tengo un agente para eso. Puedo ayudarte con: Agente de Ezequiel, Agente de cocina chilena, agente_meteorologo.
+```
+
+El supervisor eligió al `agente_meteorologo` de Gustavo por su ficha y lo consultó por A2A
+(dialecto `SendMessage`, desanidado). Pasa por los guardrails (`guardia_entrada`/`guardia_salida`)
+como cualquier otro. Interoperabilidad A2A **en ambos sentidos**, end-to-end.

@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de interoperabilidad A2A (prompt 49).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1342
-# Última modificación: 20261111 1738
+# Última modificación: 20261111 1741
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de interoperabilidad A2A (prompt 49).

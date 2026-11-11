@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/29-corrida-real-2-pc.md`  
 > **Objetivo:** 21 · Respuesta — Corrida real entre 2 computadores  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2225 · **Última modificación:** 20261111 1738
+> **Creación:** 20261110 2225 · **Última modificación:** 20261111 1741
 <!--/encabezado-grupo-->
 
 # 21 · Respuesta — Corrida real entre 2 computadores

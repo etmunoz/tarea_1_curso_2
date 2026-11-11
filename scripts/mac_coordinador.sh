@@ -4,7 +4,7 @@
 # Objetivo: mac_coordinador.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1953
-# Última modificación: 20261111 1738
+# Última modificación: 20261111 1741
 # --8<-- fin-encabezado-grupo
 
 # Mac (Ezequiel) · coordinador BIDIRECCIONAL: enruta a lo LOCAL (Ezequiel, cocina) y a

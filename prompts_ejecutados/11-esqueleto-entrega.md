@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/11-esqueleto-entrega.md`  
 > **Objetivo:** 11 · Esqueleto de entrega y empaquetador del zip  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1438
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1738
 <!--/encabezado-grupo-->
 
 # 11 · Esqueleto de entrega y empaquetador del zip

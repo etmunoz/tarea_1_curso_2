@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/38-windows-commit-push-36-y-pull-37-mac.md`  
 > **Objetivo:** 38 · Windows: commit/push del 36 e integración del 37 del Mac  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2303 · **Última modificación:** 20261111 1438
+> **Creación:** 20261110 2303 · **Última modificación:** 20261111 1738
 <!--/encabezado-grupo-->
 
 # 38 · Windows: commit/push del 36 e integración del 37 del Mac

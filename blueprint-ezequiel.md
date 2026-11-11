@@ -2,7 +2,7 @@
 > **Archivo:** `blueprint-ezequiel.md`  
 > **Objetivo:** Blueprint · Agente de Ezequiel  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1933 · **Última modificación:** 20261111 1438
+> **Creación:** 20261110 1933 · **Última modificación:** 20261111 1738
 <!--/encabezado-grupo-->
 
 # Blueprint · Agente de Ezequiel

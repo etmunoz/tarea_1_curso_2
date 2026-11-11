@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1438
+# Última modificación: 20261111 1738
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -171,6 +171,52 @@ def _endpoint_clasico(card: dict, base: str) -> str:
     return (url if isinstance(url, str) and url else base).rstrip("/")
 
 
+def _cuerpo_message_send(texto: str, context_id: str) -> dict:
+    """Objetivo: JSON-RPC estándar `message/send` (langgraph y a2a-protocol.org).
+    Entradas: texto, context_id. Salida: dict."""
+    return {
+        "jsonrpc": "2.0", "id": "1", "method": "message/send",
+        "params": {"message": {"role": "user", "kind": "message", "messageId": uuid.uuid4().hex,
+                               "contextId": context_id, "parts": [{"kind": "text", "text": texto}]}},
+    }
+
+
+def _cuerpo_sendmessage(texto: str, context_id: str) -> dict:
+    """Objetivo: variante `SendMessage` que usa el servidor de un compañero (role ROLE_USER,
+    parts sin `kind`). Se usa como FALLBACK cuando `message/send` da -32601 en dialecto clásico.
+    Entradas: texto, context_id. Salida: dict."""
+    return {
+        "jsonrpc": "2.0", "id": "1", "method": "SendMessage",
+        "params": {"message": {"role": "ROLE_USER", "messageId": uuid.uuid4().hex,
+                               "contextId": context_id, "parts": [{"text": texto}]}},
+    }
+
+
+def _codigo_error(datos) -> int | None:
+    """Objetivo: código de un error JSON-RPC, si lo hay. Entradas: datos. Salida: int|None."""
+    if isinstance(datos, dict) and isinstance(datos.get("error"), dict):
+        cod = datos["error"].get("code")
+        return cod if isinstance(cod, int) else None
+    return None
+
+
+def _desanidar(texto: str) -> str:
+    """Objetivo: algunos servidores (p. ej. el agente del compañero) devuelven el texto DENTRO
+    de un string con un repr de lista/dict: "[{'type':'text','text':'...','extras':{...}}]".
+    Si el texto es exactamente eso, se extrae el/los `text` internos; si no, se devuelve igual.
+    Entradas: texto (str). Salida: str."""
+    t = (texto or "").strip()
+    if not (t.startswith("[") or t.startswith("{")):
+        return texto
+    try:
+        import ast  # noqa: PLC0415
+        valor = ast.literal_eval(t)
+    except (ValueError, SyntaxError):
+        return texto
+    internos = _textos(valor)  # reutiliza el extractor recursivo de 'text'
+    return "\n".join(internos) if internos else texto
+
+
 def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
     """Objetivo: obtener el assistant_id (UUID) que el servidor asigna a un grafo (con caché).
     Entradas: base_url (str) del servidor; graph (str) id del grafo; timeout (float) segundos.
@@ -233,7 +279,10 @@ def _textos(o) -> list[str]:
     """Objetivo: juntar los `text` de las partes A2A dentro de un dict/list (recursivo).
     Entradas: o (dict | list | otro). Salida: list[str] — textos no vacíos, en orden."""
     if isinstance(o, dict):
-        if o.get("kind") == "text" and isinstance(o.get("text"), str):
+        # Una "parte de texto" es cualquier dict con un campo `text` de tipo str: cubre
+        # langgraph/a2a estándar ({kind:text,text}), la variante del compañero ({type:text,text})
+        # y partes mínimas ({text}). No recurre más dentro de esa parte.
+        if isinstance(o.get("text"), str):
             return [o["text"]] if o["text"].strip() else []
         return [t for v in o.values() for t in _textos(v)]
     if isinstance(o, list):
@@ -280,20 +329,7 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     Lanza AgenteNoDisponible si el agente no responde (conexión/timeout/HTTP/JSON).
     Habla ambos dialectos: langgraph (`/a2a/<assistant_id>`) y clásico (URL base)."""
     base = base_url.rstrip("/")
-    cuerpo = {
-        "jsonrpc": "2.0",
-        "id": "1",
-        "method": "message/send",
-        "params": {
-            "message": {
-                "role": "user",
-                "kind": "message",
-                "messageId": uuid.uuid4().hex,
-                "contextId": context_id,
-                "parts": [{"kind": "text", "text": texto}],
-            }
-        },
-    }
+    cuerpo = _cuerpo_message_send(texto, context_id)
     destino = f"{base} ({graph})"
     es_clasico = dialecto(base, timeout) == "clasico"
 
@@ -330,7 +366,21 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
         datos = r.json()
     except ValueError as exc:
         raise RespuestaA2AInvalida(destino, "respuesta ilegible del servidor") from exc
+    # Fallback de interoperabilidad: algunos servidores A2A clásicos no implementan
+    # `message/send` (responden -32601) sino `SendMessage` (role ROLE_USER, parts sin kind,
+    # header A2A-Version). Se reintenta UNA vez con esa variante.
+    if es_clasico and _codigo_error(datos) == -32601:
+        endpoint = _endpoint_clasico(_card_clasica(base, timeout), base)
+        r = _pedir(httpx.post, endpoint, destino, json=_cuerpo_sendmessage(texto, context_id),
+                   headers={"A2A-Version": "1.0"}, _lectura=timeout)
+        try:
+            datos = r.json()
+        except ValueError as exc:
+            raise RespuestaA2AInvalida(destino, "respuesta ilegible del servidor") from exc
+
     if isinstance(datos, dict) and datos.get("error"):
         # Error JSON-RPC del servidor remoto: es un error de PROTOCOLO (no de transporte).
         raise ErrorProtocoloA2A(destino, f"error del agente remoto: {datos['error']}")
-    return _texto_de_resultado(datos.get("result", datos) if isinstance(datos, dict) else datos, destino)
+    bruto = _texto_de_resultado(datos.get("result", datos) if isinstance(datos, dict) else datos, destino)
+    # Algunos servidores devuelven el texto dentro de un repr de lista/dict: se desanida.
+    return _desanidar(bruto)

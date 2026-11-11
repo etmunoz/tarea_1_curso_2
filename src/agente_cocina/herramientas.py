@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de cocina chilena (recetas + costeo desde SQLite).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261111 1438
+# Última modificación: 20261111 1738
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de cocina chilena (recetas + costeo desde SQLite)."""

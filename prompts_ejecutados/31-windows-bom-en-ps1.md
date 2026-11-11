@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/31-windows-bom-en-ps1.md`  
 > **Objetivo:** 31 · Windows: arreglar la codificación de los `.ps1` (UTF-8 con BOM)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2226 · **Última modificación:** 20261111 1438
+> **Creación:** 20261110 2226 · **Última modificación:** 20261111 1738
 <!--/encabezado-grupo-->
 
 # 31 · Windows: arreglar la codificación de los `.ps1` (UTF-8 con BOM)

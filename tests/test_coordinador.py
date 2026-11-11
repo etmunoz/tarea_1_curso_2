@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del coordinador (supervisor).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2259
+# Última modificación: 20261110 2306
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del coordinador (supervisor).

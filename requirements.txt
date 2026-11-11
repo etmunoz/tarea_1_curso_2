@@ -3,7 +3,7 @@
 # Objetivo: Dependencias del proyecto (pip).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2259
+# Última modificación: 20261110 2306
 # --8<-- fin-encabezado-grupo
 
 # runtime del agente (familia LangChain 1.x)

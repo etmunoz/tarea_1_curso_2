@@ -3,7 +3,7 @@
 # Objetivo: Agente de viajes · se expone por A2A de forma NATIVA con el servidor de LangGraph.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2259
+# Última modificación: 20261110 2306
 # --8<-- fin-encabezado-grupo
 
 """Agente de viajes · se expone por A2A de forma NATIVA con el servidor de LangGraph.

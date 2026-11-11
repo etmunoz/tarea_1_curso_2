@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/29-corrida-real-2-pc.md`  
 > **Objetivo:** 21 · Corrida real entre 2 computadores (Mac ↔ Windows por Cloudflare)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2225 · **Última modificación:** 20261110 2259
+> **Creación:** 20261110 2225 · **Última modificación:** 20261110 2306
 <!--/encabezado-grupo-->
 
 # 21 · Corrida real entre 2 computadores (Mac ↔ Windows por Cloudflare)

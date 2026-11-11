@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/20-docstrings-todos-los-py.md`  
 > **Objetivo:** 20 · Documentar con docstring todas las clases y funciones (.py)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2147 · **Última modificación:** 20261110 2259
+> **Creación:** 20261110 2147 · **Última modificación:** 20261110 2306
 <!--/encabezado-grupo-->
 
 # 20 · Documentar con docstring todas las clases y funciones (.py)

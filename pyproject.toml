@@ -3,7 +3,7 @@
 # Objetivo: Configuración del proyecto y dependencias (uv).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1514
-# Última modificación: 20261110 2259
+# Última modificación: 20261110 2306
 # --8<-- fin-encabezado-grupo
 
 [project]
@@ -12,7 +12,7 @@ version = "0.1.0"
 description = "Taller A2A (Curso 2 · Sesión 1): agente de viajes LangGraph expuesto por A2A nativo, swarm y agente conversacional."
 readme = "README.md"
 requires-python = ">=3.11"
-authors = [{ name = "Ezequiel Muñoz Krsulovic", email = "noreply@tarea1-curso2.invalid" }]
+authors = [{ name = "Grupo: Fabio Durán · Gustavo Reyes · Ezequiel Muñoz" }]
 dependencies = [
   # runtime del agente (familia LangChain 1.x)
   "langchain>=1.3,<2",

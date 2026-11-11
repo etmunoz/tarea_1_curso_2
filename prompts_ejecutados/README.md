@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2208
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2217
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -37,3 +37,7 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 22 | [Windows: ejecutar setup_windows.ps1 (clave Gemini y AVG)](22-windows-ejecutar-setup.md) | [respuesta](../respuestas/22-windows-ejecutar-setup.md) |
 | 23 | [Windows: cambiar el puerto de Redis (6379 ocupado)](23-windows-puerto-redis.md) | [respuesta](../respuestas/23-windows-puerto-redis.md) |
 | 24 | [Windows: dejar registro de prompts y resultados](24-windows-registro-de-evidencias.md) | [respuesta](../respuestas/24-windows-registro-de-evidencias.md) |
+| 25 | [Windows: commit + push y qué sigue](25-windows-commit-push-y-siguientes-pasos.md) | [respuesta](../respuestas/25-windows-commit-push-y-siguientes-pasos.md) |
+| 26 | [Windows: levantar agente y túnel; verificación](26-windows-levantar-y-verificar-agente-tunel.md) | [respuesta](../respuestas/26-windows-levantar-y-verificar-agente-tunel.md) |
+| 27 | [Windows: respuestas completas, todo en español](27-windows-respuestas-completas-en-espanol.md) | [respuesta](../respuestas/27-windows-respuestas-completas-en-espanol.md) |
+| 28 | [Windows: verificar el túnel de Cloudflare](28-windows-verificar-tunel.md) | [respuesta](../respuestas/28-windows-verificar-tunel.md) |

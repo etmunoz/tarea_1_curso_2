@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/21-windows-clonar-y-leer-instrucciones.md`  
 > **Objetivo:** 21 · Respuesta — Windows: clonar el repo y leer las instrucciones  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2208
+> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2217
 <!--/encabezado-grupo-->
 
 # 21 · Respuesta — Windows: clonar el repo y leer las instrucciones
@@ -45,3 +45,55 @@ scripts/*.ps1                                                 -> UTF-8 SIN BOM
 ## Estado
 
 Repo clonado y plan aprobado por el usuario → sigue en el prompt 22.
+
+---
+
+## Respuesta completa del asistente (chat)
+
+### Mensajes de avance
+
+> La carpeta está vacía. Clono el repo ahí.
+
+### Respuesta final
+
+> Cloné el repo en `C:\Users\etmun\proyecto\tarea_1_curso_2` y leí las instrucciones para
+> Windows. Me detengo aquí, como pediste: todavía no ejecuté nada.
+>
+> **Qué dicen las instrucciones (rol Windows = Tomás)**
+> La guía está en `guia_ezequiel_tomas.md`, sección B. El Windows corre el agente Tomás
+> (Maestro Reiki), que usa un RAG sobre un Redis local en Docker. Además abre un túnel de
+> Cloudflare hacia el Mac de Ezequiel y corre un coordinador que trabaja en ambos sentidos.
+>
+> **Estado de tu PC:** ya están instalados winget, uv 0.11.24, cloudflared 2026.10.7 y
+> Docker 29.8.2, y Docker está corriendo. Aún no existe el archivo `.env`.
+>
+> **Lo que propongo hacer**
+>
+> 1. **Ejecutar el setup (`scripts/setup_windows.ps1`).** Como ya tienes todo instalado, no
+>    instalará nada nuevo. Hace esto:
+>    - instala Python 3.13 con `uv` y corre `uv sync` para crear `.venv`;
+>    - crea `.env` a partir de `.env.example`;
+>    - prueba tu clave de Gemini;
+>    - levanta Redis con `docker compose up -d` (imagen `redis/redis-stack`, puertos 6379 y 8001);
+>    - carga el contenido de Reiki en el RAG.
+> 2. **La `GOOGLE_API_KEY` la pones tú.** El script la pide de forma interactiva, y esta
+>    sesión no puede responder esa pregunta. Además, no corresponde que yo escriba tu clave.
+>    Mi propuesta: creo el `.env`, tú pegas la clave a mano y después yo sigo con el resto del setup.
+> 3. **Dejar para después los pasos que necesitan terminales abiertas o al otro equipo:**
+>    - `win_servir.ps1` (agente en el puerto 2024) y `win_tunel.ps1` (túnel) quedan
+>      corriendo, así que conviene abrirlos en pestañas de terminal aparte;
+>    - `win_coordinador.ps1 "https://<tunel-mac>"` necesita la URL del túnel del Mac de Ezequiel.
+>
+> **Dos problemas que encontré**
+> - **Codificación de los `.ps1`:** están en UTF-8 sin BOM. Windows PowerShell 5.1 los lee
+>   mal, y los acentos y la "¿" salen como "Â¿QuÃ©". Esto puede alterar las preguntas que
+>   envía `win_coordinador.ps1` y quedar mal escrito en las evidencias. La solución es guardar
+>   esos archivos con BOM; es un cambio pequeño. También se pueden correr con `pwsh`
+>   (PowerShell 7) si lo tienes.
+> - **Permisos de ejecución:** tu política de ejecución está en `Undefined`, y probablemente
+>   Windows bloqueará los `.ps1`. La guía sugiere `Set-ExecutionPolicy -Scope CurrentUser
+>   RemoteSigned`. Como es un ajuste de seguridad, prefiero que lo apliques tú. La otra opción
+>   es que yo corra cada script con `-ExecutionPolicy Bypass` solo para esa ejecución, sin
+>   cambiar nada de forma permanente.
+>
+> Dime si sigo así o si quieres cambiar algo, por ejemplo usar `-SinRag` para omitir Redis.

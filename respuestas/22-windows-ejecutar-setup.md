@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/22-windows-ejecutar-setup.md`  
 > **Objetivo:** 22 · Respuesta — Windows: ejecutar setup_windows.ps1 (clave Gemini y AVG)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2208
+> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2217
 <!--/encabezado-grupo-->
 
 # 22 · Respuesta — Windows: ejecutar `setup_windows.ps1` (clave Gemini y AVG)
@@ -63,3 +63,103 @@ Prompt: [`../prompts_ejecutados/22-windows-ejecutar-setup.md`](../prompts_ejecut
 
 - Que `setup_windows.ps1` no sobrescriba la clave si la respuesta viene vacía.
 - Agregar a la guía (sección *Problemas típicos*) el caso de antivirus con inspección HTTPS.
+
+---
+
+## Respuestas completas del asistente (chat)
+
+### A «luego debes ejecutar .\scripts\setup_windows.ps1»
+
+**Mensaje de avance:**
+
+> Ejecuto el setup en una pestaña de terminal, para que puedas pegar tu clave ahí cuando la pida.
+
+**Respuesta final:**
+
+> El setup está en marcha en la pestaña *setup windows* y se detuvo en el paso 3 de 6, que
+> pide tu clave de Gemini.
+>
+> - **Pasos 1 y 2:** ya terminaron. Quedaron instalados Python 3.13 y las 134 dependencias.
+> - **Paso 3:** se creó `.env` a partir de `.env.example`. Ahora el script espera la línea
+>   `Pega tu GOOGLE_API_KEY (Gemini, la misma del Mac):`.
+>
+> **Lo que tienes que hacer:** abre esa pestaña, pega tu clave y presiona Enter. La clave
+> queda guardada solo en `.env`, que git no sube al repositorio. Yo no la escribo por ti.
+>
+> Después el script sigue solo: prueba la clave de Gemini, levanta Redis con Docker y carga
+> el RAG de Reiki. Cuando me avises, reviso la salida.
+>
+> Para que el script corriera usé `-ExecutionPolicy Bypass` solo en esta ejecución, sin
+> cambiar ningún ajuste de tu sistema. Los acentos se ven mal en la consola ("Â·") porque el
+> `.ps1` no tiene BOM, como te comenté antes. Por ahora es solo un problema de visualización.
+
+### A «ya la agregué al .env directamente» y «lo paré yo»
+
+**Mensajes de avance (traducidos; en el chat salieron en inglés):**
+
+> La clave está en `.env`, pero el script sigue esperando en la pregunta. Si presionas Enter
+> ahí sin escribir nada, el script va a sobrescribir tu clave con un valor vacío. Cancelo esa
+> ejecución y la vuelvo a correr; esta vez ve la clave y se salta la pregunta.
+
+> La prueba de Gemini se interrumpió mientras reintentaba una solicitud fallida. Reviso el
+> formato de la clave (sin mostrarla) y el error real.
+
+> Entendido, la paraste tú. Mientras reintentaba encontré algo útil: tu clave empieza
+> distinto a las claves estándar de Google AI Studio. Hago una llamada directa, sin
+> reintentos, para ver el error exacto.
+
+> La clave funciona: Gemini respondió "OK" (HTTP 200). El reintento anterior probablemente
+> fue un error temporal de Google. Vuelvo a correr el setup.
+
+> Redis se está descargando. Mientras tanto reviso el error SSL: mi llamada directa
+> funcionó, pero la llamada de la librería de Gemini falla.
+
+> La causa es **AVG Antivirus**. Su "Web/Mail Shield" intercepta el tráfico HTTPS y vuelve a
+> firmar los certificados con su propia raíz. Windows confía en esa raíz, pero la librería de
+> Gemini usa su propia lista de certificados (certifi), que no la incluye. Pruebo un arreglo
+> que no cambia nada de forma permanente: un paquete combinado (certifi + raíz de AVG) en una
+> carpeta temporal.
+
+### A «dime qué excepcion pongo en AVG»
+
+**Respuesta final:**
+
+> El error SSL lo causa AVG y no tu clave. AVG intercepta las conexiones HTTPS para
+> revisarlas, y la librería de Gemini que usa Python no reconoce el certificado de AVG. Por
+> eso hay que excluir las direcciones que usa el proyecto.
+>
+> **Qué excepción agregar en AVG**
+> 1. Abre AVG y ve a **Menú ☰ → Configuración → General → Excepciones**.
+> 2. Haz clic en **Agregar excepción** y escribe estas direcciones, una por una:
+>    - `https://generativelanguage.googleapis.com/*`: Gemini, la usan los agentes y la prueba de la clave.
+>    - `https://*.trycloudflare.com/*`: los túneles. Hace falta cuando tu coordinador o la app
+>      llamen al túnel del Mac, porque fallaría por el mismo motivo.
+> 3. Guarda los cambios.
+>
+> **Si el error sigue después de agregarlas:** en algunas versiones de AVG las excepciones de
+> URL no desactivan la revisión de HTTPS. En ese caso, en **Protección básica → Escudo web**,
+> desmarca **Habilitar análisis HTTPS**. Esto desactiva la revisión de HTTPS para todo el
+> equipo, no solo para estas direcciones, así que decide tú si te parece bien.
+>
+> **Alternativa sin tocar AVG**
+> Hice una prueba que no dejó ningún cambio permanente y funcionó: Gemini respondió. Junté
+> los certificados normales de Python con el certificado de AVG en un solo archivo y le
+> indiqué a Python que lo usara. Para dejarlo fijo, guardaría ese archivo dentro del proyecto,
+> sin subirlo a git, y agregaría una línea `SSL_CERT_FILE=...` en tu `.env`.
+>
+> **En qué va el setup**
+> En la pestaña *setup windows 2* se está descargando la imagen de Redis: 188 de 373 MB,
+> paso 5 de 6. Después viene la carga del RAG de Reiki, que probablemente falle por el mismo
+> problema SSL. Cuando esté resuelto, vuelvo a correr la prueba de Gemini y la carga del RAG.
+
+### A «Ya la agregué»
+
+**Mensajes de avance (traducidos):**
+
+> La excepción de AVG funciona: Gemini responde sin ningún ajuste extra. Ahora espero a que
+> Redis termine y se cargue el RAG.
+
+> Redis no arrancó: el puerto 6379 ya está ocupado. Reviso qué lo está usando.
+
+*(La respuesta final de este turno se registra en el prompt 23, porque el usuario pidió
+cambiar el puerto mientras se trabajaba.)*

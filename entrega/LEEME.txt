@@ -1,0 +1,60 @@
+# --8<-- encabezado-grupo
+# Archivo: entrega/LEEME.txt
+# Objetivo: LEEME.txt del proyecto.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 2321
+# Última modificación: 20261110 2322
+# --8<-- fin-encabezado-grupo
+
+================================================================================
+  LEEME — Taller A2A (Curso 2 · Sesión 1)
+  "tu skill es un agente y habla por A2A"
+  Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+================================================================================
+
+QUÉ ES ESTO
+-----------
+Al descomprimir el .zip obtienes una carpeta llamada "tarea_1_curso_2" (el mismo
+nombre del repositorio) con TODO lo que pide el taller:
+
+  tarea_1_curso_2/
+  ├── LEEME.txt                 <- este archivo
+  ├── documento-entrega.pdf     <- documento de entrega (o .md si no se exportó)
+  ├── blueprint-ezequiel.md     <- blueprint del agente de Ezequiel
+  ├── companeros.md             <- plantilla / agentes de los compañeros
+  ├── evidencias/               <- fichas (JSON), catálogos y rondas (Mac y Windows)
+  └── proyecto/                 <- el proyecto COMPLETO (código versionado en git)
+
+Nota: "proyecto/" NO incluye secretos: el .env real y el .venv están en
+.gitignore y nunca entran al paquete. El código completo también está público en:
+    https://github.com/etmunoz/tarea_1_curso_2
+
+QUÉ HACER DESPUÉS DE DESZIPEAR
+------------------------------
+1) Leer "documento-entrega.pdf" (resumen de la entrega) y los blueprints.
+2) Revisar "evidencias/" (fichas aplicadas, catálogo del coordinador y la ronda
+   de preguntas real entre dos equipos, Mac y Windows, por Cloudflare).
+
+PARA CORRER EL PROYECTO (carpeta proyecto/)
+-------------------------------------------
+Requisitos: uv (https://docs.astral.sh/uv/), Python 3.13, Docker (para el RAG),
+y una GOOGLE_API_KEY de Gemini (https://aistudio.google.com/apikey).
+
+    cd proyecto
+    uv sync
+    cp .env.example .env            # pega tu GOOGLE_API_KEY en el .env
+    docker compose up -d            # levanta Redis (RAG del agente de Tomás)
+    uv run langgraph dev            # publica los agentes en http://127.0.0.1:2024
+    uv run python tools/configurar_fichas.py   # aplica las fichas (Agent Cards)
+
+Probar / evidencias:
+    uv run pytest
+    uv run python tools/guardar_evidencias.py --etiqueta mac
+
+Coordinador, app web y túnel Cloudflare (plug and play por equipo):
+    Mac:      scripts/mac_coordinador.sh · scripts/mac_app.sh · scripts/mac_tunel.sh
+    Windows:  scripts/win_coordinador.ps1 · scripts/win_app.ps1 · scripts/win_tunel.ps1
+
+Guía completa paso a paso: carpeta "taller-a2a/" dentro de proyecto/.
+
+================================================================================

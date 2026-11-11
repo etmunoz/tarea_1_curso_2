@@ -1,0 +1,77 @@
+{
+  "name": "Agente de viajes",
+  "description": "Busca vuelos y hoteles (SCL, LIM, BOG, EZE) con precios en CLP. No gestiona pagos ni seguros.",
+  "url": "http://127.0.0.1:2024/a2a/f4c036e2-e856-5746-a4ec-f64eb476af3d",
+  "supportedInterfaces": [
+    {
+      "url": "http://127.0.0.1:2024/a2a/f4c036e2-e856-5746-a4ec-f64eb476af3d",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://langchain.com/a2a/extensions/history-scope/v1",
+        "description": "Choose task-only or full-context response history",
+        "required": false,
+        "params": {
+          "header": "LangGraph-A2A-History-Scope",
+          "values": [
+            "context",
+            "task"
+          ],
+          "default": "context",
+          "methods": [
+            "SendMessage",
+            "GetTask",
+            "ListTasks"
+          ]
+        }
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "f4c036e2-e856-5746-a4ec-f64eb476af3d-main",
+      "name": "Agente de viajes Capabilities",
+      "description": "Busca vuelos y hoteles (SCL, LIM, BOG, EZE) con precios en CLP. No gestiona pagos ni seguros.",
+      "tags": [
+        "assistant",
+        "langgraph"
+      ],
+      "examples": [],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "metadata": {
+        "inputSchema": {
+          "required": [
+            "messages"
+          ],
+          "properties": [
+            "messages"
+          ],
+          "supportsA2A": true
+        }
+      }
+    }
+  ],
+  "version": "0.17.1"
+}

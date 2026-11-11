@@ -1,0 +1,77 @@
+{
+  "name": "Agente de cocina chilena",
+  "description": "Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta (costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina.",
+  "url": "http://127.0.0.1:2024/a2a/1ad6da12-29cb-5223-9520-c95799e5a3a1",
+  "supportedInterfaces": [
+    {
+      "url": "http://127.0.0.1:2024/a2a/1ad6da12-29cb-5223-9520-c95799e5a3a1",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://langchain.com/a2a/extensions/history-scope/v1",
+        "description": "Choose task-only or full-context response history",
+        "required": false,
+        "params": {
+          "header": "LangGraph-A2A-History-Scope",
+          "values": [
+            "context",
+            "task"
+          ],
+          "default": "context",
+          "methods": [
+            "SendMessage",
+            "GetTask",
+            "ListTasks"
+          ]
+        }
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "1ad6da12-29cb-5223-9520-c95799e5a3a1-main",
+      "name": "Agente de cocina chilena Capabilities",
+      "description": "Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta (costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina.",
+      "tags": [
+        "assistant",
+        "langgraph"
+      ],
+      "examples": [],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "metadata": {
+        "inputSchema": {
+          "required": [
+            "messages"
+          ],
+          "properties": [
+            "messages"
+          ],
+          "supportsA2A": true
+        }
+      }
+    }
+  ],
+  "version": "0.17.1"
+}

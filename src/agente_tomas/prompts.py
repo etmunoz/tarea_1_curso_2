@@ -3,7 +3,7 @@
 # Objetivo: System prompt del agente de Tomás. Separado del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2312
+# Última modificación: 20261110 2322
 # --8<-- fin-encabezado-grupo
 
 """System prompt del agente de Tomás. Separado del grafo (regla de AGENTS.md)."""

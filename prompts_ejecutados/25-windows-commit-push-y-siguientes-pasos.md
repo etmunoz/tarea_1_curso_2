@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/25-windows-commit-push-y-siguientes-pasos.md`  
 > **Objetivo:** 25 · Windows: commit + push y qué sigue  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2215 · **Última modificación:** 20261110 2312
+> **Creación:** 20261110 2215 · **Última modificación:** 20261110 2322
 <!--/encabezado-grupo-->
 
 # 25 · Windows: commit + push y qué sigue

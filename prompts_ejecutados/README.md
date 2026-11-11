@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2312
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2322
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -53,3 +53,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 38 | [Windows: commit/push del 36 e integración del 37 del Mac](38-windows-commit-push-36-y-pull-37-mac.md) | [respuesta](../respuestas/38-windows-commit-push-36-y-pull-37-mac.md) |
 | 39 | [Chequeo de seguridad antes de publicar](39-chequeo-seguridad-antes-de-publicar.md) | [respuesta](../respuestas/39-chequeo-seguridad-antes-de-publicar.md) |
 | 40 | [Hacer público el repo y purgar el email del historial](40-publicar-repo-y-purgar-email.md) | [respuesta](../respuestas/40-publicar-repo-y-purgar-email.md) |
+| 41 | [Empaquetar la entrega como carpeta en la repo + LEEME](41-empaquetar-entrega-carpeta-y-leeme.md) | [respuesta](../respuestas/41-empaquetar-entrega-carpeta-y-leeme.md) |

@@ -18,5 +18,8 @@ for _ in 1 2 3 4; do [ -n "${CONDA_DEFAULT_ENV:-}" ] && conda deactivate 2>/dev/
 export PUENTE_BASE="${PUENTE_BASE:-http://127.0.0.1:2024}"
 export PUENTE_GRAFO="${PUENTE_GRAFO:-agente_ezequiel}"
 export PUENTE_PORT="${PUENTE_PORT:-8790}"
+# Log de accesos por defecto, para que tools/monitor_puente.py muestre quién consume el agente.
+export PUENTE_LOG="${PUENTE_LOG:-$PWD/logs/puente-acceso.log}"
+mkdir -p "$(dirname "$PUENTE_LOG")"
 if [ "${1:-}" ]; then export PUENTE_URL_PUBLICA="${1%/}"; fi
 exec uv run python -m src.puente_a2a.servidor

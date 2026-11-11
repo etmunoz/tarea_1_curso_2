@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/20-docstrings-todos-los-py.md`  
 > **Objetivo:** 20 · Respuesta — Docstrings en todos los .py  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2147 · **Última modificación:** 20261111 0835
+> **Creación:** 20261110 2147 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 # 20 · Respuesta — Docstrings en todos los .py

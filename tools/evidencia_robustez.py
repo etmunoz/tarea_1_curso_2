@@ -3,7 +3,7 @@
 # Objetivo: Genera la evidencia de robustez del coordinador: resiliencia + guardrails.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 """Genera la evidencia de robustez del coordinador: resiliencia + guardrails.
@@ -167,6 +167,44 @@ def _seccion_guardrails(lineas: list[str]) -> None:
     lineas.append("")
 
 
+def _seccion_salida(lineas: list[str]) -> None:
+    """Objetivo: evidenciar el guardrail de SALIDA común (redacción + restricciones).
+    Entradas: lineas (acumulador). Salida: None."""
+    lineas.append("\n## 4. Guardrail de SALIDA (común a todo camino)\n")
+    casos = [
+        ("secreto en respuesta", "La clave del servicio es AIzaSyA1234567890abcdefghijklmnopqrstuv"),
+        ("contraseña + token", "entra con password: hunter2 y Authorization: Bearer abcdef1234567890"),
+        ("respuesta larga", "a" * (guardrails.LIMITE_SALIDA + 300)),
+        ("respuesta vacía", "   "),
+        ("respuesta normal", "El pastel de choclo para 4 personas cuesta $8.976 CLP."),
+    ]
+    lineas.append("| Caso | flags | salida (recortada) |\n|---|---|---|")
+    for nombre, txt in casos:
+        out, flags = guardrails.revisar_salida(txt)
+        f = f"secretos={flags['secretos'] or '—'}, recortado={flags['recortado']}"
+        lineas.append(f"| {nombre} | {f} | `{out[:70]}` |")
+    lineas.append("")
+
+
+def _seccion_allowlist(lineas: list[str]) -> None:
+    """Objetivo: evidenciar el allow-list explícito de agentes. Entradas: lineas. Salida: None."""
+    lineas.append("\n## 5. Allow-list de agentes (tools permitidas del coordinador)\n")
+    from src.coordinador.catalogo import construir_catalogo  # noqa: PLC0415
+
+    os.environ["A2A_GRAFOS_LOCALES"] = "agente_ezequiel,agente_cocina"
+    os.environ["URLS_AGENTES"] = "https://intruso.example#agente_intruso"
+
+    os.environ.pop("A2A_AGENTES_PERMITIDOS", None)
+    sin = [a.graph for a in construir_catalogo()]
+    lineas.append(f"- **Sin** allow-list → catálogo: `{sin}` (entra hasta el `agente_intruso` colado).\n")
+
+    os.environ["A2A_AGENTES_PERMITIDOS"] = "agente_ezequiel,agente_cocina"
+    con = [a.graph for a in construir_catalogo()]
+    lineas.append(f"- **Con** `A2A_AGENTES_PERMITIDOS=agente_ezequiel,agente_cocina` → catálogo: `{con}` "
+                  "(el intruso queda fuera).\n")
+    os.environ.pop("A2A_AGENTES_PERMITIDOS", None)
+
+
 def main() -> None:
     """Objetivo: CLI de la evidencia de robustez. Entradas: --remoto, --etiqueta. Salida: None."""
     ap = argparse.ArgumentParser(description=__doc__)
@@ -180,6 +218,8 @@ def main() -> None:
     _seccion_resiliencia(lineas, args.remoto.rstrip("/"))
     _seccion_forzado(lineas, args.remoto.rstrip("/"))
     _seccion_guardrails(lineas)
+    _seccion_salida(lineas)
+    _seccion_allowlist(lineas)
 
     EV.mkdir(exist_ok=True)
     suf = f"-{args.etiqueta}" if args.etiqueta else ""

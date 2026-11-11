@@ -1,9 +1,9 @@
 # --8<-- encabezado-grupo
-# Archivo: evidencias/04-catalogo.txt
+# Archivo: entrega/tarea_1_curso_2/evidencias/04-catalogo.txt
 # Objetivo: 04-catalogo.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2041
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 - Agente de viajes: Busca vuelos y hoteles (SCL, LIM, BOG, EZE) con precios en CLP. No gestiona pagos ni seguros. (skills: Agente de viajes Capabilities)

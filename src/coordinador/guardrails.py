@@ -3,7 +3,7 @@
 # Objetivo: Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 """Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
@@ -28,6 +28,8 @@ from dataclasses import dataclass
 
 # Tamaño máximo de una pregunta (configurable por entorno).
 LIMITE_ENTRADA = int(os.environ.get("GUARDRAIL_MAX_ENTRADA", "4000"))
+# Tamaño máximo de una respuesta final (guardrail de salida).
+LIMITE_SALIDA = int(os.environ.get("GUARDRAIL_MAX_SALIDA", "8000"))
 
 
 @dataclass
@@ -96,6 +98,23 @@ def redactar_secretos(texto: str) -> tuple[str, list[str]]:
             encontrados.append(nombre)
             out = patron.sub("[REDACTADO]", out)
     return out, encontrados
+
+
+def revisar_salida(texto: str) -> tuple[str, dict]:
+    """Objetivo (guardrail de SALIDA, común a TODA respuesta final): aplica las restricciones
+    de salida — redacta credenciales, trunca lo excesivamente largo y evita respuestas vacías.
+    A diferencia de `redactar_secretos`, no se limita a la respuesta de un agente: por este
+    control pasan también `sin_agente` y los avisos del guardrail de entrada.
+    Entradas: texto (str) respuesta final cruda.
+    Salida: (texto_saneado (str), flags (dict) con 'secretos', 'recortado')."""
+    saneado, secretos = redactar_secretos(texto or "")
+    recortado = False
+    if len(saneado) > LIMITE_SALIDA:
+        saneado = saneado[:LIMITE_SALIDA].rstrip() + " […respuesta truncada]"
+        recortado = True
+    if not saneado.strip():
+        saneado = "(sin respuesta)"
+    return saneado, {"secretos": secretos, "recortado": recortado}
 
 
 def es_instruccion_remota(texto: str) -> bool:

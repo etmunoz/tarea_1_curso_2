@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0835
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -104,10 +104,13 @@ Dos implementaciones técnicas del coordinador (prompt 44):
   caída / timeout / HTTP inválido / JSON ilegible en `AgenteNoDisponible`; el
   catálogo se arma igual marcando al caído, y el supervisor devuelve un estado
   controlado («… no está disponible temporalmente … los demás continúan operativos»).
-- **Guardrails** (`src/coordinador/guardrails.py`): entrada (vacías/largas/inyección),
-  salida (redacción de credenciales) y A2A (respuesta remota tratada como dato, no
-  como instrucción).
-- Pruebas: `tests/test_resiliencia_a2a.py`, `tests/test_guardrails.py`.
+- **Guardrails** (`src/coordinador/guardrails.py`): **entrada** (`guardia_entrada`:
+  vacías/largas/inyección), **salida** (`guardia_salida`, nodo común a todo camino:
+  redacción de credenciales + tope de longitud + no vacío) y **A2A** (respuesta remota
+  como dato, no instrucción).
+- **Allow-list de agentes** (`A2A_AGENTES_PERMITIDOS`): lista blanca explícita de los
+  grafos que el coordinador puede invocar (sus "tools"); un túnel colado no se ejecuta.
+- Pruebas: `tests/test_resiliencia_a2a.py`, `tests/test_guardrails.py`, `tests/test_salida_y_allowlist.py`.
 - Evidencia (con un túnel de compañero caído): `evidencias/06-robustez-mac.md`.
 
 ## 11. Evidencias incluidas

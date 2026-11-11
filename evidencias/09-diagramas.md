@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/09-diagramas.md`  
 > **Objetivo:** Diagramas · grafo del coordinador y arquitectura de agentes  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0743 · **Última modificación:** 20261111 0835
+> **Creación:** 20261111 0743 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 # Diagramas · grafo del coordinador y arquitectura de agentes
@@ -22,22 +22,24 @@ graph TD;
 	enrutar(enrutar)
 	consultar(consultar)
 	sin_agente(sin_agente)
+	guardia_salida(guardia_salida)
 	__end__([__end__]):::last
 	__start__ --> guardia_entrada;
+	guardia_entrada -. ok .-> enrutar;
+	guardia_entrada -. bloqueado .-> guardia_salida;
 	enrutar -.-> consultar;
 	enrutar -.-> sin_agente;
-	guardia_entrada -. bloqueado .-> __end__;
-	guardia_entrada -. ok .-> enrutar;
-	consultar --> __end__;
-	sin_agente --> __end__;
+	consultar --> guardia_salida;
+	sin_agente --> guardia_salida;
+	guardia_salida --> __end__;
 	classDef first fill-opacity:0
 	classDef last fill:#bfb6fc
 ```
 
 - `guardia_entrada`: guardrail de ENTRADA (vacías/largas/inyección); si bloquea, va directo a END.
 - `enrutar`: el supervisor elige un agente del catálogo por su ficha.
-- `consultar`: reenvía por A2A; aplica guardrails de salida (redacción) y A2A (respuesta = dato);
-  si el remoto está caído, devuelve el estado controlado (`agente_no_disponible`).
+- `consultar`: reenvía por A2A; guardrail A2A (respuesta = dato); si el remoto cae → estado controlado (`agente_no_disponible`).
+- `guardia_salida`: guardrail de SALIDA común a todo camino (redacta credenciales, tope de longitud, no vacío).
 - `sin_agente`: ningún agente cubre la pregunta.
 
 ## 2. Arquitectura de los agentes (dos equipos por Cloudflare)

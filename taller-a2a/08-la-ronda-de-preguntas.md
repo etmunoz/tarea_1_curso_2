@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/08-la-ronda-de-preguntas.md`  
 > **Objetivo:** La ronda de preguntas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261111 0835
+> **Creación:** 20261110 1450 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 8/10 · Parte 3 · Hablar entre agentes -->

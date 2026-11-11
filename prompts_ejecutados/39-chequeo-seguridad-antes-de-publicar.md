@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/39-chequeo-seguridad-antes-de-publicar.md`  
 > **Objetivo:** 39 · Chequeo de seguridad antes de hacer público el repo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2306 · **Última modificación:** 20261111 0835
+> **Creación:** 20261110 2306 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 # 39 · Chequeo de seguridad antes de hacer público el repo

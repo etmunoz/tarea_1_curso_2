@@ -4,7 +4,7 @@
 # Objetivo: mac_app.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 # Mac (Ezequiel) · app web para probar agentes uno a uno y vía coordinador.

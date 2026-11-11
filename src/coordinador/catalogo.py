@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -14,6 +14,8 @@ Las direcciones vienen del entorno (nunca del código, regla de AGENTS.md):
   A2A_GRAFOS_LOCALES  grafos locales a incluir, separados por comas (def. agente_viajes,agente_ezequiel,agente_cocina,agente_tomas)
   URLS_AGENTES        agentes de compañeros: lista separada por comas de `url` o `url#grafo`
                       (si no se indica grafo, se asume 'agente'); cada url es su túnel público
+  A2A_AGENTES_PERMITIDOS  allow-list opcional de grafos permitidos (coma-separada); si está
+                      definida, solo esos agentes entran al catálogo (los "tools" del coordinador)
 
 Cada entrada del catálogo resuelve su Agent Card (nombre, descripción, skills) para
 que el supervisor decida a quién enrutar. Las cards se piden una vez (lazy + cache).
@@ -114,13 +116,29 @@ def _parse_urls_agentes(valor: str) -> list[tuple[str, str]]:
     return salida
 
 
+def _agentes_permitidos() -> set[str] | None:
+    """Objetivo: allow-list EXPLÍCITO de grafos que el coordinador puede invocar.
+    Los "tools" del coordinador son los agentes; esta lista blanca (variable
+    `A2A_AGENTES_PERMITIDOS`, grafos separados por comas) acota cuáles corren, aunque
+    `URLS_AGENTES`/`A2A_GRAFOS_LOCALES` traigan otros (defensa ante mala configuración o
+    un túnel colado). Entradas: ninguna. Salida: set[str] con los permitidos, o None si
+    no se definió la variable (entonces se permiten todos, compatible hacia atrás)."""
+    v = os.environ.get("A2A_AGENTES_PERMITIDOS", "").strip()
+    permitidos = {g.strip() for g in v.split(",") if g.strip()}
+    return permitidos or None
+
+
 def construir_catalogo() -> list[AgenteRemoto]:
-    """Arma el catálogo desde el entorno: grafos locales + agentes de compañeros."""
+    """Arma el catálogo desde el entorno: grafos locales + agentes de compañeros,
+    filtrado por el allow-list `A2A_AGENTES_PERMITIDOS` si está definido."""
     base = os.environ.get("A2A_BASE", "http://127.0.0.1:2024").rstrip("/")
     locales = os.environ.get("A2A_GRAFOS_LOCALES", "agente_viajes,agente_ezequiel,agente_cocina,agente_tomas")
     catalogo = [AgenteRemoto(base, g.strip(), local=True) for g in locales.split(",") if g.strip()]
     for url, graph in _parse_urls_agentes(os.environ.get("URLS_AGENTES", "")):
         catalogo.append(AgenteRemoto(url, graph, local=False))
+    permitidos = _agentes_permitidos()
+    if permitidos is not None:
+        catalogo = [a for a in catalogo if a.graph in permitidos]
     return catalogo
 
 

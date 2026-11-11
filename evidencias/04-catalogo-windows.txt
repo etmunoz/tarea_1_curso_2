@@ -3,7 +3,7 @@
 # Objetivo: 04-catalogo-windows.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2041
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 - Agente de Tomás: Maestro Reiki: explica los cinco principios (Gokai), las posiciones de manos para autotratamiento, los símbolos y los niveles de la práctica. Es bienestar complementario: no da consejo médico ni diagnósticos; para temas de salud deriva a un profesional. (skills: Agente de Tomás Capabilities)

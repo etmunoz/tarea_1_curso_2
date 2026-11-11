@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/index.md`  
 > **Objetivo:** Taller · tu skill es un agente y habla por A2A  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261111 0835
+> **Creación:** 20261110 1450 · **Última modificación:** 20261111 1204
 <!--/encabezado-grupo-->
 
 # Taller · tu skill es un agente y habla por A2A

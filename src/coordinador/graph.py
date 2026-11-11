@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 0835
+# Última modificación: 20261111 1204
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
@@ -13,8 +13,13 @@ Agent Cards, locales y de compañeros vía `URLS_AGENTES`), decide a quién mand
 pregunta y reenvía por A2A. La respuesta del agente remoto es un DATO: se devuelve
 etiquetada como `[Nombre] …`, no se obedece.
 
-  enrutar ──(elige un agente)──▶ consultar ─▶ END
-          └─("ninguno")────────▶ sin_agente ▶ END
+  guardia_entrada ─(ok)─▶ enrutar ─(elige)─▶ consultar ─┐
+        │                       └─("ninguno")─▶ sin_agente ─┤
+        └─(bloqueado)──────────────────────────────────────┴─▶ guardia_salida ─▶ END
+
+Guardrails: guardia_entrada (entrada), guardia_salida (salida, común a todo camino),
+y en `consultar` el guardrail A2A (respuesta remota = dato). El catálogo se acota con el
+allow-list `A2A_AGENTES_PERMITIDOS` (ver catalogo.py).
 """
 from __future__ import annotations
 
@@ -85,9 +90,7 @@ def guardia_entrada(estado: Estado) -> dict:
     v = guardrails.revisar_entrada(_ultimo_texto(estado["messages"]))
     if v.ok:
         return {"bloqueado": False, "ruta": ["guardia_entrada"]}
-    return {"bloqueado": True, "respuesta": v.mensaje,
-            "messages": [AIMessage(content=v.mensaje)],
-            "ruta": ["guardia_entrada:bloqueado"]}
+    return {"bloqueado": True, "respuesta": v.mensaje, "ruta": ["guardia_entrada:bloqueado"]}
 
 
 def enrutar(estado: Estado) -> dict:
@@ -123,22 +126,30 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
         # Estado controlado: el remoto no respondió; los demás agentes siguen operativos.
         texto = (f"El {elegido.nombre} no está disponible temporalmente ({exc.motivo}). "
                  "Puedes intentar nuevamente más tarde. Los demás agentes continúan operativos.")
-        return {"respuesta": texto, "messages": [AIMessage(content=texto)],
-                "ruta": ["agente_no_disponible"]}
+        return {"respuesta": texto, "ruta": ["agente_no_disponible"]}
     # Guardrail A2A: la respuesta del agente es un DATO (no se obedece como instrucción).
     saneado, _flags = guardrails.sanear_respuesta_remota(bruto)
-    # Guardrail de SALIDA: redactar credenciales/datos sensibles antes de devolver.
-    texto, _secretos = guardrails.redactar_secretos(f"[{elegido.nombre}] {saneado}")
+    texto = f"[{elegido.nombre}] {saneado}"
     paso = "agente_local" if elegido.local else "agente_remoto"
-    return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": [paso]}
+    # La redacción/restricciones de salida las aplica el nodo guardia_salida (común a todo camino).
+    return {"respuesta": texto, "ruta": [paso]}
 
 
 def sin_agente(estado: Estado) -> dict:
     """Objetivo (nodo): responder cuando ningún agente cubre la pregunta, listando los disponibles.
-    Entradas: estado (Estado). Salida: dict — {respuesta, messages, ruta:['sin_agente']}."""
+    Entradas: estado (Estado). Salida: dict — {respuesta, ruta:['sin_agente']}."""
     nombres = ", ".join(a.nombre for a in construir_catalogo())
     texto = f"No tengo un agente para eso. Puedo ayudarte con: {nombres}."
-    return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": ["sin_agente"]}
+    return {"respuesta": texto, "ruta": ["sin_agente"]}
+
+
+def guardia_salida(estado: Estado) -> dict:
+    """Objetivo (nodo): guardrail de SALIDA común a TODOS los caminos (consultar, sin_agente y
+    el aviso de guardia_entrada). Aplica las restricciones de salida (redacción de credenciales,
+    tope de longitud, no vacío) y emite el mensaje final.
+    Entradas: estado (Estado) con 'respuesta'. Salida: dict — {respuesta, messages, ruta}."""
+    final, _flags = guardrails.revisar_salida(estado.get("respuesta", ""))
+    return {"respuesta": final, "messages": [AIMessage(content=final)], "ruta": ["guardia_salida"]}
 
 
 def _rama_entrada(estado: Estado) -> str:
@@ -164,11 +175,13 @@ def _construir_grafo():
     g.add_node("enrutar", enrutar)
     g.add_node("consultar", consultar)
     g.add_node("sin_agente", sin_agente)
+    g.add_node("guardia_salida", guardia_salida)
     g.add_edge(START, "guardia_entrada")
-    g.add_conditional_edges("guardia_entrada", _rama_entrada, {"ok": "enrutar", "bloqueado": END})
+    g.add_conditional_edges("guardia_entrada", _rama_entrada, {"ok": "enrutar", "bloqueado": "guardia_salida"})
     g.add_conditional_edges("enrutar", _rama, {"consultar": "consultar", "sin_agente": "sin_agente"})
-    g.add_edge("consultar", END)
-    g.add_edge("sin_agente", END)
+    g.add_edge("consultar", "guardia_salida")
+    g.add_edge("sin_agente", "guardia_salida")
+    g.add_edge("guardia_salida", END)
     return g.compile(checkpointer=InMemorySaver())
 
 

@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2335
+# Última modificación: 20261110 2340
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.

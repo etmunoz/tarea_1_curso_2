@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.

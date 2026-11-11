@@ -3,7 +3,7 @@
 # Objetivo: setup_windows.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2114
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 # Setup del Windows (nodo Tomás) para la prueba A2A bidireccional entre 2 computadores.

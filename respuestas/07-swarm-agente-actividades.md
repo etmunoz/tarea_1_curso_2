@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/07-swarm-agente-actividades.md`  
 > **Objetivo:** 07 · Respuesta — Swarm con el agente de actividades  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1920 · **Última modificación:** 20261111 2016
+> **Creación:** 20261110 1920 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # 07 · Respuesta — Swarm con el agente de actividades

@@ -4,7 +4,7 @@
 # Objetivo: mac_fichas_auto.sh del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 2016
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 # Mac · mantiene las fichas (Agent Cards) aplicadas AUTOMÁTICAMENTE: re-aplica tras cada recarga

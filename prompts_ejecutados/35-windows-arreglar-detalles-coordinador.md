@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/35-windows-arreglar-detalles-coordinador.md`  
 > **Objetivo:** 35 · Windows: arreglar los detalles del coordinador y de las herramientas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2253 · **Última modificación:** 20261111 2016
+> **Creación:** 20261110 2253 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # 35 · Windows: arreglar los detalles del coordinador y de las herramientas

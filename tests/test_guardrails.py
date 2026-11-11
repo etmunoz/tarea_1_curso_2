@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de los guardrails del coordinador (implementación 2).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de los guardrails del coordinador (implementación 2).

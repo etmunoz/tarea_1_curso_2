@@ -3,7 +3,7 @@
 # Objetivo: Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1342
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 """Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.

@@ -3,7 +3,7 @@
 # Objetivo: Base de conocimiento (SQLite) de recetas chilenas clásicas + costeo.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 """Base de conocimiento (SQLite) de recetas chilenas clásicas + costeo.

@@ -3,7 +3,7 @@
 # Objetivo: Backoffice de escritorio (Tkinter) para VER en vivo quién y qué accede al puente A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1723
-# Última modificación: 20261111 2016
+# Última modificación: 20261111 2049
 # --8<-- fin-encabezado-grupo
 
 """Backoffice de escritorio (Tkinter) para VER en vivo quién y qué accede al puente A2A.

@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/44-resiliencia-remota-y-guardrails.md`  
 > **Objetivo:** Prompt 44 · Dos implementaciones: resiliencia de agentes remotos y guardrails  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0730 · **Última modificación:** 20261111 2016
+> **Creación:** 20261111 0730 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Prompt 44 · Dos implementaciones: resiliencia de agentes remotos y guardrails

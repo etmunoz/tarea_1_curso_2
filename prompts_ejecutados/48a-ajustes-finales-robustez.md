@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/48a-ajustes-finales-robustez.md`  
 > **Objetivo:** Prompt para Claude Code — Ajustes finales de robustez en `prompt-48-robustez`  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1429 · **Última modificación:** 20261111 2016
+> **Creación:** 20261111 1429 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Prompt para Claude Code — Ajustes finales de robustez en `prompt-48-robustez`

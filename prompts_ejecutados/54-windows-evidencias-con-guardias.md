@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/54-windows-evidencias-con-guardias.md`  
 > **Objetivo:** 54 · Windows: actualizar las evidencias contra el Mac con el código final (guardias)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 2027 · **Última modificación:** 20261111 2027
+> **Creación:** 20261111 2027 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # 54 · Windows: actualizar las evidencias contra el Mac con el código final (guardias)

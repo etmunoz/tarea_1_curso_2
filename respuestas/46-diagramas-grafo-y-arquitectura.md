@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/46-diagramas-grafo-y-arquitectura.md`  
 > **Objetivo:** Respuesta 46 · Diagramas: grafo del coordinador y arquitectura de agentes  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0743 · **Última modificación:** 20261111 2016
+> **Creación:** 20261111 0743 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Respuesta 46 · Diagramas: grafo del coordinador y arquitectura de agentes

@@ -2,7 +2,7 @@
 > **Archivo:** `src/consumidor/README.md`  
 > **Objetivo:** Agente conversacional (lo construyes tú con @spec e @implementador)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1514 · **Última modificación:** 20261111 2016
+> **Creación:** 20261110 1514 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Agente conversacional (lo construyes tú con @spec e @implementador)

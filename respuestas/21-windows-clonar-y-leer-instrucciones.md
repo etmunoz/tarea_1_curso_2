@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/21-windows-clonar-y-leer-instrucciones.md`  
 > **Objetivo:** 21 · Respuesta — Windows: clonar el repo y leer las instrucciones  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2322
+> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2325
 <!--/encabezado-grupo-->
 
 # 21 · Respuesta — Windows: clonar el repo y leer las instrucciones

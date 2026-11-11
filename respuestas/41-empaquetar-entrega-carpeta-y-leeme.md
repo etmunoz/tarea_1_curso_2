@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/41-empaquetar-entrega-carpeta-y-leeme.md`  
 > **Objetivo:** Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2322
+> **Creación:** 20261110 2322 · **Última modificación:** 20261110 2325
 <!--/encabezado-grupo-->
 
 # Respuesta 41 · Empaquetar la entrega como carpeta en la repo + LEEME
@@ -60,3 +60,32 @@ tarea_1_curso_2/
 ## Encabezados
 
 `aplicar_encabezados.py` → OK · 194 archivos con encabezado (incluido el LEEME).
+
+---
+
+## Cierre (estado final)
+
+Entrega empaquetada y publicada. Commit `79f07ff` pusheado a la rama principal.
+
+- **Repo público:** https://github.com/etmunoz/tarea_1_curso_2
+- **Carpeta de entrega (verla en la web, sin deszipear nada):**
+  https://github.com/etmunoz/tarea_1_curso_2/tree/main/entrega/tarea_1_curso_2
+- **Zip reproducible:** `uv run python tools/empaquetar_entrega.py --grupo N`
+  → `dist/grupo-N-tarea_1_curso_2.zip` (raíz `tarea_1_curso_2/`, 204 archivos en
+  `proyecto/`, sin `.env` ni `.venv`).
+
+### Cómo lo revisan los compañeros
+1. Abrir el link de la carpeta de entrega (arriba) para ver documento, blueprint,
+   LEEME y evidencias directo en GitHub.
+2. Para correrlo: `git clone https://github.com/etmunoz/tarea_1_curso_2` y seguir
+   el `LEEME.txt` (uv sync · `.env` con GOOGLE_API_KEY · docker compose up -d ·
+   langgraph dev · configurar_fichas).
+
+### Qué queda por completar (de ellos / manual, no bloquea)
+- Número de grupo en `documento-entrega.md`.
+- Blueprints de Fabio y Gustavo (`blueprint-fabio.md`, `blueprint-gustavo.md`).
+- Capturas `evidencias/01-saltos.png` y `03-tunel.png`.
+- Exportar `documento-entrega.md` → `.pdf` y re-empaquetar.
+
+Con esto queda **cerrado** lo hecho por Ezequiel (agentes, coordinador, A2A
+bidireccional Mac↔Windows por Cloudflare, evidencias y empaquetado).

@@ -3,7 +3,7 @@
 # Objetivo: System prompt del supervisor del coordinador. Separado del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2322
+# Última modificación: 20261110 2325
 # --8<-- fin-encabezado-grupo
 
 """System prompt del supervisor del coordinador. Separado del grafo (regla de AGENTS.md)."""

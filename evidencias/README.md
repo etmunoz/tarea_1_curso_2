@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/README.md`  
 > **Objetivo:** Evidencias  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2322
+> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2325
 <!--/encabezado-grupo-->
 
 # Evidencias

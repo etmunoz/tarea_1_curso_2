@@ -3,7 +3,7 @@
 # Objetivo: LEEME.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2321
-# Última modificación: 20261110 2322
+# Última modificación: 20261110 2325
 # --8<-- fin-encabezado-grupo
 
 ================================================================================

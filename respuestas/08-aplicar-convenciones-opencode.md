@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/08-aplicar-convenciones-opencode.md`  
 > **Objetivo:** 08 · Respuesta — Aplicar las convenciones OpenCode  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1923 · **Última modificación:** 20261110 2322
+> **Creación:** 20261110 1923 · **Última modificación:** 20261110 2325
 <!--/encabezado-grupo-->
 
 # 08 · Respuesta — Aplicar las convenciones OpenCode

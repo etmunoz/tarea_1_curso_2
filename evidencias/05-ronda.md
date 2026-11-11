@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/05-ronda.md`  
 > **Objetivo:** Ronda de preguntas · evidencia  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2124
+> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2136
 <!--/encabezado-grupo-->
 
 # Ronda de preguntas · evidencia

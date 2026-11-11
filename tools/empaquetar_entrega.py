@@ -3,7 +3,7 @@
 # Objetivo: Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1941
-# Última modificación: 20261110 2124
+# Última modificación: 20261110 2136
 # --8<-- fin-encabezado-grupo
 
 """Arma el zip de entrega del grupo con la estructura del Paso 9 del taller.

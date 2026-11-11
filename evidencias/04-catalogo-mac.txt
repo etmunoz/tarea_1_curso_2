@@ -1,0 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: evidencias/04-catalogo-mac.txt
+# Objetivo: 04-catalogo-mac.txt del proyecto.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261110 2136
+# Última modificación: 20261110 2136
+# --8<-- fin-encabezado-grupo
+
+- Agente de Ezequiel: Ingeniero de IA y Data Scientist: recomienda qué técnica de machine learning usar para un problema, qué métricas mirar y qué modelo elegir según el tipo de dato. No programa por ti, no entrena modelos reales y no responde temas fuera de IA/Data Science. (skills: Agente de Ezequiel Capabilities)
+- Agente de cocina chilena: Conoce recetas chilenas clásicas y calcula cuánto cuesta producir una receta (costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina. (skills: Agente de cocina chilena Capabilities)
+- Agente de Tomás: Maestro Reiki: explica los cinco principios (Gokai), las posiciones de manos para autotratamiento, los símbolos y los niveles de la práctica. Es bienestar complementario: no da consejo médico ni diagnósticos; para temas de salud deriva a un profesional. (skills: Agente de Tomás Capabilities)

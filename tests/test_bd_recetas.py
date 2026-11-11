@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de la BD de recetas chilenas y el costeo. Sin API key ni servidor.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2013
-# Última modificación: 20261110 2124
+# Última modificación: 20261110 2136
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de la BD de recetas chilenas y el costeo. Sin API key ni servidor."""

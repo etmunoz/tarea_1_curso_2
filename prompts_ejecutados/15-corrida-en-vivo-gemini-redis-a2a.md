@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/15-corrida-en-vivo-gemini-redis-a2a.md`  
 > **Objetivo:** 15 · Corrida en vivo (Gemini + Redis + A2A) y correcciones  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2124
+> **Creación:** 20261110 2041 · **Última modificación:** 20261110 2136
 <!--/encabezado-grupo-->
 
 # 15 · Corrida en vivo (Gemini + Redis + A2A) y correcciones

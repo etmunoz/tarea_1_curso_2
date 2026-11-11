@@ -1,38 +1,39 @@
 <!--encabezado-grupo-->
 > **Archivo:** `guia_ezequiel_tomas.md`  
-> **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — todo por Cloudflare  
+> **Objetivo:** Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — bidireccional, por Cloudflare  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1953 · **Última modificación:** 20261110 2124
+> **Creación:** 20261110 1953 · **Última modificación:** 20261110 2136
 <!--/encabezado-grupo-->
 
-# Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — todo por Cloudflare
+# Guía end-to-end · Ezequiel (Mac) ↔ Tomás (Windows) — bidireccional, por Cloudflare
 
-Prueba de A2A **entre dos computadores en redes distintas** (sin LAN): todo el tráfico
-entre equipos pasa por **Cloudflare**. Pensada para ser **plug-and-play**: sigue los
-pasos en orden y funciona.
+Prueba de A2A **entre dos computadores en redes distintas** (sin LAN): **la misma repo**
+corre en ambos equipos y el **rol lo definen variables de entorno** (no cambia el código).
+Es **bidireccional**: desde el Mac usas el coordinador con acceso a lo local y lo remoto, y
+desde el Windows igual. La prueba termina con **consultas en ambos lados** y **evidencias
+registradas en los dos PC**. Todo el tráfico entre equipos va por **túneles HTTP de
+Cloudflare**; **nada por TCP ni LAN**.
 
 ## Reparto (quién hace qué)
 
-- **MacOS = Ezequiel**: corre el agente **Ezequiel** (IA/Data Science), **hospeda el Redis**
-  (dockerizado) y corre el **coordinador** que enruta las preguntas.
-- **Windows = Tomás**: corre el agente **Tomás** (Maestro Reiki) y su **RAG**, que usa el
-  **Redis del Mac** de forma remota.
-
-Todo entre equipos va por Cloudflare:
+- **MacOS = Ezequiel**: corre los agentes **Ezequiel** (IA/Data Science) y **cocina** (y viajes),
+  expone su `langgraph dev` por un **túnel HTTP de Cloudflare**, y corre un **coordinador**.
+- **Windows = Tomás**: corre el agente **Tomás** (Maestro Reiki) con su **RAG sobre un Redis
+  LOCAL** (dockerizado, no se expone por red), expone su `langgraph dev` por un **túnel HTTP de
+  Cloudflare**, y corre un **coordinador**.
+- Cada agente **expone sus capacidades** (y el RAG, en el caso de Tomás) **a través de su propio
+  agente** por el túnel HTTP. El coordinador de cada lado alcanza lo remoto por ese túnel.
 
 ```
    MacOS (Ezequiel)                               Windows (Tomás)
  ┌───────────────────────────────┐             ┌───────────────────────────────┐
  │ langgraph dev :2024            │             │ langgraph dev :2024            │
- │   · agente_ezequiel (local)    │             │   · agente_tomas              │
- │ Redis :6379 (Docker)           │             │ RAG de Tomás → usa el Redis   │
- │   └─ túnel TCP Cloudflare ─────┼──TCP CF────▶│      del Mac (forwarder local) │
- │ coordinador:                   │             │ túnel HTTP Cloudflare de Tomás │
- │   local: ezequiel              │◀──HTTP CF───┼──── (trycloudflare.com)        │
- │   remoto: tomas (túnel HTTP)   │             │                               │
+ │  ezequiel · cocina · viajes    │             │  tomas (RAG → Redis LOCAL)    │
+ │ túnel HTTP Cloudflare ◀────────┼──HTTP CF───▶┼───────▶ túnel HTTP Cloudflare  │
+ │ coordinador (mac):             │             │ coordinador (windows):        │
+ │  local  ezequiel, cocina       │             │  local  tomas                 │
+ │  remoto tomas (túnel win)      │             │  remoto ezequiel, cocina (túnel mac) │
  └───────────────────────────────┘             └───────────────────────────────┘
-      IA/Data Science → Ezequiel (local)
-      Reiki           → Tomás (remoto, Windows) · responde con el RAG sobre el Redis del Mac
 ```
 
 ## Requisitos
@@ -41,22 +42,16 @@ Todo entre equipos va por Cloudflare:
 |---|---|---|
 | uv + Python 3.13 | sí | sí (lo instala el setup) |
 | cloudflared | `brew install cloudflared` | lo instala el setup |
-| Docker Desktop | **sí** (para Redis) | no |
+| Docker Desktop | no | **sí** (Redis local del RAG) |
 | GOOGLE_API_KEY (Gemini, con saldo) | sí | sí (la misma) |
-| **Cuenta Cloudflare + un DOMINIO en Cloudflare** | **sí** (para el túnel TCP de Redis) | no |
 
-> **Importante (único prerrequisito especial):** exponer Redis por Cloudflare entre redes
-> distintas necesita un **túnel con nombre (TCP)**, y eso exige un **dominio gestionado en
-> tu cuenta de Cloudflare** (sus nameservers apuntando a Cloudflare). Elige un host, p. ej.
-> `redis-tomas.TU-DOMINIO.com`. Los agentes (HTTP) usan túneles gratis `trycloudflare.com`
-> y no necesitan dominio.
+> No se necesita dominio: los túneles de agentes son `trycloudflare.com` (HTTP, gratis).
 
 ---
 
 ## A · MacOS (Ezequiel) — desde cero
 
 ```bash
-# 1) Clonar (si no está)
 mkdir -p ~/proyectos && cd ~/proyectos
 gh repo clone etmunoz/tarea_1_curso_2 2>/dev/null || true
 cd tarea_1_curso_2
@@ -66,15 +61,19 @@ uv run python tools/probar_gemini.py   # debe decir: ✓ Gemini respondió 'OK'
 ```
 
 ```bash
-# 2) Terminal 1 — agente Ezequiel (langgraph dev) + su ficha
+# Terminal 1 — agentes (langgraph dev) + ficha de Ezequiel
 ./scripts/mac_servir.sh
 ```
 
 ```bash
-# 3) Terminal 2 — Redis + túnel TCP de Cloudflare (reemplaza por tu host real)
-./scripts/mac_redis_cloudflare.sh redis-tomas.TU-DOMINIO.com
-# La primera vez abre el navegador (cloudflared tunnel login): elige tu dominio.
-# Deja esta terminal ABIERTA. Pásale al Windows el host: redis-tomas.TU-DOMINIO.com
+# Terminal 2 — túnel HTTP; COPIA la URL https (es el "túnel del Mac")
+./scripts/mac_tunel.sh
+# imprime algo como: https://azul-rio-123.trycloudflare.com
+```
+
+```bash
+# Terminal 3 (opcional) — app web del Mac para probar agentes uno a uno y el coordinador
+./scripts/mac_app.sh            # abre http://127.0.0.1:8800
 ```
 
 ---
@@ -91,62 +90,69 @@ cd "$env:USERPROFILE\proyectos"
 gh repo clone etmunoz/tarea_1_curso_2
 cd tarea_1_curso_2
 
-# 2) Setup (instala uv, Python 3.13, cloudflared; uv sync; .env + clave; apunta REDIS_URL al forwarder local)
-.\scripts\setup_windows.ps1 -RedisUrl redis://localhost:6379
+# 2) Setup: instala uv, Python 3.13, cloudflared, Docker; uv sync; .env + clave;
+#    levanta Redis LOCAL y carga el RAG de Reiki.
+.\scripts\setup_windows.ps1
+#    (si Docker se acaba de instalar: ábrelo una vez y re-corre el script)
 ```
 
 ```powershell
-# 3) Terminal A — acceso al Redis del Mac por Cloudflare (deja ABIERTA)
-.\scripts\win_redis_cloudflare.ps1 redis-tomas.TU-DOMINIO.com
-```
-
-```powershell
-# 4) Terminal B — ingesta del RAG (ahora que el Redis del Mac es accesible en localhost:6379)
-uv run python tools/cargar_rag_reiki.py        # debe decir: ✓ N fragmentos indexados
-```
-
-```powershell
-# 5) Terminal C — agente Tomás + su ficha
+# 3) Terminal 1 — agente Tomás (langgraph dev) + su ficha
 .\scripts\win_servir.ps1
 ```
 
 ```powershell
-# 6) Terminal D — túnel HTTP de Tomás; COPIA la URL https y pásala al Mac
+# 4) Terminal 2 — túnel HTTP; COPIA la URL https (es el "túnel del Windows")
 .\scripts\win_tunel.ps1
-# imprime algo como: https://reiki-azul-123.trycloudflare.com
+# imprime algo como: https://reiki-azul-456.trycloudflare.com
+```
+
+```powershell
+# 5) Terminal 3 (opcional) — app web del Windows
+.\scripts\win_app.ps1            # abre http://127.0.0.1:8800
 ```
 
 ---
 
-## C · MacOS (Ezequiel) — el coordinador enruta a los dos
+## C · Intercambien las URLs y corran el coordinador EN AMBOS
+
+Cada equipo le pasa al otro su URL de túnel.
 
 ```bash
-# Terminal 3 — con la URL del túnel de Tomás (Windows)
-./scripts/mac_coordinador.sh "https://<tunel-win>#agente_tomas"
+# En el MAC (Terminal 4) — remoto = túnel del Windows
+./scripts/mac_coordinador.sh "https://<tunel-windows>"
+# Enruta: ML→Ezequiel(local) · Reiki→Tomás(remoto) · receta→cocina(local) · fuera→ninguno
+# Guarda: evidencias/04-catalogo-mac.txt y 05-ronda-mac.md
 ```
 
-Esperado (enrutamiento correcto):
+```powershell
+# En el WINDOWS (Terminal 4) — remoto = túnel del Mac
+.\scripts\win_coordinador.ps1 "https://<tunel-mac>"
+# Enruta: Reiki→Tomás(local) · métricas→Ezequiel(remoto) · receta→cocina(remoto) · fuera→ninguno
+# Guarda: evidencias/04-catalogo-windows.txt y 05-ronda-windows.md
+```
 
-- *"¿Qué técnica uso si tengo desbalance de clases?"* → **[Agente de Ezequiel]** (local, Mac)
-- *"¿Qué símbolos se aprenden en el nivel 2 de Reiki?"* → **[Agente de Tomás]** (remoto, Windows; responde con el RAG sobre el Redis del Mac)
-- *"¿Cuánto cuesta un pastel de choclo para 4?"* → **[Agente de cocina chilena]** (local, Mac)
-- *"¿Quién ganó el mundial de 1962?"* → **sin_agente** (rechazado)
+> La **app web** (paso opcional) hace lo mismo con clics: en el selector eliges un agente
+> (local o remoto) para probarlo solo, o **"Coordinador"** para ver el ruteo. En el Mac la app
+> ve a Ezequiel/cocina locales + Tomás remoto; en el Windows, a Tomás local + Ezequiel/cocina
+> remotos. Pásale a la app la URL del túnel del otro equipo con la variable del script.
 
-El coordinador guarda `evidencias/04-catalogo.txt` y `evidencias/05-ronda.md`.
+Al terminar, **cada PC tiene sus propias evidencias** (`*-mac` en el Mac, `*-windows` en el
+Windows), demostrando que el ruteo funciona **en ambos sentidos**.
 
 ---
 
 ## Evidencias (Paso 7–8 del taller)
 
-| Archivo | Cómo se genera | Dónde |
+| Archivo | Dónde se genera | Qué demuestra |
 |---|---|---|
-| `02-ficha-agente_ezequiel.json` | `mac_servir.sh` (configura la ficha) | Mac, automático |
-| `02-ficha-agente_tomas.json` | `win_servir.ps1` (configura la ficha) | Windows, automático |
-| `04-catalogo.txt` · `05-ronda.md` | `mac_coordinador.sh` | Mac, automático |
-| `01-saltos.png` | captura de un agente usando su herramienta y rechazando lo ajeno | manual |
-| `03-tunel.png` | captura de `cloudflared` (túnel de Tomás) + su ficha vista desde el Mac | manual |
+| `02-ficha-agente_ezequiel.json` · `02-ficha-agente_cocina.json` | Mac (`mac_servir.sh`) | fichas de Ezequiel/cocina |
+| `02-ficha-agente_tomas.json` | Windows (`win_servir.ps1`) | ficha de Tomás |
+| `04-catalogo-mac.txt` · `05-ronda-mac.md` | Mac (`mac_coordinador.sh`) | el Mac enruta local+remoto |
+| `04-catalogo-windows.txt` · `05-ronda-windows.md` | Windows (`win_coordinador.ps1`) | el Windows enruta local+remoto |
+| `01-saltos.png` · `03-tunel.png` | ambos (capturas) | manual |
 
-Empaquetar la entrega al final (en el Mac):
+Empaquetar la entrega al final (en cualquiera de los dos; el zip incluye `evidencias/`):
 
 ```bash
 uv run python tools/empaquetar_entrega.py --grupo N
@@ -156,19 +162,16 @@ uv run python tools/empaquetar_entrega.py --grupo N
 
 ## Problemas típicos
 
-- **cloudflared tunnel login no abre / dominio no aparece:** tu dominio debe estar **agregado y
-  activo en Cloudflare** (nameservers apuntando a Cloudflare). Revisa el panel de Cloudflare.
-- **Windows: el RAG no conecta (`Redis no responde`):** verifica que la Terminal A
-  (`win_redis_cloudflare.ps1`) siga abierta y que `.env` tenga `REDIS_URL=redis://localhost:6379`.
-- **El coordinador no ve a Tomás:** revisa que en el Windows sigan abiertos `win_servir.ps1` y
-  `win_tunel.ps1`, y que la URL que le pasaste al Mac sea la actual (el túnel HTTP **cambia la URL**
-  al reiniciarse).
+- **El coordinador no ve al remoto:** revisa que en el OTRO equipo sigan abiertos `*_servir` y
+  `*_tunel`, y que la URL que te pasaron sea la actual (el túnel HTTP **cambia la URL** al reiniciarse).
+- **Windows: Tomás no usa el RAG (`buscar_reiki` degrada):** Docker Desktop debe estar abierto y
+  `docker compose up -d` + `tools/cargar_rag_reiki.py` ejecutados (lo hace `setup_windows.ps1`).
 - **Firewall de Windows:** la 1ª vez permite `langgraph`/Python en redes privadas.
 - **Permisos de `.ps1`:** `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
-- **402 / sin saldo al usar Gemini:** la clave necesita saldo/cuota (ver `tools/probar_gemini.py`).
+- **402 / sin saldo en Gemini:** la clave necesita saldo/cuota (`tools/probar_gemini.py` lo diagnostica).
 
 ## Al terminar (teardown)
 
-- `Ctrl+C` en: `win_tunel.ps1`, `win_redis_cloudflare.ps1`, `mac_redis_cloudflare.sh`, `win_servir.ps1`, `mac_servir.sh`.
-- En el Mac, si quieres bajar Redis: `docker compose down`.
+- `Ctrl+C` en los `*_servir`, `*_tunel` y `*_app` de ambos equipos.
+- En el Windows, para bajar Redis: `docker compose down`.
 - Las URLs `trycloudflare.com` son temporales: no las dejes en `.env` versionado.

@@ -3,7 +3,7 @@
 # Objetivo: Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2124
+# Última modificación: 20261110 2136
 # --8<-- fin-encabezado-grupo
 
 """Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
@@ -43,15 +43,20 @@ PREGUNTAS_DEF = [
 ]
 
 
-def guardar_catalogo() -> None:
+def _suf(etiqueta: str) -> str:
+    return f"-{etiqueta}" if etiqueta else ""
+
+
+def guardar_catalogo(etiqueta: str = "") -> None:
     EV.mkdir(exist_ok=True)
     texto = texto_catalogo(construir_catalogo())
-    (EV / "04-catalogo.txt").write_text(texto + "\n", encoding="utf-8")
-    print("✓ evidencias/04-catalogo.txt")
+    nombre = f"04-catalogo{_suf(etiqueta)}.txt"
+    (EV / nombre).write_text(texto + "\n", encoding="utf-8")
+    print(f"✓ evidencias/{nombre}")
     print(texto)
 
 
-def guardar_ronda(preguntas: list[str]) -> None:
+def guardar_ronda(preguntas: list[str], etiqueta: str = "") -> None:
     try:
         from langchain_core.messages import HumanMessage  # noqa: PLC0415
 
@@ -60,9 +65,13 @@ def guardar_ronda(preguntas: list[str]) -> None:
         print(f"· ronda omitida: {exc}\n  (requiere GOOGLE_API_KEY y `langgraph dev` arriba)")
         return
 
+    import platform
     import uuid
+    from datetime import datetime, timezone
 
-    lineas = ["# Ronda de preguntas · evidencia\n"]
+    quien = etiqueta or platform.node()
+    lineas = [f"# Ronda de preguntas · evidencia ({quien})\n",
+              f"_Generada el {datetime.now(timezone.utc).isoformat(timespec='seconds')} desde `{platform.node()}`._\n"]
     for p in preguntas:
         # Hilo nuevo por pregunta: cada enrutamiento es independiente (ruta/estado limpios).
         hilo = {"configurable": {"thread_id": f"evidencia-{uuid.uuid4().hex[:8]}"}}
@@ -71,16 +80,18 @@ def guardar_ronda(preguntas: list[str]) -> None:
         lineas.append(f"**> {p}**\n\n- ruta: {ruta}\n- {r.get('respuesta', '')}\n")
         print(f"  > {p}\n    {ruta} :: {r.get('respuesta', '')[:80]}")
     EV.mkdir(exist_ok=True)
-    (EV / "05-ronda.md").write_text("\n".join(lineas), encoding="utf-8")
-    print("✓ evidencias/05-ronda.md")
+    nombre = f"05-ronda{_suf(etiqueta)}.md"
+    (EV / nombre).write_text("\n".join(lineas), encoding="utf-8")
+    print(f"✓ evidencias/{nombre}")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--preguntas", nargs="*", default=None)
+    ap.add_argument("--etiqueta", default="", help="Sufijo para las evidencias (p. ej. mac / windows).")
     args = ap.parse_args()
-    guardar_catalogo()
-    guardar_ronda(args.preguntas or PREGUNTAS_DEF)
+    guardar_catalogo(args.etiqueta)
+    guardar_ronda(args.preguntas or PREGUNTAS_DEF, args.etiqueta)
 
 
 if __name__ == "__main__":

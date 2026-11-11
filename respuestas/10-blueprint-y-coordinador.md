@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/10-blueprint-y-coordinador.md`  
 > **Objetivo:** 10 · Respuesta — Blueprint + coordinador  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1933 · **Última modificación:** 20261110 2124
+> **Creación:** 20261110 1933 · **Última modificación:** 20261110 2136
 <!--/encabezado-grupo-->
 
 # 10 · Respuesta — Blueprint + coordinador

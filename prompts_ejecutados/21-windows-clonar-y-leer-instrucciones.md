@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/21-windows-clonar-y-leer-instrucciones.md`  
 > **Objetivo:** 21 · Windows: clonar el repo y leer las instrucciones (sin ejecutar)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2227
+> **Creación:** 20261110 2208 · **Última modificación:** 20261110 2259
 <!--/encabezado-grupo-->
 
 # 21 · Windows: clonar el repo y leer las instrucciones (sin ejecutar)

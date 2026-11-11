@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/26-windows-levantar-y-verificar-agente-tunel.md`  
 > **Objetivo:** 26 · Respuesta — Windows: el usuario levanta agente y túnel; Claude verifica  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2215 · **Última modificación:** 20261110 2227
+> **Creación:** 20261110 2215 · **Última modificación:** 20261110 2259
 <!--/encabezado-grupo-->
 
 # 26 · Respuesta — Windows: el usuario levanta agente y túnel; Claude verifica

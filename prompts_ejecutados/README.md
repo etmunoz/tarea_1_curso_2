@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2306
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2312
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -52,3 +52,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 37 | [Mac: verificar arreglos de Tomás y regenerar la ronda](37-mac-verificar-arreglos-y-ronda.md) | [respuesta](../respuestas/37-mac-verificar-arreglos-y-ronda.md) |
 | 38 | [Windows: commit/push del 36 e integración del 37 del Mac](38-windows-commit-push-36-y-pull-37-mac.md) | [respuesta](../respuestas/38-windows-commit-push-36-y-pull-37-mac.md) |
 | 39 | [Chequeo de seguridad antes de publicar](39-chequeo-seguridad-antes-de-publicar.md) | [respuesta](../respuestas/39-chequeo-seguridad-antes-de-publicar.md) |
+| 40 | [Hacer público el repo y purgar el email del historial](40-publicar-repo-y-purgar-email.md) | [respuesta](../respuestas/40-publicar-repo-y-purgar-email.md) |

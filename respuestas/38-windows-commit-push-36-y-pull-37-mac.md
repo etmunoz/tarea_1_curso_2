@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/38-windows-commit-push-36-y-pull-37-mac.md`  
 > **Objetivo:** 38 · Respuesta — Windows: commit/push del 36 e integración del 37 del Mac  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2303 · **Última modificación:** 20261110 2303
+> **Creación:** 20261110 2303 · **Última modificación:** 20261110 2312
 <!--/encabezado-grupo-->
 
 # 38 · Respuesta — Windows: commit/push del 36 e integración del 37 del Mac

@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/01-extraer-taller-a-markdown.md`  
 > **Objetivo:** 01 · Respuesta — Extraer el taller A2A a Markdown  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1620 · **Última modificación:** 20261110 2306
+> **Creación:** 20261110 1620 · **Última modificación:** 20261110 2312
 <!--/encabezado-grupo-->
 
 # 01 · Respuesta — Extraer el taller A2A a Markdown

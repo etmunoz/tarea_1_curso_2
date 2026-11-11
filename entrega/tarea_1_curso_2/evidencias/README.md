@@ -1,5 +1,5 @@
 <!--encabezado-grupo-->
-> **Archivo:** `entrega/tarea_1_curso_2/evidencias/README.md`  
+> **Archivo:** `evidencias/README.md`  
 > **Objetivo:** Evidencias  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
 > **Creación:** 20261110 1941 · **Última modificación:** 20261111 1857
@@ -21,5 +21,6 @@ Las que requieren el agente vivo necesitan `GOOGLE_API_KEY` + `uv run langgraph 
 | `07-grafo-coordinador.svg` | grafo del coordinador (guardia_entrada → enrutar → consultar/sin_agente → guardia_salida) | `graph.get_graph().draw_mermaid()` + SVG |
 | `08-arquitectura.svg` | arquitectura A2A de todos los agentes (2 equipos por Cloudflare) | diagrama del grupo |
 | `09-diagramas.md` | índice de los diagramas (mermaid auténtico + SVG) | — |
+| `10-interop-puente-mac.md` | interoperabilidad A2A: puente al formato clásico (para Gustavo) | `uv run python -m src.puente_a2a.servidor` + túnel |
 
 > Mientras no existan, el empaquetado las marca como faltantes (no bloquea).

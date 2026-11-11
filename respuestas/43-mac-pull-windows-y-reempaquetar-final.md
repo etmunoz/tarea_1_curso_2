@@ -2,37 +2,65 @@
 > **Archivo:** `respuestas/43-mac-pull-windows-y-reempaquetar-final.md`  
 > **Objetivo:** Respuesta 43 · Mac: integrar evidencias de Windows y reempaquetar la entrega final  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2349 · **Última modificación:** 20261111 0743
+> **Creación:** 20261110 2349 · **Última modificación:** 20261111 0829
 <!--/encabezado-grupo-->
 
 # Respuesta 43 · Mac: integrar evidencias de Windows y reempaquetar la entrega final
 
-## Qué se hizo
+Prompt: [`../prompts_ejecutados/43-mac-pull-windows-y-reempaquetar-final.md`](../prompts_ejecutados/43-mac-pull-windows-y-reempaquetar-final.md)
 
-1. **`git pull --rebase`** (fast-forward `5a80f5d..4c89013`): llegó el **prompt 42**
-   de Windows con las evidencias finales:
-   - `evidencias/04-catalogo-windows.txt` y `05-ronda-windows.md` (y sus copias en
-     `entrega/tarea_1_curso_2/`).
-2. **Evidencia bidireccional completa** (espejo entre equipos):
-   - **Mac** (`05-ronda-mac.md`): Ezequiel y cocina **locales**; Tomás **remoto**
-     por el túnel Cloudflare del Windows.
-   - **Windows** (`05-ronda-windows.md`): Tomás **local**; Ezequiel y cocina
-     **remotos** por el túnel Cloudflare del Mac.
-   - Ambos enrutan bien por ficha y rechazan lo fuera de dominio (`sin_agente`).
-3. **Reempaquetado final**: `tools/empaquetar_entrega.py --grupo NN` regeneró la
-   carpeta versionada `entrega/tarea_1_curso_2/` y `dist/grupo-NN-tarea_1_curso_2.zip`
-   con todo lo requerido y sin avisos pendientes.
-4. **Fichas recargadas** en el Mac tras aplicar encabezados.
+## 1. Pull de las evidencias de Windows (salida real)
 
-## Estado de la entrega (cerrada)
+```text
+$ git fetch origin
+From https://github.com/etmunoz/tarea_1_curso_2
+   5a80f5d..4c89013  main -> origin/main
 
-- Raíz del zip: `tarea_1_curso_2/` con `LEEME.txt`, `documento-entrega.pdf`,
-  `blueprint-{ezequiel,fabio,gustavo}.md`, `companeros.md`, `evidencias/`
-  (fichas, catálogos y rondas de **Mac y Windows**) y `proyecto/` (código completo,
-  sin `.env` ni `.venv`).
-- Sin campos ⟨pendiente⟩; empaquetador sin avisos.
+$ git pull --rebase origin main
+Updating 5a80f5d..4c89013
+Fast-forward
+ .../evidencias/04-catalogo-windows.txt             |  2 +-
+ .../tarea_1_curso_2/evidencias/05-ronda-windows.md | 10 +-
+ evidencias/04-catalogo-windows.txt                 |  2 +-
+ evidencias/05-ronda-windows.md                     | 10 +-
+ .../42-windows-capturar-evidencias-finales.md      | 21 ++++
+ prompts_ejecutados/README.md                       |  1 +
+ .../42-windows-capturar-evidencias-finales.md      | 106 +++++++++++++++
+ 7 files changed, 140 insertions(+), 12 deletions(-)
+```
 
-## Para compartir
+> Nota: el commit `4c89013` (prompt 42, hecho en el Windows) entró con el email personal
+> `etmunoz@gmail.com` porque el git del Windows no tenía el email de marcador. Esto quedó
+> en el historial público (ver el aviso en la respuesta 40).
 
-- Repo público: https://github.com/etmunoz/tarea_1_curso_2
-- Carpeta de entrega: https://github.com/etmunoz/tarea_1_curso_2/tree/main/entrega/tarea_1_curso_2
+## 2. Evidencia bidireccional completa (espejo entre equipos)
+
+- **Mac** (`05-ronda-mac.md`): Ezequiel y cocina **locales**; Tomás **remoto** por Cloudflare.
+- **Windows** (`05-ronda-windows.md`): Tomás **local**; Ezequiel y cocina **remotos** por Cloudflare.
+
+Ronda real del Windows (extracto `05-ronda-windows.md`, desde `ASUS-ETMK`):
+
+```
+> ¿Cuáles son los cinco principios del Reiki?
+  ruta: supervisor → agente_local    [Agente de Tomás] … Gokai …
+> ¿Qué métricas uso en un problema de regresión?
+  ruta: supervisor → agente_remoto   [Agente de Ezequiel] … MAE, RMSE, R², MAPE …
+> ¿Cuánto cuesta una cazuela de vacuno para 6 personas?
+  ruta: supervisor → agente_remoto   [Agente de cocina chilena] … Costo total: $11.302 CLP …
+> ¿Quién descubrió América?           ruta: supervisor → sin_agente
+```
+
+## 3. Reempaquetado (salida real)
+
+```text
+$ uv run python tools/empaquetar_entrega.py --grupo NN
+✓ Carpeta de entrega: entrega/tarea_1_curso_2/ (versionada en la repo)
+✓ Zip creado: dist/grupo-NN-tarea_1_curso_2.zip
+  raíz del zip: tarea_1_curso_2/ · proyecto/: 215 archivos versionados
+
+$ uv run python tools/aplicar_encabezados.py --check
+OK · 204 archivos con encabezado.
+```
+
+Fichas recargadas en el Mac. Commit `3305e58` — «43 · Mac: integrar evidencias finales de
+Windows y reempaquetar la entrega».

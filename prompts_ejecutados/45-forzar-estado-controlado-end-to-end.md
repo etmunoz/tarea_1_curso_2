@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/45-forzar-estado-controlado-end-to-end.md`  
 > **Objetivo:** Prompt 45 · Forzar el estado controlado end-to-end (remoto caído)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0735 · **Última modificación:** 20261111 0743
+> **Creación:** 20261111 0735 · **Última modificación:** 20261111 0829
 <!--/encabezado-grupo-->
 
 # Prompt 45 · Forzar el estado controlado end-to-end (remoto caído)

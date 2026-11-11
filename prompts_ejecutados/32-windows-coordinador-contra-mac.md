@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/32-windows-coordinador-contra-mac.md`  
 > **Objetivo:** 32 · Windows: commit/push del BOM y coordinador contra el túnel del Mac  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2238 · **Última modificación:** 20261111 0743
+> **Creación:** 20261110 2238 · **Última modificación:** 20261111 0829
 <!--/encabezado-grupo-->
 
 # 32 · Windows: commit/push del BOM y coordinador contra el túnel del Mac

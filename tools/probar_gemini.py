@@ -3,7 +3,7 @@
 # Objetivo: Prueba mínima y directa de la GOOGLE_API_KEY contra Gemini.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2030
-# Última modificación: 20261111 0743
+# Última modificación: 20261111 0829
 # --8<-- fin-encabezado-grupo
 
 """Prueba mínima y directa de la GOOGLE_API_KEY contra Gemini.

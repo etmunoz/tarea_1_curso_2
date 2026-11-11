@@ -1,5 +1,5 @@
 <!--encabezado-grupo-->
-> **Archivo:** `entrega/tarea_1_curso_2/evidencias/10-interop-puente-mac.md`  
+> **Archivo:** `evidencias/10-interop-puente-mac.md`  
 > **Objetivo:** Interoperabilidad A2A: puente al formato clásico · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
 > **Creación:** 20261111 1342 · **Última modificación:** 20261111 2016

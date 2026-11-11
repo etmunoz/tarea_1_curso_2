@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/47-guardrail-salida-y-allowlist.md`  
 > **Objetivo:** Prompt 47 · Guardrail de salida completo + allow-list de agentes (tools permitidas)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1204 · **Última modificación:** 20261111 1406
+> **Creación:** 20261111 1204 · **Última modificación:** 20261111 1410
 <!--/encabezado-grupo-->
 
 # Prompt 47 · Guardrail de salida completo + allow-list de agentes (tools permitidas)

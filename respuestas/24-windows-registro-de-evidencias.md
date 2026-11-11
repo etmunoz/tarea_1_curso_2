@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/24-windows-registro-de-evidencias.md`  
 > **Objetivo:** 24 · Respuesta — Windows: dejar registro de prompts y resultados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2208 · **Última modificación:** 20261111 1406
+> **Creación:** 20261110 2208 · **Última modificación:** 20261111 1410
 <!--/encabezado-grupo-->
 
 # 24 · Respuesta — Windows: dejar registro de prompts y resultados

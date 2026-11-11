@@ -3,7 +3,7 @@
 # Objetivo: Pruebas del guardrail de SALIDA común y del allow-list de agentes (prompt 47).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1204
-# Última modificación: 20261111 1406
+# Última modificación: 20261111 1410
 # --8<-- fin-encabezado-grupo
 
 """Pruebas del guardrail de SALIDA común y del allow-list de agentes (prompt 47).

@@ -2,7 +2,7 @@
 > **Archivo:** `guia_para_gustavo.md`  
 > **Objetivo:** Guía para Gustavo · conectar tu coordinador con el agente de Ezequiel (A2A)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1342 · **Última modificación:** 20261111 1406
+> **Creación:** 20261111 1342 · **Última modificación:** 20261111 1410
 <!--/encabezado-grupo-->
 
 # Guía para Gustavo · conectar tu coordinador con el agente de Ezequiel (A2A)

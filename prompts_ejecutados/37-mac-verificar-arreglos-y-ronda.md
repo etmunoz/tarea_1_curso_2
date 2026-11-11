@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/37-mac-verificar-arreglos-y-ronda.md`  
 > **Objetivo:** 37 · Mac: verificar los arreglos de Tomás y regenerar la ronda real  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2259 · **Última modificación:** 20261111 1406
+> **Creación:** 20261110 2259 · **Última modificación:** 20261111 1410
 <!--/encabezado-grupo-->
 
 # 37 · Mac: verificar los arreglos de Tomás y regenerar la ronda real

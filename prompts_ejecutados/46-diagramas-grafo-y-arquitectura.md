@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/46-diagramas-grafo-y-arquitectura.md`  
 > **Objetivo:** Prompt 46 · Diagramas: grafo del coordinador y arquitectura de agentes  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0743 · **Última modificación:** 20261111 1406
+> **Creación:** 20261111 0743 · **Última modificación:** 20261111 1410
 <!--/encabezado-grupo-->
 
 # Prompt 46 · Diagramas: grafo del coordinador y arquitectura de agentes

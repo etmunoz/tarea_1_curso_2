@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261111 1406
+# Última modificación: 20261111 1410
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A: habla con el agente de viajes (remoto) por el protocolo A2A.

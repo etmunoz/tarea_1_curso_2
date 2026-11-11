@@ -3,7 +3,7 @@
 # Objetivo: Catálogo de agentes del coordinador: de dónde salen y sus fichas.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2349
+# Última modificación: 20261111 0730
 # --8<-- fin-encabezado-grupo
 
 """Catálogo de agentes del coordinador: de dónde salen y sus fichas.
@@ -80,6 +80,16 @@ class AgenteRemoto:
         except Exception:  # noqa: BLE001
             return "(ficha no disponible)"
 
+    def disponible(self) -> bool:
+        """Objetivo: decir si el agente responde ahora mismo (su ficha es alcanzable).
+        Un agente caído NO debe impedir armar el catálogo de los que sí funcionan.
+        Entradas: ninguna. Salida: bool — True si la card responde, False si no."""
+        try:
+            self.card()
+            return True
+        except Exception:  # noqa: BLE001 - cualquier fallo = no disponible
+            return False
+
     def preguntar(self, texto: str, context_id: str) -> str:
         """Objetivo: enviar una pregunta a este agente por A2A.
         Entradas: texto (str), context_id (str) UUID de la conversación.
@@ -115,5 +125,14 @@ def construir_catalogo() -> list[AgenteRemoto]:
 
 
 def texto_catalogo(catalogo: list[AgenteRemoto]) -> str:
-    """Listado legible (nombre → descripción) para el prompt del supervisor."""
-    return "\n".join(f"- {a.nombre}: {a.descripcion()}" for a in catalogo)
+    """Objetivo: listado legible (nombre → descripción) para el prompt del supervisor.
+    Resiliente: si un agente está caído, aparece marcado '(no disponible ahora)' en vez
+    de romper el catálogo; los demás se listan normal. Entradas: catalogo. Salida: str."""
+    lineas = []
+    for a in catalogo:
+        desc = a.descripcion()
+        if desc == "(ficha no disponible)":
+            lineas.append(f"- {a.nombre}: (no disponible ahora — intentar más tarde)")
+        else:
+            lineas.append(f"- {a.nombre}: {desc}")
+    return "\n".join(lineas)

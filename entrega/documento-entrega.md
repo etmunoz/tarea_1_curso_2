@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261110 2349
+> **Creación:** 20261110 1941 · **Última modificación:** 20261111 0730
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -96,7 +96,21 @@ uv run pytest                 # pruebas
 - Coordinador / app web / túnel: ver los scripts `scripts/mac_*.sh` y
   `scripts/win_*.ps1` (plug and play por equipo) y la guía `taller-a2a/`.
 
-## 10. Evidencias incluidas
+## 10. Robustez (resiliencia + guardrails)
+
+Dos implementaciones técnicas del coordinador (prompt 44):
+
+- **Agente remoto no disponible:** `src/coordinador/a2a.py` convierte conexión
+  caída / timeout / HTTP inválido / JSON ilegible en `AgenteNoDisponible`; el
+  catálogo se arma igual marcando al caído, y el supervisor devuelve un estado
+  controlado («… no está disponible temporalmente … los demás continúan operativos»).
+- **Guardrails** (`src/coordinador/guardrails.py`): entrada (vacías/largas/inyección),
+  salida (redacción de credenciales) y A2A (respuesta remota tratada como dato, no
+  como instrucción).
+- Pruebas: `tests/test_resiliencia_a2a.py`, `tests/test_guardrails.py`.
+- Evidencia (con un túnel de compañero caído): `evidencias/06-robustez-mac.md`.
+
+## 11. Evidencias incluidas
 
 Ver carpeta `evidencias/` (lista y requisitos en `evidencias/README.md`):
 

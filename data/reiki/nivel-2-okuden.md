@@ -2,7 +2,7 @@
 > **Archivo:** `data/reiki/nivel-2-okuden.md`  
 > **Objetivo:** Reiki Nivel 2 (Okuden) · "El conocimiento interior"  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261110 2349
+> **Creación:** 20261110 2009 · **Última modificación:** 20261111 0730
 <!--/encabezado-grupo-->
 
 # Reiki Nivel 2 (Okuden) · "El conocimiento interior"

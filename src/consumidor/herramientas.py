@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1629
-# Última modificación: 20261110 2349
+# Última modificación: 20261111 0730
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente conversacional. Sin modelo aquí: se importan sin API key.

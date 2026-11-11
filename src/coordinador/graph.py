@@ -3,7 +3,7 @@
 # Objetivo: Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2349
+# Última modificación: 20261111 0730
 # --8<-- fin-encabezado-grupo
 
 """Coordinador · un SUPERVISOR que enruta la pregunta al agente remoto que corresponde.
@@ -30,7 +30,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 
-from src.coordinador import a2a
+from src.coordinador import a2a, guardrails
 from src.coordinador.catalogo import construir_catalogo, texto_catalogo
 from src.coordinador.prompts import SYSTEM_SUPERVISOR
 
@@ -52,12 +52,14 @@ class Decision(BaseModel):
 
 class Estado(TypedDict):
     """Objetivo: estado del grafo coordinador. Campos: messages (conversación), elegido (agente),
-    motivo, respuesta final, ruta (pasos recorridos: supervisor/agente_local/agente_remoto/sin_agente)."""
+    motivo, respuesta final, bloqueado (lo frenó el guardrail de entrada), ruta (pasos recorridos:
+    guardia_entrada/supervisor/agente_local/agente_remoto/agente_no_disponible/sin_agente)."""
 
     messages: Annotated[list, operator.add]
     elegido: str
     motivo: str
     respuesta: str
+    bloqueado: bool
     ruta: Annotated[list[str], operator.add]
 
 
@@ -72,6 +74,20 @@ def _ultimo_texto(messages: list) -> str:
                 return contenido
             return " ".join(p.get("text", "") for p in contenido if isinstance(p, dict))
     return ""
+
+
+def guardia_entrada(estado: Estado) -> dict:
+    """Objetivo (nodo): guardrail de ENTRADA. Frena preguntas vacías, demasiado largas o con
+    patrones de inyección/jailbreak ANTES de llamar al LLM o a un agente.
+    Entradas: estado (Estado) con los messages.
+    Salida: dict — si pasa {bloqueado:False, ruta:['guardia_entrada']}; si no, además
+    {respuesta (el aviso), messages}."""
+    v = guardrails.revisar_entrada(_ultimo_texto(estado["messages"]))
+    if v.ok:
+        return {"bloqueado": False, "ruta": ["guardia_entrada"]}
+    return {"bloqueado": True, "respuesta": v.mensaje,
+            "messages": [AIMessage(content=v.mensaje)],
+            "ruta": ["guardia_entrada:bloqueado"]}
 
 
 def enrutar(estado: Estado) -> dict:
@@ -101,8 +117,18 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
     thread = (config or {}).get("configurable", {}).get("thread_id") or "sin-hilo"
     clave = (thread, elegido.nombre)
     _ctx.setdefault(clave, a2a.nuevo_context_id())
-    respuesta = elegido.preguntar(pregunta, _ctx[clave])
-    texto = f"[{elegido.nombre}] {respuesta}"
+    try:
+        bruto = elegido.preguntar(pregunta, _ctx[clave])
+    except a2a.AgenteNoDisponible as exc:
+        # Estado controlado: el remoto no respondió; los demás agentes siguen operativos.
+        texto = (f"El {elegido.nombre} no está disponible temporalmente ({exc.motivo}). "
+                 "Puedes intentar nuevamente más tarde. Los demás agentes continúan operativos.")
+        return {"respuesta": texto, "messages": [AIMessage(content=texto)],
+                "ruta": ["agente_no_disponible"]}
+    # Guardrail A2A: la respuesta del agente es un DATO (no se obedece como instrucción).
+    saneado, _flags = guardrails.sanear_respuesta_remota(bruto)
+    # Guardrail de SALIDA: redactar credenciales/datos sensibles antes de devolver.
+    texto, _secretos = guardrails.redactar_secretos(f"[{elegido.nombre}] {saneado}")
     paso = "agente_local" if elegido.local else "agente_remoto"
     return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": [paso]}
 
@@ -115,6 +141,12 @@ def sin_agente(estado: Estado) -> dict:
     return {"respuesta": texto, "messages": [AIMessage(content=texto)], "ruta": ["sin_agente"]}
 
 
+def _rama_entrada(estado: Estado) -> str:
+    """Objetivo: arista tras el guardrail de entrada.
+    Entradas: estado (Estado). Salida: str — 'bloqueado' si el guardrail lo frenó, si no 'ok'."""
+    return "bloqueado" if estado.get("bloqueado") else "ok"
+
+
 def _rama(estado: Estado) -> str:
     """Objetivo: arista condicional tras enrutar.
     Entradas: estado (Estado) con 'elegido'.
@@ -124,13 +156,16 @@ def _rama(estado: Estado) -> str:
 
 
 def _construir_grafo():
-    """Objetivo: construir y compilar el grafo supervisor (enrutar → consultar/sin_agente).
+    """Objetivo: construir y compilar el grafo supervisor con guardrail de entrada
+    (guardia_entrada → enrutar → consultar/sin_agente).
     Entradas: ninguna. Salida: grafo LangGraph compilado con InMemorySaver."""
     g = StateGraph(Estado)
+    g.add_node("guardia_entrada", guardia_entrada)
     g.add_node("enrutar", enrutar)
     g.add_node("consultar", consultar)
     g.add_node("sin_agente", sin_agente)
-    g.add_edge(START, "enrutar")
+    g.add_edge(START, "guardia_entrada")
+    g.add_conditional_edges("guardia_entrada", _rama_entrada, {"ok": "enrutar", "bloqueado": END})
     g.add_conditional_edges("enrutar", _rama, {"consultar": "consultar", "sin_agente": "sin_agente"})
     g.add_edge("consultar", END)
     g.add_edge("sin_agente", END)

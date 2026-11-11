@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261110 2349
+# Última modificación: 20261111 0730
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -24,6 +24,46 @@ import httpx
 _cache_aid: dict[tuple[str, str], str] = {}
 
 
+class AgenteNoDisponible(RuntimeError):
+    """Objetivo: señalar que un agente remoto no respondió (conexión caída, timeout,
+    respuesta HTTP inválida o JSON ilegible). Lleva `destino` (a qué agente se intentó)
+    y `motivo` (en una frase) para que el coordinador arme un estado controlado."""
+
+    def __init__(self, destino: str, motivo: str):
+        self.destino = destino
+        self.motivo = motivo
+        super().__init__(f"{destino}: {motivo}")
+
+
+def _motivo(exc: Exception) -> str:
+    """Objetivo: traducir una excepción httpx/JSON a un motivo corto y legible.
+    Entradas: exc (Exception). Salida: str — el motivo para el usuario/log."""
+    if isinstance(exc, httpx.TimeoutException):
+        return "tiempo de espera agotado"
+    if isinstance(exc, httpx.ConnectError):
+        return "no se pudo conectar (¿túnel caído?)"
+    if isinstance(exc, httpx.HTTPStatusError):
+        return f"respondió con error HTTP {exc.response.status_code}"
+    if isinstance(exc, httpx.HTTPError):
+        return "error de red"
+    return "respuesta ilegible del servidor"
+
+
+def _json(metodo, url: str, destino: str, **kw) -> dict | list:
+    """Objetivo: hacer una petición HTTP y devolver su JSON, convirtiendo CUALQUIER fallo
+    (conexión, timeout, HTTP != 2xx, JSON inválido) en AgenteNoDisponible(destino, motivo).
+    Entradas: metodo (callable httpx.get/post), url (str), destino (str) etiqueta del agente,
+    kw (dict) argumentos de httpx. Salida: dict|list — el JSON de la respuesta."""
+    try:
+        r = metodo(url, **kw)
+        r.raise_for_status()
+        return r.json()
+    except httpx.HTTPError as exc:
+        raise AgenteNoDisponible(destino, _motivo(exc)) from exc
+    except ValueError as exc:  # json.JSONDecodeError hereda de ValueError
+        raise AgenteNoDisponible(destino, _motivo(exc)) from exc
+
+
 def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
     """Objetivo: obtener el assistant_id (UUID) que el servidor asigna a un grafo (con caché).
     Entradas: base_url (str) del servidor; graph (str) id del grafo; timeout (float) segundos.
@@ -31,9 +71,10 @@ def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
     base = base_url.rstrip("/")
     clave = (base, graph)
     if clave not in _cache_aid:
-        r = httpx.post(f"{base}/assistants/search", json={"graph_id": graph}, timeout=timeout).json()
+        r = _json(httpx.post, f"{base}/assistants/search", f"{base} ({graph})",
+                  json={"graph_id": graph}, timeout=timeout)
         if not r:
-            raise RuntimeError(f"{base}: el servidor no conoce el grafo '{graph}'.")
+            raise AgenteNoDisponible(f"{base} ({graph})", f"el servidor no conoce el grafo '{graph}'")
         _cache_aid[clave] = r[0]["assistant_id"]
     return _cache_aid[clave]
 
@@ -44,7 +85,8 @@ def agent_card(base_url: str, graph: str, timeout: float = 10) -> dict:
     Salida: dict — la tarjeta (name, description, skills, url…)."""
     base = base_url.rstrip("/")
     aid = assistant_id(base, graph, timeout)
-    return httpx.get(f"{base}/.well-known/agent-card.json", params={"assistant_id": aid}, timeout=timeout).json()
+    return _json(httpx.get, f"{base}/.well-known/agent-card.json", f"{base} ({graph})",
+                 params={"assistant_id": aid}, timeout=timeout)
 
 
 def nuevo_context_id() -> str:
@@ -89,7 +131,8 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     """Objetivo: enviar `texto` a un agente por A2A (message/send) y devolver su respuesta.
     Entradas: base_url (str), graph (str), texto (str) la pregunta, context_id (str) UUID de la
     conversación (memoria del remoto), timeout (float).
-    Salida: str — el texto de la respuesta del agente (o un aviso de error entre corchetes)."""
+    Salida: str — el texto de la respuesta del agente (o un aviso del propio protocolo A2A).
+    Lanza AgenteNoDisponible si el agente no responde (conexión/timeout/HTTP/JSON)."""
     base = base_url.rstrip("/")
     aid = assistant_id(base, graph, timeout)
     cuerpo = {
@@ -105,7 +148,7 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
             }
         },
     }
-    r = httpx.post(f"{base}/a2a/{aid}", json=cuerpo, timeout=timeout).json()
-    if "error" in r:
+    r = _json(httpx.post, f"{base}/a2a/{aid}", f"{base} ({graph})", json=cuerpo, timeout=timeout)
+    if isinstance(r, dict) and "error" in r:
         return f"[error del agente remoto: {r['error']}]"
-    return _texto_de_resultado(r.get("result", r))
+    return _texto_de_resultado(r.get("result", r) if isinstance(r, dict) else r)

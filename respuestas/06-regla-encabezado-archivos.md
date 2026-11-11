@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/06-regla-encabezado-archivos.md`  
 > **Objetivo:** 06 · Respuesta — Regla: encabezado de archivos del grupo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1746 · **Última modificación:** 20261111 1429
+> **Creación:** 20261110 1746 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 # 06 · Respuesta — Regla: encabezado de archivos del grupo

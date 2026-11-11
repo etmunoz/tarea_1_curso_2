@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/36-windows-mac-actualizado.md`  
 > **Objetivo:** 36 · Windows: el Mac hizo pull y reaplicó sus fichas; verificación  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2256 · **Última modificación:** 20261111 1429
+> **Creación:** 20261110 2256 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 # 36 · Windows: el Mac hizo pull y reaplicó sus fichas; verificación

@@ -3,7 +3,7 @@
 # Objetivo: Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1405
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 """Guardrails por capas y auth/authz A2A (prompt 48, correcciones 2 y 3).
@@ -127,8 +127,10 @@ def test_cargar_identidades(monkeypatch):
 
 
 def test_cliente_adjunta_bearer(monkeypatch):
-    """El cliente A2A adjunta Authorization: Bearer cuando A2A_TOKEN está configurado."""
+    """El cliente A2A adjunta Authorization: Bearer cuando A2A_TOKEN está configurado y el host
+    es confiable (token por destino, prompt 48b)."""
     monkeypatch.setenv("A2A_TOKEN", "tok-xyz")
+    monkeypatch.setenv("A2A_HOSTS_CONFIABLES", "srv")  # marcamos 'srv' como confiable
     a2a._cache_dialecto["http://srv"] = "langgraph"
     a2a._cache_aid[("http://srv", "g")] = "aid1"
     capturado = {}

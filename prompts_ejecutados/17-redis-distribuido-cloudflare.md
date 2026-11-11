@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/17-redis-distribuido-cloudflare.md`  
 > **Objetivo:** 17 · Reparto Ezequiel(Redis)/Tomás(RAG) — todo por Cloudflare, redes distintas  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2123 · **Última modificación:** 20261111 1429
+> **Creación:** 20261110 2123 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 # 17 · Reparto Ezequiel(Redis)/Tomás(RAG) — todo por Cloudflare, redes distintas

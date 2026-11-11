@@ -2,7 +2,7 @@
 > **Archivo:** `taller-a2a/03-mi-agente-con-mi-skill.md`  
 > **Objetivo:** Mi agente, con mi skill  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261111 1429
+> **Creación:** 20261110 1450 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 <!-- clase: Taller · tu skill es un agente y habla por A2A · 61408ca1 | sección: sf8f5c9 | slide 3/10 · Parte 1 · Tu agente -->

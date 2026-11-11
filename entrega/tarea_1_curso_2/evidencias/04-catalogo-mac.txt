@@ -3,7 +3,7 @@
 # Objetivo: 04-catalogo-mac.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2041
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 - Agente de Ezequiel: Ingeniero de IA y Data Scientist: recomienda qué técnica de machine learning usar para un problema, qué métricas mirar y qué modelo elegir según el tipo de dato. No programa por ti, no entrena modelos reales y no responde temas fuera de IA/Data Science. (skills: Agente de Ezequiel Capabilities)

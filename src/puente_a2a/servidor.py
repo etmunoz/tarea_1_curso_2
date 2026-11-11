@@ -3,7 +3,7 @@
 # Objetivo: Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1342
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 """Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.
@@ -38,7 +38,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(RAIZ))
 
-from src.coordinador import a2a  # noqa: E402
+from src.coordinador import a2a, guardrails  # noqa: E402
 
 
 def card_clasica(card_langgraph: dict, url_publica: str) -> dict:
@@ -104,6 +104,8 @@ def _config() -> dict:
         "grafo": os.environ.get("PUENTE_GRAFO", "agente_ezequiel"),
         "port": port,
         "url_publica": os.environ.get("PUENTE_URL_PUBLICA", f"http://127.0.0.1:{port}").rstrip("/"),
+        # Token opcional que el puente EXIGE a quien lo consuma (si está vacío, modo demo abierto).
+        "token": os.environ.get("PUENTE_TOKEN", "").strip(),
     }
 
 
@@ -123,42 +125,66 @@ class _Handler(BaseHTTPRequestHandler):
     def log_message(self, *_a):  # noqa: D401 - silenciar el log ruidoso por defecto
         """No imprime una línea por request (ruido)."""
 
+    def _token_ok(self) -> bool:
+        """Objetivo: si el puente exige token (PUENTE_TOKEN), validar el Authorization Bearer.
+        Entradas: ninguna. Salida: bool — True si no exige token o si coincide."""
+        requerido = self.cfg.get("token")
+        if not requerido:
+            return True  # modo demo abierto
+        dado = (self.headers.get("Authorization") or "").removeprefix("Bearer ").strip()
+        return dado == requerido
+
     def do_GET(self):  # noqa: N802
-        if self.path.startswith("/.well-known/agent-card.json"):
-            try:
-                card = a2a.agent_card(self.cfg["base"], self.cfg["grafo"])
-            except a2a.AgenteNoDisponible as exc:
-                self._responder(503, {"error": f"agente no disponible: {exc.motivo}"})
-                return
-            self._responder(200, card_clasica(card, self.cfg["url_publica"]))
-        elif self.path.startswith("/ok"):
-            self._responder(200, {"status": "ok"})
-        else:
-            self._responder(404, {"error": "not found"})
+        try:
+            if self.path.startswith("/.well-known/agent-card.json"):
+                # La card es pública (descubrimiento); no exige token.
+                try:
+                    card = a2a.agent_card(self.cfg["base"], self.cfg["grafo"])
+                except a2a.ErrorA2A as exc:
+                    self._responder(503, {"error": f"agente no disponible: {exc.motivo}"})
+                    return
+                self._responder(200, card_clasica(card, self.cfg["url_publica"]))
+            elif self.path.startswith("/ok"):
+                self._responder(200, {"status": "ok"})
+            else:
+                self._responder(404, {"error": "not found"})
+        except Exception:  # noqa: BLE001 - nunca filtrar trazas internas al cliente
+            self._responder(500, {"error": "error interno del puente"})
 
     def do_POST(self):  # noqa: N802
-        largo = int(self.headers.get("Content-Length", 0))
-        crudo = self.rfile.read(largo) if largo else b"{}"
         try:
-            payload = json.loads(crudo)
-        except ValueError:
-            self._responder(400, _error_rpc(None, -32700, "Parse error"))
-            return
-        rpc_id = payload.get("id")
-        if payload.get("method") != "message/send":
-            self._responder(200, _error_rpc(rpc_id, -32601, "Method not found"))
-            return
-        texto, ctx = extraer_texto_y_ctx(payload)
-        if not texto:
-            self._responder(200, _error_rpc(rpc_id, -32602, "Mensaje sin texto"))
-            return
-        try:
-            respuesta = a2a.enviar_mensaje(self.cfg["base"], self.cfg["grafo"], texto, ctx)
-        except a2a.AgenteNoDisponible as exc:
-            # No se filtran URLs ni trazas internas al cliente remoto.
-            self._responder(200, _error_rpc(rpc_id, -32000, "El agente no está disponible temporalmente."))
-            return
-        self._responder(200, resultado_a2a(respuesta, rpc_id, ctx))
+            if not self._token_ok():
+                self._responder(401, _error_rpc(None, -32001, "No autorizado"))
+                return
+            largo = int(self.headers.get("Content-Length", 0) or 0)
+            crudo = self.rfile.read(largo) if largo else b"{}"
+            try:
+                payload = json.loads(crudo)
+            except ValueError:
+                self._responder(400, _error_rpc(None, -32700, "Parse error"))
+                return
+            rpc_id = payload.get("id") if isinstance(payload, dict) else None
+            if not isinstance(payload, dict) or payload.get("method") != "message/send":
+                self._responder(200, _error_rpc(rpc_id, -32601, "Method not found"))
+                return
+            texto, ctx = extraer_texto_y_ctx(payload)
+            # Guardrail de ENTRADA (el puente es una puerta pública): vacías/largas/inyección.
+            v = guardrails.revisar_entrada(texto)
+            if not v.ok:
+                guardrails.registrar_evento("puente-entrada", "bloqueada", self.cfg["grafo"], str(rpc_id), v.motivo)
+                self._responder(200, _error_rpc(rpc_id, -32602, v.mensaje))
+                return
+            try:
+                respuesta = a2a.enviar_mensaje(self.cfg["base"], self.cfg["grafo"], texto, ctx)
+            except a2a.ErrorA2A:
+                # No se filtran URLs ni trazas internas al cliente remoto.
+                self._responder(200, _error_rpc(rpc_id, -32000, "El agente no está disponible temporalmente."))
+                return
+            # Guardrail de SALIDA: redacta credenciales / limita longitud antes de devolver.
+            segura, _flags = guardrails.revisar_salida(respuesta)
+            self._responder(200, resultado_a2a(segura, rpc_id, ctx))
+        except Exception:  # noqa: BLE001 - nunca filtrar trazas internas al cliente
+            self._responder(500, _error_rpc(None, -32603, "error interno del puente"))
 
 
 def main() -> None:

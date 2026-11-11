@@ -3,7 +3,7 @@
 # Objetivo: System prompt del agente de Ezequiel. Separado del grafo (regla de AGENTS.md).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1603
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 """System prompt del agente de Ezequiel. Separado del grafo (regla de AGENTS.md)."""

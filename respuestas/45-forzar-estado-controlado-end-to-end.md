@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/45-forzar-estado-controlado-end-to-end.md`  
 > **Objetivo:** Respuesta 45 · Forzar el estado controlado end-to-end (remoto caído)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0735 · **Última modificación:** 20261111 1429
+> **Creación:** 20261111 0735 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 # Respuesta 45 · Forzar el estado controlado end-to-end (remoto caído)

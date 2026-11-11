@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -100,7 +100,7 @@ def _pedir(metodo, url: str, destino: str, **kw) -> httpx.Response:
     Entradas: metodo (httpx.get/post), url, destino, kw. Salida: httpx.Response."""
     from src.coordinador import auth  # noqa: PLC0415 - import tardío para evitar ciclos
     kw.setdefault("timeout", _timeout(kw.pop("_lectura", None)))
-    auth_headers = auth.encabezados_auth()
+    auth_headers = auth.encabezados_auth(url)  # token POR DESTINO (no se filtra a terceros)
     if auth_headers:
         kw["headers"] = {**auth_headers, **(kw.get("headers") or {})}
     try:

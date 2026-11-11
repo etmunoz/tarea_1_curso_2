@@ -3,7 +3,7 @@
 # Objetivo: Autenticación y autorización A2A — alcance académico (prompt 48, Corrección 3).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1405
-# Última modificación: 20261111 1429
+# Última modificación: 20261111 1438
 # --8<-- fin-encabezado-grupo
 
 """Autenticación y autorización A2A — alcance académico (prompt 48, Corrección 3).
@@ -31,9 +31,31 @@ from __future__ import annotations
 
 import json
 import os
+from urllib.parse import urlparse
 
 # Operaciones A2A que el coordinador puede ejecutar (para el control de autorización).
 OPERACIONES = {"agent_card", "message_send"}
+
+
+def _hosts_confiables() -> set[str]:
+    """Objetivo: hosts a los que SÍ se envía nuestro token (prompt 48b). El token es una
+    credencial propia: NO debe mandarse a servidores de terceros (p. ej. el de Gustavo) solo
+    porque estén en el catálogo. Confiables = host de `A2A_BASE` + `A2A_HOSTS_CONFIABLES` +
+    localhost. Entradas: ninguna. Salida: set[str] de hostnames."""
+    confiables = {"127.0.0.1", "localhost", "::1"}
+    base = os.environ.get("A2A_BASE", "http://127.0.0.1:2024")
+    h = urlparse(base).hostname
+    if h:
+        confiables.add(h)
+    confiables |= (_conjunto("A2A_HOSTS_CONFIABLES") or set())
+    return confiables
+
+
+def token_para(url: str) -> str:
+    """Objetivo: token a enviar a `url` SOLO si su host es confiable; si no, '' (no se envía).
+    Evita filtrar la credencial a endpoints arbitrarios. Entradas: url (str). Salida: str."""
+    host = urlparse(url or "").hostname
+    return token_cliente() if host in _hosts_confiables() else ""
 
 
 def token_cliente() -> str:
@@ -49,10 +71,12 @@ def enmascarar_token(token: str) -> str:
     return f"{token[:4]}…({len(token)})"
 
 
-def encabezados_auth() -> dict:
-    """Objetivo: encabezados de autenticación para una petición A2A saliente.
-    Entradas: ninguna. Salida: dict — {'Authorization': 'Bearer …'} o {} si no hay token."""
-    t = token_cliente()
+def encabezados_auth(url: str | None = None) -> dict:
+    """Objetivo: encabezados de autenticación para una petición A2A saliente. Si se pasa `url`,
+    el token se adjunta SOLO cuando el host es confiable (token por destino, prompt 48b); sin
+    `url` usa el token global (compatibilidad). Entradas: url (str|None).
+    Salida: dict — {'Authorization': 'Bearer …'} o {} si no corresponde."""
+    t = token_para(url) if url is not None else token_cliente()
     return {"Authorization": f"Bearer {t}"} if t else {}
 
 

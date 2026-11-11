@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/11-robustez-48-mac.md`  
 > **Objetivo:** Robustecimiento final (prompt 48) · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1429
+> **Creación:** 20261111 1405 · **Última modificación:** 20261111 1438
 <!--/encabezado-grupo-->
 
 # Robustecimiento final (prompt 48) · evidencia (mac)
@@ -114,3 +114,32 @@ $ uv run pytest tests/test_ajustes_48a.py -q
 23 passed in 0.26s
 ```
 Suite completa: 133 passed, 1 skipped.
+
+---
+
+## Refuerzos de seguridad sobre la interoperabilidad (prompt 48b)
+
+El prompt 49 abrió superficie nueva (puente público + cliente a servidores de terceros). Ajustes:
+
+1. **Token por destino** — nuestro `A2A_TOKEN` ya **no** se envía a endpoints arbitrarios
+   (solo a hosts confiables: `A2A_BASE` + `A2A_HOSTS_CONFIABLES` + localhost):
+```
+Token POR DESTINO (A2A_TOKEN=secreto):
+  http://127.0.0.1:2024                                  -> ENVÍA token
+  https://advised-holiday-against-economic.trycloudfla   -> NO envía (tercero)
+```
+2. **Guardrails en el puente** — ahora aplica guardrail de ENTRADA (bloquea vacías/largas/
+   inyección con `-32602`) y de SALIDA (redacta credenciales) a lo que entra y sale por el
+   túnel público; token opcional (`PUENTE_TOKEN`) y la card sigue pública para descubrimiento.
+3. **Sin fuga de trazas** — el `http.server` del puente tiene catch-all: ante cualquier error
+   interno devuelve un mensaje seguro, nunca un traceback.
+
+**Pruebas (prompt 48b):** `tests/test_seguridad_48b.py`
+```
+$ uv run pytest tests/test_seguridad_48b.py -q
+8 passed in 2.27s
+```
+Suite completa: 141 passed, 1 skipped.
+
+**Pendiente (no fabricado):** la prueba nosotros→agente de Gustavo sigue bloqueada por su
+`-32601`; esta sección cubre solo lo que controlamos (nuestro cliente y nuestro puente).

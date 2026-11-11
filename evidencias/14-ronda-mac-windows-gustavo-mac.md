@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/14-ronda-mac-windows-gustavo-mac.md`  
 > **Objetivo:** Ronda end-to-end Mac ↔ Windows ↔ Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 2004 · **Última modificación:** 20261111 2016
+> **Creación:** 20261111 2004 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Ronda end-to-end Mac ↔ Windows ↔ Gustavo · evidencia (mac)
@@ -53,3 +53,31 @@ A2A clásico `SendMessage`). Corrida real:
 La consulta de clima **efectiva** a Gustavo (y la evidencia live del cache del prompt 52) queda
 pendiente de que su quick tunnel esté estable. La interop nosotros→Gustavo ya se probó con éxito
 en el prompt 51 (ver `evidencias/13-interop-gustavo-mac.md`).
+
+## Ronda completa con la card de Gustavo corregida (todo OK)
+
+Gustavo corrigió su `URL_PUBLICA` (su card ya anuncia su túnel real, no uno caído). El
+coordinador del Mac enruta a **los tres orígenes** por A2A:
+
+```
+> ¿Qué clima hará mañana en Valdivia?
+  ruta: guardia_entrada → supervisor → agente_remoto → guardia_salida
+  [agente_meteorologo] Para mañana en Valdivia se esperan chubascos y cielo nublado, máx 15 °C,
+  mín 6 °C.            ← REMOTO (Gustavo), A2A clásico SendMessage + desanidado
+
+> ¿Cuáles son los cinco principios del Reiki?
+  ruta: guardia_entrada → supervisor → agente_remoto → guardia_salida
+  [Agente de Tomás] … Gokai: no te enojes / no te preocupes / sé agradecido / honestidad /
+  sé amable …          ← REMOTO (Windows), A2A nativo langgraph
+
+> ¿Qué técnica uso si tengo desbalance de clases?
+  ruta: guardia_entrada → supervisor → agente_local → guardia_salida
+  [Agente de Ezequiel] … class weights, SMOTE/undersampling, F1/PR-AUC …   ← LOCAL (Mac)
+```
+
+Además el **cache de método (prompt 52) quedó verificado en vivo**: tras la primera consulta a
+Gustavo, `a2a._cache_metodo` guardó `SendMessage` para ese host (las siguientes van directas).
+
+**Interoperabilidad A2A completa:** un coordinador (Mac) enrutando a agentes **locales**,
+**remotos en otra máquina** (Windows, A2A nativo) y **remotos de otro grupo con otro dialecto**
+(Gustavo, A2A clásico `SendMessage`), todo por túneles de Cloudflare y pasando por los guardrails.

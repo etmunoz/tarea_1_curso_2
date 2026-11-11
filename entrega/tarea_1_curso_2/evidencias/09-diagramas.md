@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
-> **Archivo:** `evidencias/09-diagramas.md`  
+> **Archivo:** `entrega/tarea_1_curso_2/evidencias/09-diagramas.md`  
 > **Objetivo:** Diagramas · grafo del coordinador y arquitectura de agentes  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 0743 · **Última modificación:** 20261111 1227
+> **Creación:** 20261111 0743 · **Última modificación:** 20261111 1343
 <!--/encabezado-grupo-->
 
 # Diagramas · grafo del coordinador y arquitectura de agentes

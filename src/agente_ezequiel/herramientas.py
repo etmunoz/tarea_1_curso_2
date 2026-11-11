@@ -3,7 +3,7 @@
 # Objetivo: Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1603
-# Última modificación: 20261111 1227
+# Última modificación: 20261111 1343
 # --8<-- fin-encabezado-grupo
 
 """Herramientas del agente de Ezequiel · IA Engineer & Data Scientist.

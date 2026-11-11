@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/30-windows-commit-push-registros-25-28.md`  
 > **Objetivo:** 30 · Windows: commit y push de los registros 25–28  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2224 · **Última modificación:** 20261111 1227
+> **Creación:** 20261110 2224 · **Última modificación:** 20261111 1343
 <!--/encabezado-grupo-->
 
 # 30 · Windows: commit y push de los registros 25–28

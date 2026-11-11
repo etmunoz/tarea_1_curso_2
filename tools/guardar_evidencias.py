@@ -3,7 +3,7 @@
 # Objetivo: Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1227
+# Última modificación: 20261111 1343
 # --8<-- fin-encabezado-grupo
 
 """Guarda evidencias del coordinador a `evidencias/` (Paso 7–8 del taller).

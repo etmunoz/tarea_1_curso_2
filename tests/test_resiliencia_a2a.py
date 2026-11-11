@@ -3,7 +3,7 @@
 # Objetivo: Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1227
+# Última modificación: 20261111 1343
 # --8<-- fin-encabezado-grupo
 
 """Pruebas de resiliencia: qué pasa cuando un agente remoto NO está disponible.
@@ -45,14 +45,17 @@ class _Resp:
 
 @pytest.fixture(autouse=True)
 def _limpiar_caches():
-    """Limpia las cachés de a2a entre pruebas (assistant_id)."""
+    """Limpia las cachés de a2a entre pruebas (assistant_id y dialecto)."""
     a2a._cache_aid.clear()
+    a2a._cache_dialecto.clear()
     yield
     a2a._cache_aid.clear()
+    a2a._cache_dialecto.clear()
 
 
 def test_connect_error_es_agente_no_disponible(monkeypatch):
     """Conexión caída (túnel abajo) → AgenteNoDisponible con motivo claro."""
+    a2a._cache_dialecto["https://caido.example"] = "langgraph"  # evita el GET de detección
     monkeypatch.setattr(a2a.httpx, "post", lambda *a, **k: (_ for _ in ()).throw(httpx.ConnectError("down")))
     with pytest.raises(a2a.AgenteNoDisponible) as e:
         a2a.enviar_mensaje("https://caido.example", "agente_fabio", "hola", "ctx")
@@ -62,6 +65,7 @@ def test_connect_error_es_agente_no_disponible(monkeypatch):
 
 def test_timeout_es_agente_no_disponible(monkeypatch):
     """Timeout → AgenteNoDisponible('tiempo de espera agotado')."""
+    a2a._cache_dialecto["https://lento.example"] = "langgraph"  # evita el GET de detección
     monkeypatch.setattr(a2a.httpx, "post", lambda *a, **k: (_ for _ in ()).throw(httpx.ReadTimeout("slow")))
     with pytest.raises(a2a.AgenteNoDisponible) as e:
         a2a.enviar_mensaje("https://lento.example", "agente_x", "hola", "ctx")

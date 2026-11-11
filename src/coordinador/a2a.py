@@ -3,7 +3,7 @@
 # Objetivo: Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1933
-# Última modificación: 20261111 1227
+# Última modificación: 20261111 1343
 # --8<-- fin-encabezado-grupo
 
 """Cliente A2A general: habla con cualquier agente expuesto por `langgraph dev`.
@@ -22,6 +22,10 @@ import httpx
 
 # cache de assistant_id por (base, graph): el servidor lo mantiene fijo mientras vive.
 _cache_aid: dict[tuple[str, str], str] = {}
+
+# cache del "dialecto" A2A por base_url: 'langgraph' (nuestro, requiere assistant_id) o
+# 'clasico' (SDK a2a-protocol.org: card sin assistant_id, mensajes en la URL base).
+_cache_dialecto: dict[str, str] = {}
 
 
 class AgenteNoDisponible(RuntimeError):
@@ -64,6 +68,43 @@ def _json(metodo, url: str, destino: str, **kw) -> dict | list:
         raise AgenteNoDisponible(destino, _motivo(exc)) from exc
 
 
+def dialecto(base_url: str, timeout: float = 10) -> str:
+    """Objetivo: detectar (una vez, con caché) qué dialecto A2A habla un servidor.
+    Pide la Agent Card SIN assistant_id: un servidor 'clasico' (SDK a2a-protocol.org)
+    la devuelve con `name`; nuestro langgraph dev responde un error pidiendo el
+    `assistant_id`. Entradas: base_url (str), timeout (float).
+    Salida: str — 'clasico' o 'langgraph'. Lanza AgenteNoDisponible si no hay red."""
+    base = base_url.rstrip("/")
+    if base not in _cache_dialecto:
+        try:
+            r = httpx.get(f"{base}/.well-known/agent-card.json", timeout=timeout)
+        except httpx.HTTPError as exc:
+            raise AgenteNoDisponible(base, _motivo(exc)) from exc
+        try:
+            data = r.json()
+        except ValueError:
+            data = None
+        es_clasico = r.status_code == 200 and isinstance(data, dict) and bool(data.get("name"))
+        _cache_dialecto[base] = "clasico" if es_clasico else "langgraph"
+    return _cache_dialecto[base]
+
+
+def _card_clasica(base: str, timeout: float) -> dict:
+    """Objetivo: leer la Agent Card de un servidor A2A clásico (sin assistant_id)."""
+    return _json(httpx.get, f"{base}/.well-known/agent-card.json", base, timeout=timeout)
+
+
+def _endpoint_clasico(card: dict, base: str) -> str:
+    """Objetivo: sacar la URL del endpoint de mensajes de una card clásica.
+    Usa `url` o la primera `supportedInterfaces[].url`; si no hay, la base. Salida: str."""
+    url = card.get("url")
+    if not url:
+        interfaces = card.get("supportedInterfaces") or card.get("additionalInterfaces") or []
+        if interfaces and isinstance(interfaces, list):
+            url = (interfaces[0] or {}).get("url")
+    return (url or base).rstrip("/")
+
+
 def assistant_id(base_url: str, graph: str, timeout: float = 10) -> str:
     """Objetivo: obtener el assistant_id (UUID) que el servidor asigna a un grafo (con caché).
     Entradas: base_url (str) del servidor; graph (str) id del grafo; timeout (float) segundos.
@@ -84,6 +125,8 @@ def agent_card(base_url: str, graph: str, timeout: float = 10) -> dict:
     Entradas: base_url (str), graph (str), timeout (float).
     Salida: dict — la tarjeta (name, description, skills, url…)."""
     base = base_url.rstrip("/")
+    if dialecto(base, timeout) == "clasico":
+        return _card_clasica(base, timeout)
     aid = assistant_id(base, graph, timeout)
     return _json(httpx.get, f"{base}/.well-known/agent-card.json", f"{base} ({graph})",
                  params={"assistant_id": aid}, timeout=timeout)
@@ -92,6 +135,18 @@ def agent_card(base_url: str, graph: str, timeout: float = 10) -> dict:
 def nuevo_context_id() -> str:
     """Objetivo: generar un contextId A2A nuevo. Entradas: ninguna. Salida: str — un UUID."""
     return str(uuid.uuid4())
+
+
+def a_uuid(valor) -> str:
+    """Objetivo: coaccionar un contextId arbitrario a un UUID válido y ESTABLE. langgraph dev
+    usa el contextId como thread_id y exige un UUID ('Invalid thread ID' si no lo es); un
+    cliente A2A externo puede mandar cualquier string. Si ya es UUID se respeta; si no, se
+    deriva uuid5 (mismo texto → mismo UUID, así se preserva la memoria del hilo).
+    Entradas: valor (str u otro). Salida: str — un UUID."""
+    try:
+        return str(uuid.UUID(str(valor)))
+    except (ValueError, AttributeError, TypeError):
+        return str(uuid.uuid5(uuid.NAMESPACE_URL, str(valor)))
 
 
 def _textos(o) -> list[str]:
@@ -132,9 +187,9 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     Entradas: base_url (str), graph (str), texto (str) la pregunta, context_id (str) UUID de la
     conversación (memoria del remoto), timeout (float).
     Salida: str — el texto de la respuesta del agente (o un aviso del propio protocolo A2A).
-    Lanza AgenteNoDisponible si el agente no responde (conexión/timeout/HTTP/JSON)."""
+    Lanza AgenteNoDisponible si el agente no responde (conexión/timeout/HTTP/JSON).
+    Habla ambos dialectos: langgraph (`/a2a/<assistant_id>`) y clásico (URL base)."""
     base = base_url.rstrip("/")
-    aid = assistant_id(base, graph, timeout)
     cuerpo = {
         "jsonrpc": "2.0",
         "id": "1",
@@ -142,13 +197,18 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
         "params": {
             "message": {
                 "role": "user",
+                "kind": "message",
                 "messageId": uuid.uuid4().hex,
                 "contextId": context_id,
                 "parts": [{"kind": "text", "text": texto}],
             }
         },
     }
-    r = _json(httpx.post, f"{base}/a2a/{aid}", f"{base} ({graph})", json=cuerpo, timeout=timeout)
+    if dialecto(base, timeout) == "clasico":
+        endpoint = _endpoint_clasico(_card_clasica(base, timeout), base)
+    else:
+        endpoint = f"{base}/a2a/{assistant_id(base, graph, timeout)}"
+    r = _json(httpx.post, endpoint, f"{base} ({graph})", json=cuerpo, timeout=timeout)
     if isinstance(r, dict) and "error" in r:
         return f"[error del agente remoto: {r['error']}]"
     return _texto_de_resultado(r.get("result", r) if isinstance(r, dict) else r)

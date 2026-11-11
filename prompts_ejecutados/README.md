@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1227
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1343
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -60,3 +60,5 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 45 | [Forzar el estado controlado end-to-end (remoto caído)](45-forzar-estado-controlado-end-to-end.md) | [respuesta](../respuestas/45-forzar-estado-controlado-end-to-end.md) |
 | 46 | [Diagramas: grafo del coordinador y arquitectura](46-diagramas-grafo-y-arquitectura.md) | [respuesta](../respuestas/46-diagramas-grafo-y-arquitectura.md) |
 | 47 | [Guardrail de salida completo + allow-list de agentes](47-guardrail-salida-y-allowlist.md) | [respuesta](../respuestas/47-guardrail-salida-y-allowlist.md) |
+| 48 | [Robustecimiento final del Taller A2A (5 correcciones)](48-robustecimiento-final-a2a.md) | [respuesta](../respuestas/48-robustecimiento-final-a2a.md) |
+| 49 | [Interoperabilidad A2A clásico: cliente generalizado + puente](49-interop-a2a-clasico-y-puente.md) | [respuesta](../respuestas/49-interop-a2a-clasico-y-puente.md) |

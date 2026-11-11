@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/14-agente-cocina-recetas-chilenas.md`  
 > **Objetivo:** 14 · Respuesta — Agente de cocina chilena con costeo  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2013 · **Última modificación:** 20261111 1227
+> **Creación:** 20261110 2013 · **Última modificación:** 20261111 1343
 <!--/encabezado-grupo-->
 
 # 14 · Respuesta — Agente de cocina chilena con costeo

@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/02-crear-repo-contenido.md`  
 > **Objetivo:** 02 · Respuesta — Crear el repo de contenido `tarea_1_curso_2`  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1620 · **Última modificación:** 20261111 1227
+> **Creación:** 20261110 1620 · **Última modificación:** 20261111 1343
 <!--/encabezado-grupo-->
 
 # 02 · Respuesta — Crear el repo de contenido `tarea_1_curso_2`

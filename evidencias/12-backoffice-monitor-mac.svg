@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 308" font-family="-apple-system,Segoe UI,Roboto,sans-serif">
+<rect x="0" y="0" width="980" height="308" fill="#f3f3f5"/>
+<rect x="0" y="0" width="980" height="30" fill="#e3e3e6"/>
+<circle cx="18" cy="15" r="6" fill="#ff5f57"/>
+<circle cx="38" cy="15" r="6" fill="#febc2e"/>
+<circle cx="58" cy="15" r="6" fill="#28c840"/>
+<text x="490.0" y="19" text-anchor="middle" font-size="12.5" fill="#555">Backoffice · accesos al puente A2A</text>
+<text x="16" y="52" font-size="14" font-weight="700" fill="#1a1a2e">Accesos al Agente de Ezequiel (vía puente A2A)</text>
+<text x="16" y="72" font-size="12.5" fill="#1a7a3a">Total accesos: 5  ·  IPs distintas: 2  ·  Consultas: 2  ·  Fichas leídas: 3  ·  Último: 17:22:31 desde 186.107.24.191</text>
+<text x="16" y="90" font-size="11" fill="#999">Log: logs/puente-acceso.log  ·  render con datos reales (la ventana Tkinter se actualiza en vivo cada 1s)</text>
+<rect x="12" y="94" width="956" height="24" fill="#dfe3ea"/>
+<text x="16" y="111" font-size="12" font-weight="600" fill="#333">Hora</text>
+<text x="110" y="111" font-size="12" font-weight="600" fill="#333">IP del cliente</text>
+<text x="285" y="111" font-size="12" font-weight="600" fill="#333">Qué hizo</text>
+<text x="620" y="111" font-size="12" font-weight="600" fill="#333">Ruta</text>
+<text x="900" y="111" font-size="12" font-weight="600" fill="#333">Código</text>
+<rect x="12" y="118" width="956" height="30" fill="#eef4fb"/>
+<text x="16" y="138" font-size="12" fill="#222">17:15:47</text>
+<text x="110" y="138" font-size="12" fill="#222">152.230.191.47</text>
+<text x="285" y="138" font-size="12" fill="#222">📇 Leyó la ficha (descubrimiento)</text>
+<text x="620" y="138" font-size="12" fill="#222">/.well-known/agent-card.json</text>
+<text x="900" y="138" font-size="12" fill="#222">200</text>
+<rect x="12" y="148" width="956" height="30" fill="#eaf5ea"/>
+<text x="16" y="168" font-size="12" fill="#222">17:15:51</text>
+<text x="110" y="168" font-size="12" fill="#222">152.230.191.47</text>
+<text x="285" y="168" font-size="12" fill="#222">💬 Envió una consulta (message/send)</text>
+<text x="620" y="168" font-size="12" fill="#222">/</text>
+<text x="900" y="168" font-size="12" fill="#222">200</text>
+<rect x="12" y="178" width="956" height="30" fill="#eef4fb"/>
+<text x="16" y="198" font-size="12" fill="#222">17:17:06</text>
+<text x="110" y="198" font-size="12" fill="#222">186.107.24.191</text>
+<text x="285" y="198" font-size="12" fill="#222">📇 Leyó la ficha (descubrimiento)</text>
+<text x="620" y="198" font-size="12" fill="#222">/.well-known/agent-card.json</text>
+<text x="900" y="198" font-size="12" fill="#222">200</text>
+<rect x="12" y="208" width="956" height="30" fill="#eef4fb"/>
+<text x="16" y="228" font-size="12" fill="#222">17:17:49</text>
+<text x="110" y="228" font-size="12" fill="#222">186.107.24.191</text>
+<text x="285" y="228" font-size="12" fill="#222">📇 Leyó la ficha (descubrimiento)</text>
+<text x="620" y="228" font-size="12" fill="#222">/.well-known/agent-card.json</text>
+<text x="900" y="228" font-size="12" fill="#222">200</text>
+<rect x="12" y="238" width="956" height="30" fill="#eaf5ea"/>
+<text x="16" y="258" font-size="12" fill="#222">17:22:31</text>
+<text x="110" y="258" font-size="12" fill="#222">186.107.24.191</text>
+<text x="285" y="258" font-size="12" fill="#222">💬 Envió una consulta (message/send)</text>
+<text x="620" y="258" font-size="12" fill="#222">/</text>
+<text x="900" y="258" font-size="12" fill="#222">200</text>
+</svg>

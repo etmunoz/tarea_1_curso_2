@@ -3,7 +3,7 @@
 # Objetivo: Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 1342
-# Última modificación: 20261111 1741
+# Última modificación: 20261111 1857
 # --8<-- fin-encabezado-grupo
 
 """Puente/adaptador A2A: expone un agente de `langgraph dev` en formato **A2A clásico**.
@@ -32,6 +32,7 @@ import json
 import os
 import sys
 import uuid
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -122,8 +123,22 @@ class _Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(datos)
 
-    def log_message(self, *_a):  # noqa: D401 - silenciar el log ruidoso por defecto
-        """No imprime una línea por request (ruido)."""
+    def log_message(self, fmt, *args):  # noqa: D401
+        """Registro de accesos OPCIONAL (prompt 50): si la variable PUENTE_LOG apunta a un
+        archivo, escribe una línea por request (fecha UTC, IP real del cliente —reenviada por
+        Cloudflare—, método, ruta, código). NO guarda el contenido del mensaje ni secretos. Sin
+        PUENTE_LOG, silencia. Lo visualiza `tools/monitor_puente.py`."""
+        destino = os.environ.get("PUENTE_LOG")
+        if not destino:
+            return
+        ip = self.headers.get("Cf-Connecting-Ip") or self.headers.get("X-Forwarded-For") \
+            or self.client_address[0]
+        linea = f"{datetime.now(timezone.utc).isoformat(timespec='seconds')}\t{ip}\t{fmt % args}\n"
+        try:
+            with open(destino, "a", encoding="utf-8") as f:
+                f.write(linea)
+        except Exception:  # noqa: BLE001 - el log nunca debe tumbar el puente
+            pass
 
     def _token_ok(self) -> bool:
         """Objetivo: si el puente exige token (PUENTE_TOKEN), validar el Authorization Bearer.

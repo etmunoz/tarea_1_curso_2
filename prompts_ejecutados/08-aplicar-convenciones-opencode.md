@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/08-aplicar-convenciones-opencode.md`  
 > **Objetivo:** 08 · Aplicar las convenciones de los agentes OpenCode (@spec / @implementador)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1923 · **Última modificación:** 20261111 1741
+> **Creación:** 20261110 1923 · **Última modificación:** 20261111 1857
 <!--/encabezado-grupo-->
 
 # 08 · Aplicar las convenciones de los agentes OpenCode (@spec / @implementador)

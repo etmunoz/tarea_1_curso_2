@@ -3,7 +3,7 @@
 # Objetivo: Guardrails del coordinador: controles de entrada, salida y comunicación A2A.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261111 0730
-# Última modificación: 20261111 1741
+# Última modificación: 20261111 1857
 # --8<-- fin-encabezado-grupo
 
 """Guardrails del coordinador: controles de entrada, salida y comunicación A2A.

@@ -3,7 +3,7 @@
 # Objetivo: Fichas (Agent Card) de los agentes locales: nombre y descripción.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261111 1741
+# Última modificación: 20261111 1857
 # --8<-- fin-encabezado-grupo
 
 """Fichas (Agent Card) de los agentes locales: nombre y descripción.

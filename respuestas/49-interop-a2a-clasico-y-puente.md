@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/49-interop-a2a-clasico-y-puente.md`  
 > **Objetivo:** Respuesta 49 · Interoperabilidad A2A clásico: cliente generalizado + puente  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1343 · **Última modificación:** 20261111 1741
+> **Creación:** 20261111 1343 · **Última modificación:** 20261111 1857
 <!--/encabezado-grupo-->
 
 # Respuesta 49 · Interoperabilidad A2A clásico: cliente generalizado + puente

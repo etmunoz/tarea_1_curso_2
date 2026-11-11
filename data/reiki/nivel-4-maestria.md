@@ -2,7 +2,7 @@
 > **Archivo:** `data/reiki/nivel-4-maestria.md`  
 > **Objetivo:** Reiki Nivel 4 · Maestría (Gokuikaiden) · "Enseñar e iniciar"  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2009 · **Última modificación:** 20261111 1741
+> **Creación:** 20261110 2009 · **Última modificación:** 20261111 1857
 <!--/encabezado-grupo-->
 
 # Reiki Nivel 4 · Maestría (Gokuikaiden) · "Enseñar e iniciar"

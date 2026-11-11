@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1741
+> **Creación:** 20261110 1603 · **Última modificación:** 20261111 1857
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -64,4 +64,5 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 49 | [Interoperabilidad A2A clásico: cliente generalizado + puente](49-interop-a2a-clasico-y-puente.md) | [respuesta](../respuestas/49-interop-a2a-clasico-y-puente.md) |
 | 48a | [Ajustes finales de robustez (continuación del 48)](48a-ajustes-finales-robustez.md) | [respuesta](../respuestas/48a-ajustes-finales-robustez.md) |
 | 48b | [Refuerzos de seguridad sobre la interoperabilidad (49 + Gustavo)](48b-seguridad-interop-puente.md) | [respuesta](../respuestas/48b-seguridad-interop-puente.md) |
+| 50 | [Backoffice de accesos al puente A2A (log + app Tkinter)](50-backoffice-monitor-accesos-puente.md) | [respuesta](../respuestas/50-backoffice-monitor-accesos-puente.md) |
 | 51 | [Interop nosotros→Gustavo (dialecto SendMessage)](51-interop-sendmessage-gustavo.md) | [respuesta](../respuestas/51-interop-sendmessage-gustavo.md) |

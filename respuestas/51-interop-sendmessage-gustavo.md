@@ -2,7 +2,7 @@
 > **Archivo:** `respuestas/51-interop-sendmessage-gustavo.md`  
 > **Objetivo:** Respuesta 51 · Interop nosotros→Gustavo (dialecto SendMessage)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1738 · **Última modificación:** 20261111 1741
+> **Creación:** 20261111 1738 · **Última modificación:** 20261111 1857
 <!--/encabezado-grupo-->
 
 # Respuesta 51 · Interop nosotros→Gustavo (dialecto SendMessage)

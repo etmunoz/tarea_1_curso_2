@@ -1,9 +1,9 @@
-# --8<-- encabezado-grupo
+﻿# --8<-- encabezado-grupo
 # Archivo: scripts/win_coordinador.ps1
 # Objetivo: win_coordinador.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1953
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 # Windows (Tomás) · coordinador BIDIRECCIONAL: enruta a lo LOCAL (Tomás) y a lo REMOTO

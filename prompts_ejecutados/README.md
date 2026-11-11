@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2227
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2230
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -42,3 +42,5 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 27 | [Windows: respuestas completas, todo en español](27-windows-respuestas-completas-en-espanol.md) | [respuesta](../respuestas/27-windows-respuestas-completas-en-espanol.md) |
 | 28 | [Windows: verificar el túnel de Cloudflare](28-windows-verificar-tunel.md) | [respuesta](../respuestas/28-windows-verificar-tunel.md) |
 | 29 | [Corrida real entre 2 computadores (lado Mac)](29-corrida-real-2-pc.md) | [respuesta](../respuestas/29-corrida-real-2-pc.md) |
+| 30 | [Windows: commit y push de los registros 25–28](30-windows-commit-push-registros-25-28.md) | [respuesta](../respuestas/30-windows-commit-push-registros-25-28.md) |
+| 31 | [Windows: codificación de los .ps1 (UTF-8 con BOM)](31-windows-bom-en-ps1.md) | [respuesta](../respuestas/31-windows-bom-en-ps1.md) |

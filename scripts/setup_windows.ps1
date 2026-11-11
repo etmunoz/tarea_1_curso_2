@@ -1,9 +1,9 @@
-# --8<-- encabezado-grupo
+﻿# --8<-- encabezado-grupo
 # Archivo: scripts/setup_windows.ps1
 # Objetivo: setup_windows.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2114
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 # Setup del Windows (nodo Tomás) para la prueba A2A bidireccional entre 2 computadores.

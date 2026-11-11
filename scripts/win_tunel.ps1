@@ -1,9 +1,9 @@
-# --8<-- encabezado-grupo
+﻿# --8<-- encabezado-grupo
 # Archivo: scripts/win_tunel.ps1
 # Objetivo: win_tunel.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 # Windows · abre un túnel https a tu langgraph dev (:2024). Copia la URL que imprime y pásala al Mac.

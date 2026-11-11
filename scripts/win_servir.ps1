@@ -1,9 +1,9 @@
-# --8<-- encabezado-grupo
+﻿# --8<-- encabezado-grupo
 # Archivo: scripts/win_servir.ps1
 # Objetivo: win_servir.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1952
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 # Windows · levanta el agente Tomás (langgraph dev) y configura su ficha cuando esté arriba.

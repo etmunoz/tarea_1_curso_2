@@ -3,7 +3,7 @@
 # Objetivo: Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 1746
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 """Inserta/actualiza el encabezado de grupo en los archivos del repo (idempotente).
@@ -214,7 +214,12 @@ def procesar(path: Path, check: bool) -> bool:
     ext = path.suffix.lower()
     markup = ext in MARKUP_EXT
     texto = path.read_text(encoding="utf-8")
+    # BOM: los .ps1 lo necesitan para que Windows PowerShell 5.1 lea bien las tildes.
+    # Se quita para analizar y se repone al escribir (siempre en .ps1).
+    bom = "\ufeff" if (texto.startswith("\ufeff") or ext == ".ps1") else ""
+    texto = texto.removeprefix("\ufeff")
     shebang, cuerpo = _split_shebang(texto)
+    shebang = bom + shebang
 
     if check:
         return _tiene_encabezado(cuerpo, markup)

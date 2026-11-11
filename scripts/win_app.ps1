@@ -1,9 +1,9 @@
-# --8<-- encabezado-grupo
+﻿# --8<-- encabezado-grupo
 # Archivo: scripts/win_app.ps1
 # Objetivo: win_app.ps1 del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2140
-# Última modificación: 20261110 2227
+# Última modificación: 20261110 2230
 # --8<-- fin-encabezado-grupo
 
 # Windows (Tomás) · app web para probar agentes uno a uno y vía coordinador.

@@ -2,7 +2,7 @@
 > **Archivo:** `prompts_ejecutados/README.md`  
 > **Objetivo:** Prompts ejecutados  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2147
+> **Creación:** 20261110 1603 · **Última modificación:** 20261110 2208
 <!--/encabezado-grupo-->
 
 # Prompts ejecutados
@@ -33,3 +33,7 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 18 | [Coordinador bidireccional y evidencias en ambos PC](18-coordinador-bidireccional-evidencias.md) | [respuesta](../respuestas/18-coordinador-bidireccional-evidencias.md) |
 | 19 | [App web por equipo (probar agentes y coordinador)](19-app-web-por-equipo.md) | [respuesta](../respuestas/19-app-web-por-equipo.md) |
 | 20 | [Docstrings en todos los .py](20-docstrings-todos-los-py.md) | [respuesta](../respuestas/20-docstrings-todos-los-py.md) |
+| 21 | [Windows: clonar el repo y leer las instrucciones](21-windows-clonar-y-leer-instrucciones.md) | [respuesta](../respuestas/21-windows-clonar-y-leer-instrucciones.md) |
+| 22 | [Windows: ejecutar setup_windows.ps1 (clave Gemini y AVG)](22-windows-ejecutar-setup.md) | [respuesta](../respuestas/22-windows-ejecutar-setup.md) |
+| 23 | [Windows: cambiar el puerto de Redis (6379 ocupado)](23-windows-puerto-redis.md) | [respuesta](../respuestas/23-windows-puerto-redis.md) |
+| 24 | [Windows: dejar registro de prompts y resultados](24-windows-registro-de-evidencias.md) | [respuesta](../respuestas/24-windows-registro-de-evidencias.md) |

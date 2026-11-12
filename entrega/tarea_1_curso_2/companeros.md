@@ -47,34 +47,43 @@ Agentes de otros integrantes/grupos que nuestro coordinador puede invocar por A2
 
 ## agente_fabio — autor: Fabio Durán
 
-- **Skill:** **bioinformática** — análisis de secuencias de **ADN y proteínas**, consulta a bases de
-  datos públicas (**UniProt** —Swiss-Prot/TrEMBL— y **NCBI**) y armado de **pipelines reproducibles**.
-  No responde temas fuera de bioinformática.
+Lo **consumimos en vivo** durante la sesión. Esto es exactamente lo que observamos:
+
+- Su endpoint es **LangGraph nativo**: `GET /.well-known/agent-card.json` **sin** `assistant_id`
+  devolvió `{"error":{"code":-32602,"message":"Missing required query parameter: assistant_id"}}`.
+- `POST /assistants/search` → **`graph_id = agente_fabio`**, **`assistant_id =
+  61ac3d13-9376-5266-a91e-23c8d9c1b340`**.
+- Consumido con nuestro cliente (`a2a.enviar_mensaje`), respondió sobre **bioinformática**. Textual:
+  *"Puedes preguntarme sobre análisis de secuencias de ADN y proteínas, consulta en bases de datos
+  públicas como UniProt o NCBI, y sobre cómo armar flujos de análisis (pipelines) reproducibles."* y
+  *"uso principalmente UniProt, distinguiendo entre Swiss-Prot (revisada por curadores) y TrEMBL
+  (anotaciones automáticas)…"*.
+
+- **Nombre / skill:** `agente_fabio` — **bioinformática**: secuencias de ADN/proteínas, consulta a
+  **UniProt** (Swiss-Prot/TrEMBL) y **NCBI**, y **pipelines reproducibles**.
 - **Autor:** Fabio Durán.
-- **Dialecto A2A:** **LangGraph nativo** (igual que nuestros agentes): la card se pide con
-  `?assistant_id=<uuid>` y los mensajes van a `/a2a/<assistant_id>`; el `contextId` debe ser un
-  **UUID** (= thread_id). *(Consumirlo nos reveló un fix: nuestro cliente ahora coacciona el
-  `contextId` a UUID para evitar `-32602 "Invalid thread ID"` — ver `respuestas/55`.)*
-- **URL:** túnel de Cloudflare **efímero** (p. ej. `https://yarn-logic-slideshow-graphics.trycloudflare.com`,
-  `assistant_id=61ac3d13-9376-5266-a91e-23c8d9c1b340`); cambia en cada corrida.
-- **Ficha (Agent Card) — formato LangGraph nativo** *(reconstruida: su túnel estaba caído al empaquetar)*:
+- **URL:** túnel de Cloudflare **efímero** — cuando lo probamos era
+  `https://yarn-logic-slideshow-graphics.trycloudflare.com` (`assistant_id=61ac3d13-9376-5266-a91e-23c8d9c1b340`);
+  cambia en cada corrida y al empaquetar ya no respondía.
+- **Nos reveló un fix:** su servidor langgraph exige que el `contextId` (= thread_id) sea un **UUID**
+  (`-32602 "Invalid thread ID"` si no lo es). Nuestro cliente ahora lo coacciona a UUID para todos
+  los dialectos — commit `52eba04` + test (ver `respuestas/55`, §4).
+- **Ficha (Agent Card):** **no capturamos su card completa** (solo resolvimos su `assistant_id` y lo
+  consumimos; su túnel efímero ya no responde — la ficha exacta la tiene Fabio en su repo). Lo que sí
+  consta de lo observado, en formato LangGraph nativo:
 
 ```json
 {
-  "name": "agente_fabio",
-  "description": "Agente de bioinformatica: analiza secuencias de ADN y proteinas, consulta bases de datos publicas (UniProt —Swiss-Prot y TrEMBL— y NCBI) y ayuda a armar flujos de analisis (pipelines) reproducibles. No responde temas fuera de bioinformatica.",
-  "version": "0.17.1",
-  "url": "https://<tunel-de-fabio>.trycloudflare.com",
-  "preferredTransport": "JSONRPC",
-  "capabilities": {"streaming": true, "pushNotifications": false},
-  "defaultInputModes": ["application/json", "text/plain"],
-  "defaultOutputModes": ["application/json", "text/plain"],
-  "skills": [{"name": "Agente de Fabio Capabilities"}]
+  "graph_id": "agente_fabio",
+  "assistant_id": "61ac3d13-9376-5266-a91e-23c8d9c1b340",
+  "description": "Bioinformatica: analiza secuencias de ADN y proteinas, consulta bases publicas (UniProt —Swiss-Prot/TrEMBL— y NCBI) y arma flujos de analisis (pipelines) reproducibles.",
+  "card_url": "/.well-known/agent-card.json?assistant_id=61ac3d13-9376-5266-a91e-23c8d9c1b340",
+  "endpoint_mensajes": "/a2a/61ac3d13-9376-5266-a91e-23c8d9c1b340"
 }
 ```
 
-- **Evidencia de la interoperación:** consumido en vivo (preguntas de bioinformática: ADN/proteínas,
-  UniProt) durante el prompt 55; detalle en `respuestas/55-despliegue-vps-interop-backoffice.md` (§4).
+- **Evidencia:** la interacción (resolución de `assistant_id`, respuestas de bioinformática y el bug
+  `Invalid thread ID` → fix) está en `respuestas/55-despliegue-vps-interop-backoffice.md` (§4).
 
 > Para que Gustavo consuma NUESTRO agente (sentido inverso) se usa el puente del prompt 49
 > (ver `src/puente_a2a/` y `guia_para_gustavo.md`). En producción ese puente está publicado de

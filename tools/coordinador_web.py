@@ -1,9 +1,9 @@
 # --8<-- encabezado-grupo
 # Archivo: tools/coordinador_web.py
-# Objetivo: Web chat del COORDINADOR A2A: pregunta -> supervisor enruta a Ezequiel/Tomás/Fabio/Gustavo, con panel de ruteo.
+# Objetivo: Web chat del COORDINADOR A2A (moderna) con panel de RUTEO al lado.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261112 1210
-# Última modificación: 20261112 1210
+# Última modificación: 20261112 1508
 # --8<-- fin-encabezado-grupo
 
 """Web chat del COORDINADOR A2A (moderna) con panel de RUTEO al lado.
@@ -30,6 +30,7 @@ from __future__ import annotations
 import hmac
 import json
 import os
+import sys
 import traceback
 import uuid
 from base64 import b64decode
@@ -37,6 +38,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
+if str(RAIZ) not in sys.path:  # el servicio puede correr fuera del raíz del repo
+    sys.path.insert(0, str(RAIZ))
 
 # Carga el .env del repo (GOOGLE_API_KEY, catálogo…) sin pisar lo que ya venga del entorno
 # (systemd EnvironmentFile tiene prioridad: override=False por defecto).

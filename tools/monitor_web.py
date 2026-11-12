@@ -104,7 +104,7 @@ PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8">
  footer{color:#8795a8;font-size:12px;margin:0 18px 20px}
 </style></head><body>
 <header><h1>Accesos a __TITULO__ · backoffice web</h1>
-<div class="sub">Traza del puente A2A (solo lectura). Autorefresco cada 2 s. Horas en tu zona local.</div></header>
+<div class="sub">Traza del puente A2A (solo lectura). Autorefresco cada 2 s. Más reciente arriba. Horas en tu zona local.</div></header>
 <div class="resumen" id="resumen">Cargando…</div>
 <div class="wrap"><table id="tabla"><thead><tr>
  <th>Hora</th><th>IP del cliente</th><th>Qué hizo</th><th>Ruta</th><th>Código</th></tr></thead>
@@ -118,7 +118,8 @@ async function tick(){
   if(!r.ok) return;
   const ev = await r.json();
   const cuerpo = document.getElementById('cuerpo');
-  cuerpo.innerHTML = ev.map(e=>`<tr class="${e.clase}"><td>${hhmmss(e.ts)}</td>`+
+  // Más reciente arriba: invertimos el orden cronológico que entrega la API.
+  cuerpo.innerHTML = ev.slice().reverse().map(e=>`<tr class="${e.clase}"><td>${hhmmss(e.ts)}</td>`+
     `<td>${e.ip}</td><td>${e.que}</td><td>${e.ruta}</td><td class="cod">${e.cod}</td></tr>`).join('');
   const ips = new Set(ev.map(e=>e.ip));
   const cons = ev.filter(e=>e.clase==='consulta').length;
@@ -126,7 +127,6 @@ async function tick(){
   const ult = ev.length? (hhmmss(ev[ev.length-1].ts)+' desde '+ev[ev.length-1].ip):'—';
   document.getElementById('resumen').textContent =
     `Total accesos: ${ev.length}   ·   IPs distintas: ${ips.size}   ·   Consultas: ${cons}   ·   Fichas leídas: ${fich}   ·   Último: ${ult}`;
-  window.scrollTo(0, document.body.scrollHeight);
  }catch(e){}
 }
 tick(); setInterval(tick, 2000);

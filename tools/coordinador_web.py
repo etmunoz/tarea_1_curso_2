@@ -31,6 +31,7 @@ import hmac
 import json
 import os
 import smtplib
+import ssl
 import sys
 import traceback
 import uuid
@@ -184,9 +185,13 @@ def _enviar_correo(para: str, asunto: str, cuerpo: str) -> dict:
     msg["To"] = para
     msg["Subject"] = asunto
     msg.set_content(cuerpo)
+    ctx = ssl.create_default_context()
+    if SMTP_HOST in ("localhost", "127.0.0.1", "::1"):  # loopback: el cert es del hostname de correo
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
     try:
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
-            s.starttls()
+            s.starttls(context=ctx)
             s.login(SMTP_USER, SMTP_PASS)
             s.send_message(msg)
         return {"ok": True, "detalle": f"enviado a {para}"}

@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
 > **Archivo:** `evidencias/15-backoffice-tomas-mac.md`  
-> **Objetivo:** Backoffice en vivo: el monitor de Tomás (Windows) registra el tráfico entrante desde el Mac · evidencia (mac)  
+> **Objetivo:** Backoffice en vivo · el monitor de Tomás ve quién consume su agente  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 2120 · **Última modificación:** 20261111 2120
+> **Creación:** 20261111 2120 · **Última modificación:** 20261112 1508
 <!--/encabezado-grupo-->
 
 # Backoffice en vivo · el monitor de Tomás ve quién consume su agente

@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/13-interop-gustavo-mac.md`  
 > **Objetivo:** Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 1737 · **Última modificación:** 20261111 2049
+> **Creación:** 20261111 1737 · **Última modificación:** 20261112 1508
 <!--/encabezado-grupo-->
 
 # Interoperabilidad NOSOTROS → agente de Gustavo · evidencia (mac)

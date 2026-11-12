@@ -46,8 +46,8 @@ EVIDENCIAS_REQUERIDAS = [
     "01-saltos.png",
     "02-ficha-agente_ezequiel.json",
     "03-tunel.png",
-    "04-catalogo-mac.txt",
-    "05-ronda-mac.md",
+    "04-catalogo.png",
+    "05-ronda.png",
 ]
 
 
@@ -119,7 +119,7 @@ def empaquetar(grupo: str) -> Path:
 
     dist = RAIZ / "dist"
     dist.mkdir(exist_ok=True)
-    destino = dist / f"grupo-{grupo}-{CARPETA}.zip"
+    destino = dist / f"grupo-{grupo}-taller-a2a.zip"
     tracked = _git_ls_files()
 
     with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as z:

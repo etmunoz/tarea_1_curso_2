@@ -31,6 +31,10 @@ Prompt: [`../prompts_ejecutados/61-guardar-y-redesplegar-ruteo.md`](../prompts_e
 - Prueba manual (navegador): varias preguntas → cada respuesta muestra 🧭 Ver ruteo; al tocarla se
   re-despliega su ruteo a la derecha; al recargar el tab se restauran conversación y último ruteo.
 
+## Refinamiento (feedback del usuario)
+
+Cuando el supervisor **no deriva** (respuesta "ninguno / sin agente"), el cuadro "Antecedentes del acceso" desaparecía y el panel quedaba inconsistente. Ahora `pintarRuteo` muestra igual el cuadro con el texto «No se consultó ningún agente — el supervisor respondió directamente (sin acceso externo)», para que no se "pierda".
+
 ## Archivos tocados
 
 - `tools/coordinador_web.py` — `botonChat`, `burbuja(…, d)`, historial en `sessionStorage`,

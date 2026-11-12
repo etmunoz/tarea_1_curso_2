@@ -521,6 +521,12 @@ function pintarRuteo(d){
         filas.map(f=>'<div style="display:flex;gap:10px;justify-content:space-between;padding:2px 0"><span style="opacity:.6;white-space:nowrap">'+f[0]+'</span><span style="font-family:ui-monospace,Menlo,monospace;text-align:right;word-break:break-all">'+esc(f[1])+'</span></div>').join('');
       ruteo.appendChild(det);
     }
+  } else {
+    const det=document.createElement('div');
+    det.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid var(--bd,#2c2f3a);border-radius:12px;background:rgba(127,127,160,.06);font-size:12px';
+    det.innerHTML='<div style="text-transform:uppercase;letter-spacing:.04em;opacity:.55;font-size:11px;margin-bottom:6px">Antecedentes del acceso</div>'+
+      '<div style="opacity:.7">No se consultó ningún agente — el supervisor respondió directamente (sin acceso externo).</div>';
+    ruteo.appendChild(det);
   }
   const steps=document.createElement('div');steps.className='steps';
   (d.ruta||[]).forEach((p,idx)=>{

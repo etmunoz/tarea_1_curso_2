@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261111 2049
+> **Creación:** 20261110 1941 · **Última modificación:** 20261112 1542
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -321,6 +321,7 @@ de que una máquina esté encendida ni de túneles que caducan.
 | Agente (A2A, JSON-RPC `message/send`) | `https://agente.etmk.cl` |
 | Agent Card (ficha) | `https://agente.etmk.cl/.well-known/agent-card.json` |
 | Backoffice web (login) | `https://monitor.etmk.cl` (usuario `monitor` + clave) |
+| Coordinador web (login) | `https://coordinador.etmk.cl` (usuario `coordinador` + clave) |
 
 **Arquitectura del despliegue (cadena de 3 capas, todo en el VPS):**
 
@@ -332,14 +333,24 @@ Internet → Apache (reverse proxy + Let's Encrypt, :443)
 
 - El agente escucha **solo en `127.0.0.1`**; se publica por Apache con **certificado Let's Encrypt**
   (ver `evidencias/17-despliegue-vps.svg`).
-- **Persistencia real:** dos servicios **`systemd`** (`agente-langgraph`, `agente-puente`), `enabled`
-  (arrancan al bootear) y `Restart=always` (reviven si se caen). **Probado con un reinicio** del
-  servidor: volvieron solos. Esto reemplaza el modo manual (`configurar_fichas.py` a mano) del taller.
+- **Persistencia real:** cuatro servicios **`systemd`** (`agente-langgraph`, `agente-puente`,
+  `agente-monitor`, `agente-coordinador`), `enabled` (arrancan al bootear) y `Restart=always`
+  (reviven si se caen). **Probado con un reinicio** del servidor: volvieron solos. Esto reemplaza el
+  modo manual (`configurar_fichas.py` a mano) del taller.
+- **Coordinador web** (`tools/coordinador_web.py`, `https://coordinador.etmk.cl`): chat del
+  coordinador A2A con panel de ruteo y configuración de las URLs de cada agente (Ezequiel, Tomás,
+  Fabio, Gustavo); puede enviar correo desde `coordinador@etmk.cl` (allowlist, solo por acción del
+  usuario). Detrás de HTTPS + Basic Auth.
 - **Backoffice web** (`tools/monitor_web.py`): la misma traza del log de accesos que el monitor Tkinter,
   pero en el navegador, autorefrescante y protegida con **HTTP Basic Auth** (detrás de HTTPS).
 - **Seguridad del despliegue:** MySQL atado a `127.0.0.1`, el token `A2A_TOKEN` nunca se envía a
   terceros, y los avisos de seguridad no verificados **no se ejecutan**. El `.env` (con la
   `GOOGLE_API_KEY`) vive fuera del docroot público, permisos `600`, nunca en git.
+- **Receta reproducible:** toda la infraestructura del servidor (units `systemd`, plantillas de
+  entorno sin secretos, proxy + force-HTTPS y pasos de despliegue) está versionada en
+  [`deploy/`](../deploy/) — ver [`deploy/README.md`](../deploy/README.md). La historia detallada del
+  montaje (acceso, persistencia, HTTPS, hardening, correo, coordinador web y pruebas cross-machine)
+  está en [`deploy/BITACORA-SERVIDOR.md`](../deploy/BITACORA-SERVIDOR.md).
 
 ## 12. Limitaciones y trabajo futuro
 

@@ -164,7 +164,7 @@ def _agentes() -> list[dict]:
             disp = "desconocido"
         try:
             nombre = a.nombre
-            desc = a.descripcion
+            desc = a.descripcion()  # descripcion es un método del catálogo, no una property
         except Exception:  # noqa: BLE001
             nombre, desc = a.graph, ""
         out.append({"nombre": nombre, "descripcion": (desc or "")[:160],

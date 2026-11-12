@@ -1,0 +1,23 @@
+# Archivo: deploy/systemd/agente-fichas.service
+# Objetivo: Vigilante de fichas A2A — re-aplica las agent cards cuando langgraph las borra
+#           (hot-reload). Mantiene la descripción/skill correctas en agente.etmk.cl.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+[Unit]
+Description=Vigilante de fichas A2A (re-aplica las agent cards cuando langgraph las borra)
+After=agente-langgraph.service
+Wants=agente-langgraph.service
+
+[Service]
+User=web1
+Group=client1
+WorkingDirectory=/var/www/clients/client1/web1/home/etmkuseragente/tarea_1_curso_2
+Environment=HOME=/var/www/clients/client1/web1/home/etmkuseragente
+Environment=PATH=/var/www/clients/client1/web1/home/etmkuseragente/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=A2A_BASE=http://127.0.0.1:2024
+ExecStartPre=/bin/sh -c 'until curl -sf -o /dev/null http://127.0.0.1:2024/ok; do sleep 2; done'
+ExecStart=/var/www/clients/client1/web1/home/etmkuseragente/.local/bin/uv run python tools/configurar_fichas.py --vigilar --grafos agente_ezequiel,agente_cocina
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

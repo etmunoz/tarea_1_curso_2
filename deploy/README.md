@@ -23,6 +23,7 @@ Internet ──HTTPS──> Apache (Let's Encrypt)  ──reverse proxy──>  
 | `monitor.etmk.cl` | `agente-monitor` | 8793 | Backoffice web de accesos al puente (Basic Auth) |
 | `coordinador.etmk.cl` | `agente-coordinador` | 8794 | Chat del coordinador A2A: rutea a cada agente (Basic Auth) |
 | (interno) | `agente-langgraph` | 2024 | `langgraph dev`: grafos nativos (Ezequiel, cocina…). Lo consumen el puente y el coordinador |
+| (interno) | `agente-fichas` | — | Vigilante: re-aplica las agent cards (descripción/skill) cuando `langgraph dev` las borra al hot-reload |
 
 Dependencias: `agente-puente` y `agente-coordinador` esperan a `agente-langgraph` (`:2024`) antes de
 arrancar (`ExecStartPre` hace *poll* a `/ok`).
@@ -61,8 +62,8 @@ sudo install -m 600 /dev/null /etc/agente-monitor.env
 sudo cp deploy/systemd/agente-*.service /etc/systemd/system/
 # revisar User/Group/WorkingDirectory/HOME/PATH si el usuario del VPS es otro
 sudo systemctl daemon-reload
-sudo systemctl enable --now agente-langgraph agente-puente agente-monitor agente-coordinador
-systemctl is-active agente-langgraph agente-puente agente-monitor agente-coordinador
+sudo systemctl enable --now agente-langgraph agente-fichas agente-puente agente-monitor agente-coordinador
+systemctl is-active agente-langgraph agente-fichas agente-puente agente-monitor agente-coordinador
 ```
 
 ### 3. Publicación HTTPS (por subdominio, en ISPConfig)

@@ -31,12 +31,14 @@ import hmac
 import json
 import os
 import smtplib
+import socket
 import ssl
 import sys
 import traceback
 import uuid
 from base64 import b64decode
 from email.message import EmailMessage
+from urllib.parse import urlparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -85,16 +87,63 @@ def _cargar():
     return _graph, _catalogo
 
 
+def _resolver_ip(host: str) -> str:
+    """Objetivo: resolver la IP de un host (best-effort, sin bloquear). Salida: str (vacío si falla)."""
+    if not host:
+        return ""
+    prev = socket.getdefaulttimeout()
+    try:
+        socket.setdefaulttimeout(3)
+        return socket.gethostbyname(host)
+    except Exception:  # noqa: BLE001
+        return ""
+    finally:
+        socket.setdefaulttimeout(prev)
+
+
+def _detalle_destino(cat, elegido: str, ruta: list) -> dict | None:
+    """Objetivo: antecedentes del agente al que se accedió (tipo, grafo, endpoint, host, IP).
+    Entradas: cat (módulo catálogo), elegido (nombre del agente), ruta (pasos). Salida: dict | None."""
+    if not elegido or elegido.lower().startswith("ninguno"):
+        return None
+    a = None
+    try:
+        for x in cat.construir_catalogo():
+            try:
+                if x.nombre == elegido:
+                    a = x
+                    break
+            except Exception:  # noqa: BLE001
+                continue
+    except Exception:  # noqa: BLE001
+        pass
+    if a is None:  # no se pudo mapear: al menos informa local/remoto por la ruta
+        tipo = "local" if "agente_local" in ruta else ("remoto" if "agente_remoto" in ruta else "?")
+        return {"tipo": tipo, "grafo": "", "endpoint": "", "host": "", "ip": ""}
+    base = (a.base_url or "").rstrip("/")
+    host = urlparse(base).hostname or ""
+    d = {"tipo": "local" if a.local else "remoto", "grafo": a.graph,
+         "endpoint": base, "host": host, "ip": _resolver_ip(host)}
+    if a.local:  # el agente corre en este mismo servidor: muestra su identidad pública
+        d["servidor"] = os.environ.get("COORD_SERVIDOR", "este servidor (VPS)")
+        if os.environ.get("COORD_SERVIDOR_IP"):
+            d["ip_publica"] = os.environ["COORD_SERVIDOR_IP"]
+    return d
+
+
 def _preguntar(texto: str, thread: str) -> dict:
     from langchain_core.messages import HumanMessage  # noqa: PLC0415
-    g, _ = _cargar()
+    g, cat = _cargar()
     r = g.invoke({"messages": [HumanMessage(content=texto)]},
                  {"configurable": {"thread_id": thread or str(uuid.uuid4())}})
+    elegido = r.get("elegido", "")
+    ruta = r.get("ruta", [])
     return {
         "respuesta": r.get("respuesta", ""),
-        "ruta": r.get("ruta", []),
-        "elegido": r.get("elegido", ""),
+        "ruta": ruta,
+        "elegido": elegido,
         "motivo": r.get("motivo", ""),
+        "destino": _detalle_destino(cat, elegido, ruta),
     }
 
 
@@ -411,6 +460,25 @@ function pintarRuteo(d){
     '<div class="agente"><span class="av" style="background:linear-gradient(135deg,'+mt.c+',rgba(255,255,255,.08))">'+mt.e+'</span>'+elegido+'</div>'+
     (d.motivo?'<div class="motivo">«'+d.motivo+'»</div>':'');
   ruteo.appendChild(dec);
+  if(d.destino){
+    const t=d.destino;
+    const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const filas=[
+      ['Acceso', t.tipo==='local'?'🏠 Local (este servidor)':(t.tipo==='remoto'?'🌐 Remoto':'—')],
+      ['Servidor', t.servidor],
+      ['Grafo', t.grafo],
+      ['Endpoint', t.endpoint],
+      ['Host', t.host],
+      ['IP', t.ip_publica||t.ip],
+    ].filter(f=>f[1]);
+    if(filas.length){
+      const det=document.createElement('div');
+      det.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid var(--bd,#2c2f3a);border-radius:12px;background:rgba(127,127,160,.06);font-size:12px';
+      det.innerHTML='<div style="text-transform:uppercase;letter-spacing:.04em;opacity:.55;font-size:11px;margin-bottom:6px">Antecedentes del acceso</div>'+
+        filas.map(f=>'<div style="display:flex;gap:10px;justify-content:space-between;padding:2px 0"><span style="opacity:.6;white-space:nowrap">'+f[0]+'</span><span style="font-family:ui-monospace,Menlo,monospace;text-align:right;word-break:break-all">'+esc(f[1])+'</span></div>').join('');
+      ruteo.appendChild(det);
+    }
+  }
   const steps=document.createElement('div');steps.className='steps';
   (d.ruta||[]).forEach((p,idx)=>{
     const info=PASOS[p]||{i:'•',t:p,c:'#9aa3b6'};

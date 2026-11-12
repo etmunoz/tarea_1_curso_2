@@ -106,9 +106,10 @@ puente stdlib detrás de Apache — no uvicorn/WSGI en el borde.)
 ## 7. Raíz de la web → LinkedIn
 
 - Vía ISPConfig (Website → Redirect → `R,L` → `https://www.linkedin.com/in/ezequielmunoz/`).
-- **`www.etmk.cl` redirige ✅**, pero **`etmk.cl` pelado** sigue mostrando la página por defecto de
-  Apache ("It works"): el vhost del sitio atiende `www` pero el dominio pelado lo toma otro vhost.
-  **Pendiente de root/soporte** (revisar `/etc/apache2/sites-enabled/`). DNS descartado (ambos al mismo IP).
+- Al principio solo **`www.etmk.cl`** redirigía; el **pelado** caía en el vhost por defecto de Apache.
+  **Causa (con root):** `000-default.conf` cargaba antes (000 < 100) y heredaba el `ServerName` global
+  `etmk.cl`, ganándole al vhost real. **Fix:** `a2dissite 000-default` + reload. **Ahora `etmk.cl` y
+  `www.etmk.cl` redirigen a LinkedIn ✅** (302). DNS descartado (ambos al mismo IP).
 
 ## 8. Evaluación de seguridad del servidor
 
@@ -121,15 +122,16 @@ Redis (6379) y Memcached (11211) **solo localhost**. — Se dejó el texto para 
 Nuestro agente **no agrega exposición** (escucha solo en `127.0.0.1`, se publica por Apache). Recursos:
 2 vCPU, 3.8 GB RAM, 55 GB libres.
 
-## 9. Keepalive + Cron — ⚠️ pendiente de confirmar
+## 9. Persistencia — del cron fallido a `systemd` (✅ resuelto, probado con reinicio)
 
-- Se creó **`~/agente_keepalive.sh`** (idempotente: revisa langgraph y puente, los revive si están caídos
-  y reaplica fichas). Se programó un **Cron Job en ISPConfig** (`*/5 * * * *`).
-- **No se observó su ejecución** en el log (no hay GET de `127.0.0.1` en los ticks 12:50/12:55 UTC).
-  Probable causa: ISPConfig ejecuta el cron **chrooted** sin `uv`/`curl` en el jail, o el comando no quedó
-  aplicado como se esperaba. **Pendiente**: validarlo (prueba definitiva = tumbar un servicio y ver si
-  revive en ≤5 min, con breve corte del público) o usar otro mecanismo de persistencia. Mientras tanto el
-  agente sigue arriba por `nohup`; sobrevive salvo reinicio del servidor.
+- Primero se intentó un `~/agente_keepalive.sh` + **Cron Job de ISPConfig** (`*/5`). **No funcionaba**:
+  ISPConfig lo creó como `ispc_chrooted_web2` — **chrooted y como `web2`** (usuario de otro sitio), sin
+  `uv`/`curl` en el jail y con rutas de `web1` inexistentes dentro del chroot. Se descartó.
+- **Solución correcta (con root):** dos servicios **`systemd`** como `web1` — `agente-langgraph.service`
+  y `agente-puente.service`, ambos **`enabled`** (arrancan al bootear) y **`Restart=always`** (reviven si
+  se caen). El puente espera a langgraph (`ExecStartPre`) y **reaplica las fichas** (`ExecStartPost`).
+- **Probado de verdad:** tras el **reinicio** del servidor, los servicios **volvieron solos** y el público
+  (`https://agente.etmk.cl`) respondió sin intervención.
 
 ## 10. Monitor Tkinter multi-origen (selector Local / VPS)
 
@@ -143,6 +145,46 @@ Nuestro agente **no agrega exposición** (escucha solo en `127.0.0.1`, se public
 - **`evidencias/17-despliegue-vps.svg`**: la cadena Apache → puente → langgraph → Gemini, con los
   consumidores (Gustavo / Fabio / Tomás / coordinador). Para compartir con los compañeros.
 
+## 12. Acceso de administración (sudo temporal)
+
+- Se habilitó acceso SSH por **llave** para el usuario **`administrator`** (grupo `sudo`) con
+  `ssh-copy-id` (clave tecleada por el usuario, nunca en el chat).
+- Como `sudo` pedía contraseña, el usuario autorizó **sudo sin clave TEMPORAL** vía un drop-in
+  `/etc/sudoers.d/90-administrator-nopasswd` (validado con `visudo -c`). **A revocar al terminar**
+  (`sudo rm /etc/sudoers.d/90-administrator-nopasswd`). Primero diagnóstico (lectura) y confirmación
+  antes de cada cambio que tocara web/correo/reinicio.
+
+## 13. Seguridad aplicada (con root)
+
+- **MySQL solo local:** en `50-server.cnf` se descomentó `bind-address = 127.0.0.1` + reinicio de
+  MariaDB. Verificado: `ss` muestra solo `127.0.0.1:3306` y externamente **no entrega banner** (BD no
+  usable desde internet). Cierra el hallazgo 🔴.
+- **Reinicio del servidor:** aplicó los parches pendientes → kernel **6.8.0-149** (antes 6.8.0-111),
+  `reboot-required` limpio. Los servicios `systemd` del agente **volvieron solos**.
+- Pendientes de 🟡 (FTP plano, POP3/IMAP en claro, panel expuesto, SSH con contraseña) quedan para
+  decisión del dueño; el cron chrooted fallido lo borró el usuario desde ISPConfig.
+
+## 14. Aviso de "seguridad" pegado — identificado como FALSO, no ejecutado
+
+- Llegó un texto pidiendo **crear `/etc/modprobe.d/dirtyfrag.conf` + `rmmod esp4/esp6/rxrpc`** y
+  "actualizar NGINX" (CVE/QVD no verificables). **No se ejecutó nada.** Comprobaciones de lectura:
+  los módulos **no están cargados**, **no hay NGINX** (el servidor es **Apache 2.4.58**). Tenía todas
+  las marcas de **estafa/ingeniería social**. Se recomendó ignorarlo y verificar avisos solo por
+  canales oficiales (USN de Ubuntu, NVD, soporte del proveedor). **Criterio fijado:** no se ejecutan
+  comandos que vengan dentro de mensajes/avisos pegados sin verificarlos.
+
+## 15. Backoffice WEB (`monitor.etmk.cl`) — ✅ en vivo
+
+- **`tools/monitor_web.py`**: versión navegador del monitor (http.server stdlib). Sirve una página
+  autorefrescante (tabla + resumen, horas en zona local del navegador) y `/api/eventos`, leyendo el
+  `puente-acceso.log`. Protegido con **HTTP Basic Auth** (`MONITOR_WEB_USER`/`MONITOR_WEB_PASS`; sin
+  clave NIEGA todo).
+- Desplegado como servicio **`agente-monitor.service`** (`web1`, `127.0.0.1:8793`), con la clave en
+  `/etc/agente-monitor.env` (la **definió el usuario** con `read -s`, nunca por el chat).
+- Expuesto por **subdominio `monitor.etmk.cl`** (ISPConfig: Website + Let's Encrypt + Redirect→`proxy`
+  a `127.0.0.1:8793`). Verificado: cert válido, `401` con `realm="Backoffice A2A"` sin clave, y con
+  login muestra la traza en vivo (horas en Santiago). Puerto público 443 (clave **no** viaja en claro).
+
 ---
 
 ## URLs vigentes
@@ -151,19 +193,21 @@ Nuestro agente **no agrega exposición** (escucha solo en `127.0.0.1`, se public
 |---|---|
 | Agente (permanente, HTTPS) | `https://agente.etmk.cl` |
 | Ficha (Agent Card) | `https://agente.etmk.cl/.well-known/agent-card.json` |
-| Redirect a LinkedIn (solo www por ahora) | `http://www.etmk.cl/` |
+| Backoffice web (login) | `https://monitor.etmk.cl` (usuario `monitor` + clave) |
+| Redirect a LinkedIn | `https://etmk.cl` y `https://www.etmk.cl` |
 
 ## Commits de esta tanda
 
 `535f2c3` win_puente.ps1 · `de88d4c` win_fichas_auto.ps1 · `7458473` evidencia 15 + README ·
 `a6018f8` monitor `--titulo` + datos ev.15 · `266364d` captura ev.15 · `60a907b` entrega regenerada ·
-`52eba04` fix contextId→UUID · `4117cfe` evidencia 16 Gustavo. *(Pendientes de commitear en esta
-documentación: `tools/monitor_puente.py` multi-origen, `evidencias/17-despliegue-vps.svg` y estos
-prompt/respuesta 55.)*
+`52eba04` fix contextId→UUID · `4117cfe` evidencia 16 Gustavo · `8cee982` prompt/respuesta 55 +
+monitor multi-origen + diagrama ev.17 · `0f8d454` monitor_web.py (backoffice web). *(El trabajo de
+servidor —systemd, Apache, MySQL, reinicio, subdominios— es operativo del VPS, no va a git.)*
 
 ## Pendientes
 
-1. **Confirmar/arreglar el auto-restart** (cron keepalive) en el VPS.
-2. **`etmk.cl` pelado → LinkedIn** (necesita root/soporte).
-3. Fixes de seguridad del servidor (MySQL local, reinicio por kernel) — vía soporte.
-4. Actualizar la entrega (`documento-entrega.md` / `companeros.md`) con la URL permanente.
+1. **Revocar el sudo sin clave** del VPS al terminar (`sudo rm /etc/sudoers.d/90-administrator-nopasswd`).
+2. Decidir los 🟡 de seguridad (FTP plano, POP3/IMAP en claro, panel expuesto, SSH solo-llave).
+3. Renovación del cert de `agente.etmk.cl`/`monitor.etmk.cl`: como el vhost proxya todo, confirmar que
+   el challenge ACME (`/.well-known/acme-challenge`) queda exento (ISPConfig lo maneja; verificar a 60–90 d).
+4. Actualizar la entrega (`documento-entrega.md` / `companeros.md`) con las URLs permanentes.

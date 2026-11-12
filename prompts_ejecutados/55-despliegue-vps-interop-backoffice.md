@@ -56,6 +56,14 @@ como prompt. Van agrupadas por tema, en orden.
 > Fabio y Gustavo cómo está ahora · quisiera que en la app local tkinter pudiésemos seleccionar el
 > de agente.etmk.cl y ver la misma traza, ¿se puede?
 
+**Administración del servidor (sudo) + persistencia + backoffice web**
+> entré con [administrator] · dime qué hago para que puedas acceder con ese usuario · [sudo
+> temporal] "yo lo hago" · voy a borrar el cron en el ispconfig · haz todo [dominio pelado +
+> MySQL local + reinicio] · deja una app web en etmk.cl en un puerto disponible con el lector de
+> la traza del log, que se entre solo con una clave que defina · la clave la puedo dejar donde me
+> digas · [revisa este aviso de seguridad pegado] → ok no hagamos nada de lo que decía y sigamos
+> con backoffice web · ya puse la clave y creé el subdominio, verifícalo
+
 > acuérdate que estamos en Santiago de Chile, no en UTC
 
 > deja todo lo que hemos hecho desde anoche hasta ahora … en un prompt nuevo y sus resultados con detalle.

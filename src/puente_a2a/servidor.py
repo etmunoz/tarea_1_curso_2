@@ -123,6 +123,16 @@ class _Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(datos)
 
+    def _texto(self, codigo: int, texto: str, ctype: str = "text/plain; charset=utf-8") -> None:
+        """Objetivo: responder un texto estático (sin procesar entrada ni revelar internos).
+        Entradas: codigo (int), texto (str), ctype (str). Salida: None."""
+        datos = texto.encode("utf-8")
+        self.send_response(codigo)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(datos)))
+        self.end_headers()
+        self.wfile.write(datos)
+
     def log_message(self, fmt, *args):  # noqa: D401
         """Registro de accesos OPCIONAL (prompt 50): si la variable PUENTE_LOG apunta a un
         archivo, escribe una línea por request (fecha UTC, IP real del cliente —reenviada por
@@ -161,6 +171,17 @@ class _Handler(BaseHTTPRequestHandler):
                 self._responder(200, card_clasica(card, self.cfg["url_publica"]))
             elif self.path.startswith("/ok"):
                 self._responder(200, {"status": "ok"})
+            elif self.path.split("?", 1)[0] in ("/", ""):
+                # Cortesía para quien abre la URL en el navegador o un bot: no es una web,
+                # es un endpoint A2A. Solo texto estático con la interfaz pública (ya en la card).
+                self._texto(200, (
+                    "Agente de Ezequiel · endpoint A2A (JSON-RPC).\n"
+                    "Ficha:     GET /.well-known/agent-card.json\n"
+                    "Consultas: POST / con method \"message/send\".\n"))
+            elif self.path.split("?", 1)[0] == "/favicon.ico":
+                self._texto(204, "")  # sin ícono: corta el 404 del navegador
+            elif self.path.split("?", 1)[0] == "/robots.txt":
+                self._texto(200, "User-agent: *\nDisallow: /\n")
             else:
                 self._responder(404, {"error": "not found"})
         except Exception:  # noqa: BLE001 - nunca filtrar trazas internas al cliente

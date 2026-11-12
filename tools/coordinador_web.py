@@ -180,7 +180,7 @@ AGENTES_CFG = [
     ("tomas", "agente_tomas", True),
     ("fabio", "agente_fabio", False),
     ("gustavo", "agente_meteorologo", False),
-    ("proteinman", "agente_proteinman", False),
+    ("proteinman", "proteinman", False),
 ]
 
 

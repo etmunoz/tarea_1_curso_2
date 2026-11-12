@@ -69,3 +69,4 @@ orden desde el inicio. Cada archivo `NN-slug.md` es un prompt; su salida está e
 | 52 | [Confirmar interop contra el repo de Gustavo + cache de método](52-confirmar-repo-gustavo-y-cache-metodo.md) | [respuesta](../respuestas/52-confirmar-repo-gustavo-y-cache-metodo.md) |
 | 53 | [Fichas automáticas (vigilante que las re-aplica solo)](53-fichas-automaticas-vigilante.md) | [respuesta](../respuestas/53-fichas-automaticas-vigilante.md) |
 | 54 | [Windows: evidencias contra el Mac con el código final (guardias)](54-windows-evidencias-con-guardias.md) | [respuesta](../respuestas/54-windows-evidencias-con-guardias.md) |
+| 55 | [Despliegue permanente en VPS (agente.etmk.cl), interop y backoffice multi-origen](55-despliegue-vps-interop-backoffice.md) | [respuesta](../respuestas/55-despliegue-vps-interop-backoffice.md) |

@@ -227,9 +227,12 @@ def main() -> None:
     """Objetivo: levantar el puente. Entradas: ninguna (lee el entorno). Salida: None (sirve)."""
     cfg = _config()
     _Handler.cfg = cfg
-    servidor = ThreadingHTTPServer(("0.0.0.0", cfg["port"]), _Handler)
+    # Por defecto escucha SOLO en localhost (se publica por un proxy TLS como Apache); así no
+    # queda expuesto directo a internet. Override explícito con PUENTE_HOST si se necesita.
+    host = os.environ.get("PUENTE_HOST", "127.0.0.1")
+    servidor = ThreadingHTTPServer((host, cfg["port"]), _Handler)
     print(f"Puente A2A clásico para «{cfg['grafo']}» → {cfg['base']}")
-    print(f"  escuchando en http://127.0.0.1:{cfg['port']}  · card: /.well-known/agent-card.json")
+    print(f"  escuchando en http://{host}:{cfg['port']}  · card: /.well-known/agent-card.json")
     print(f"  url pública anunciada: {cfg['url_publica']}")
     print("  (Ctrl+C para parar)")
     try:

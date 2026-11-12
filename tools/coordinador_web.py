@@ -410,9 +410,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d2ff}
 <script>
 let thread = (sessionStorage.getItem('coord_thread') || (()=>{const t=crypto.randomUUID();sessionStorage.setItem('coord_thread',t);return t})());
 const CHAT_VACIO='<div class="empty">Escribe una pregunta — el supervisor la enviará al agente<br>que corresponda (Ezequiel, Tomás, Fabio, Gustavo…).</div>';
-const RUTEO_VACIO='<div class="empty">Aquí verás, por cada pregunta, a qué<br>agente enrutó el supervisor y el camino<br>que recorrió.</div>';
+const RUTEO_VACIO='<div class="empty">Aquí verás, por cada pregunta, a qué<br>agente enrutó el supervisor y el camino<br>que recorrió.<br><small style="opacity:.7">Cada respuesta guarda su ruteo: toca «🧭 Ver ruteo» para traerlo de vuelta.</small></div>';
+// Historial de la conversación (persistente en la sesión del tab): permite re-desplegar el ruteo.
+let historial=[];
+function guardarHist(){try{sessionStorage.setItem('coord_hist_'+thread,JSON.stringify(historial.slice(-60)));}catch(e){}}
+function restaurarHist(){
+  let h=[];try{h=JSON.parse(sessionStorage.getItem('coord_hist_'+thread)||'[]');}catch(e){h=[];}
+  if(!Array.isArray(h)||!h.length)return;
+  historial=h;let ultimo=null;
+  h.forEach(x=>{ if(x.rol==='me')burbuja('me',x.texto); else {burbuja('bot',x.texto,x.nombre,x.d); if(x.d)ultimo=x.d;} });
+  if(ultimo)pintarRuteo(ultimo);
+}
 function nuevaConversacion(){
-  thread=crypto.randomUUID();sessionStorage.setItem('coord_thread',thread);
+  thread=crypto.randomUUID();sessionStorage.setItem('coord_thread',thread);historial=[];
   chat.innerHTML=CHAT_VACIO;ruteo.innerHTML=RUTEO_VACIO;
   const inp=document.getElementById('inp');if(inp){inp.value='';inp.focus();}
 }
@@ -458,7 +468,12 @@ const PASOS={
   'sin_agente':{i:'🤷',t:'Sin agente',c:'#9aa3b6'},
   'guardia_salida':{i:'🛡️',t:'Guardia de salida',c:'#fbbf24'},
 };
-function burbuja(cls, texto, nombre){
+function botonChat(txt, fn){
+  const b=document.createElement('button');b.type='button';b.textContent=txt;
+  b.style.cssText='font-size:12px;padding:4px 10px;border-radius:8px;cursor:pointer;border:1px solid var(--bd,#3a3d46);background:transparent;color:inherit;opacity:.85';
+  b.addEventListener('click',fn);return b;
+}
+function burbuja(cls, texto, nombre, d){
   if(chat.querySelector('.empty'))chat.querySelector('.empty').remove();
   const m=document.createElement('div');m.className='msg '+cls;
   const av=document.createElement('div');av.className='av';
@@ -467,9 +482,10 @@ function burbuja(cls, texto, nombre){
   else{const mt=meta(nombre);av.textContent=mt.e;av.style.background='linear-gradient(135deg,'+mt.c+',rgba(255,255,255,.05))';
        if(nombre){const w=document.createElement('div');w.className='who';w.textContent=nombre;bub.appendChild(w);}
        bub.appendChild(document.createTextNode(texto));
-       if(nombre && window.__correoOK){const a=document.createElement('button');a.type='button';a.textContent='✉️ Enviar por correo';
-         a.style.cssText='margin-top:8px;display:block;font-size:12px;padding:4px 10px;border-radius:8px;cursor:pointer;border:1px solid var(--bd,#3a3d46);background:transparent;color:inherit;opacity:.85';
-         a.addEventListener('click',()=>abrirMail(texto,nombre));bub.appendChild(a);}}
+       const acc=document.createElement('div');acc.style.cssText='margin-top:8px;display:flex;gap:8px;flex-wrap:wrap';
+       if(d && ((d.ruta&&d.ruta.length)||d.elegido))acc.appendChild(botonChat('🧭 Ver ruteo',()=>pintarRuteo(d)));
+       if(nombre && window.__correoOK)acc.appendChild(botonChat('✉️ Enviar por correo',()=>abrirMail(texto,nombre)));
+       if(acc.children.length)bub.appendChild(acc);}
   m.appendChild(av);m.appendChild(bub);chat.appendChild(m);chat.scrollTop=chat.scrollHeight;return bub;
 }
 function typing(){
@@ -531,16 +547,19 @@ document.getElementById('form').addEventListener('submit', async(e)=>{
   const inp=document.getElementById('inp'),btn=document.getElementById('btn');
   const texto=inp.value.trim();if(!texto)return;
   inp.value='';btn.disabled=true;
-  burbuja('me',texto);typing();
+  burbuja('me',texto);historial.push({rol:'me',texto});typing();
   try{
     const r=await fetch('api/preguntar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({texto,thread})});
     const d=await r.json();
     document.getElementById('typing')?.remove();
-    burbuja('bot', d.respuesta || d.error || '(sin respuesta)', d.elegido);
+    const resp=d.respuesta || d.error || '(sin respuesta)';
+    burbuja('bot', resp, d.elegido, d);
+    historial.push({rol:'bot',texto:resp,nombre:d.elegido,d});guardarHist();
     pintarRuteo(d);
   }catch(err){
     document.getElementById('typing')?.remove();
     burbuja('bot','Error de conexión: '+err);
+    historial.push({rol:'bot',texto:'Error de conexión: '+err,nombre:'',d:null});guardarHist();
   }finally{btn.disabled=false;inp.focus();}
 });
 // --- configuración de URLs de agentes ---
@@ -596,6 +615,7 @@ document.getElementById('mailSend').addEventListener('click',()=>{
    .finally(()=>{b.disabled=false;b.textContent='Enviar';});
 });
 cargarCorreo();
+restaurarHist();
 cargarChips();setInterval(cargarChips,30000);
 </script></body></html>"""
 

@@ -29,11 +29,16 @@ puertos, sin nada por TCP— y que el coordinador trata las respuestas remotas c
 salida y comunicación A2A, **resiliencia** ante agentes caídos y un **allow-list** de
 agentes permitidos.
 
+Como cierre, llevamos el agente más allá de la demo: lo dejamos **desplegado de forma
+permanente en un VPS propio** con **HTTPS y URL fija** (`https://agente.etmk.cl`), con
+auto-arranque por `systemd` y un **backoffice web** del log (`https://monitor.etmk.cl`).
+Ver la sección **11.1**.
+
 - **Stack:** uv + Python 3.13 · LangGraph (A2A nativo, `langgraph dev` en `:2024`) ·
   Gemini vía `langchain-google-genai` (embeddings `models/gemini-embedding-001`) ·
   Redis (redis-stack dockerizado) + `langchain-redis` para el RAG.
 - **Repositorio (público):** https://github.com/etmunoz/tarea_1_curso_2
-- **Pruebas:** `uv run pytest` → **70 passed, 1 skipped**.
+- **Pruebas:** `uv run pytest` → **148 passed, 1 skipped**.
 
 ## 1. Identificación
 
@@ -302,6 +307,40 @@ __start__ → guardia_entrada → enrutar → {consultar | sin_agente} → guard
 - `evidencias/09-diagramas.md` — índice con el **mermaid auténtico** del grafo (extraído
   del grafo compilado) + los dos SVG.
 
+## 11.1 Despliegue permanente en un VPS (`agente.etmk.cl`)
+
+Además de la demo por túneles efímeros (Mac ↔ Windows ↔ Gustavo), dejamos **nuestro
+Agente de Ezequiel publicado de forma permanente** en un VPS propio (Ubuntu 24 + ISPConfig,
+dominio `etmk.cl`), con **HTTPS y URL fija** — así los compañeros lo consumen sin depender
+de que una máquina esté encendida ni de túneles que caducan.
+
+**URLs permanentes:**
+
+| Qué | URL |
+|---|---|
+| Agente (A2A, JSON-RPC `message/send`) | `https://agente.etmk.cl` |
+| Agent Card (ficha) | `https://agente.etmk.cl/.well-known/agent-card.json` |
+| Backoffice web (login) | `https://monitor.etmk.cl` (usuario `monitor` + clave) |
+
+**Arquitectura del despliegue (cadena de 3 capas, todo en el VPS):**
+
+```
+Internet → Apache (reverse proxy + Let's Encrypt, :443)
+        → Puente A2A clásico (Python http.server, 127.0.0.1:8790, guardrails + log de accesos)
+        → langgraph dev (uvicorn/ASGI, 127.0.0.1:2024) → agente_ezequiel / agente_cocina → Gemini
+```
+
+- El agente escucha **solo en `127.0.0.1`**; se publica por Apache con **certificado Let's Encrypt**
+  (ver `evidencias/17-despliegue-vps.svg`).
+- **Persistencia real:** dos servicios **`systemd`** (`agente-langgraph`, `agente-puente`), `enabled`
+  (arrancan al bootear) y `Restart=always` (reviven si se caen). **Probado con un reinicio** del
+  servidor: volvieron solos. Esto reemplaza el modo manual (`configurar_fichas.py` a mano) del taller.
+- **Backoffice web** (`tools/monitor_web.py`): la misma traza del log de accesos que el monitor Tkinter,
+  pero en el navegador, autorefrescante y protegida con **HTTP Basic Auth** (detrás de HTTPS).
+- **Seguridad del despliegue:** MySQL atado a `127.0.0.1`, el token `A2A_TOKEN` nunca se envía a
+  terceros, y los avisos de seguridad no verificados **no se ejecutan**. El `.env` (con la
+  `GOOGLE_API_KEY`) vive fuera del docroot público, permisos `600`, nunca en git.
+
 ## 12. Limitaciones y trabajo futuro
 
 Este trabajo es un prototipo funcional y honesto; dejamos registradas sus limitaciones
@@ -309,11 +348,14 @@ y cómo se extendería.
 
 **Limitaciones actuales:**
 
-- **Túneles efímeros.** Usamos *quick tunnels* de Cloudflare (`trycloudflare.com`): la
-  URL cambia en cada corrida y hay que re-compartirla, y no tienen autenticación ni DNS
-  fijo. Cualquiera con la URL puede hablarle al agente mientras el túnel vive.
-- **Fichas volátiles.** `langgraph dev` recarga en caliente y **borra las Agent Cards**;
-  hoy se recuperan corriendo `configurar_fichas.py` a mano tras cada cambio.
+- **Túneles efímeros (en la demo).** Para la ronda Mac ↔ Windows ↔ Gustavo usamos *quick
+  tunnels* de Cloudflare (`trycloudflare.com`): la URL cambia en cada corrida y no tiene
+  autenticación ni DNS fijo. **Ya resuelto para nuestro agente** con el despliegue permanente
+  del **§11.1** (`https://agente.etmk.cl`, HTTPS y URL fija); los túneles quedan solo para la
+  demo entre equipos.
+- **Fichas volátiles.** `langgraph dev` recarga en caliente y **borra las Agent Cards**; en
+  la demo se recuperan con `configurar_fichas.py` (modo `--vigilar`). En el VPS (§11.1) el
+  servicio `systemd` las **reaplica solo** tras cada arranque.
 - **Datos simulados.** Varios catálogos (técnicas/modelos de Ezequiel, precios de cocina)
   son datos de ejemplo, no fuentes de producción.
 - **Guardrails heurísticos.** La detección de inyección/jailbreak y de secretos es por

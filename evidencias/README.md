@@ -27,5 +27,7 @@ Las que requieren el agente vivo necesitan `GOOGLE_API_KEY` + `uv run langgraph 
 | `13-interop-gustavo-mac.md` | interoperabilidad NOSOTROS → agente de Gustavo (dialecto `SendMessage`) | cliente A2A contra el túnel de Gustavo |
 | `14-ronda-mac-windows-gustavo-mac.md` | ronda end-to-end Mac ↔ Windows ↔ Gustavo (3 orígenes por A2A) | `./scripts/mac_coordinador.sh "<túnel-windows>"` con el catálogo cargado |
 | `15-backoffice-tomas-mac.md` | el monitor de Tomás (Windows) registra el tráfico entrante desde el Mac | `win_puente.ps1` + `win_fichas_auto.ps1` en Windows; cliente A2A desde el Mac |
+| `16-e2e-gustavo-mac.md` | interop A2A end-to-end con Gustavo (para enviarle): discovery + `message/send` + guardrails + compat de método | `curl` contra la URL pública del puente + suite `pytest` de interop |
+| `17-despliegue-vps.svg` | arquitectura del despliegue permanente: Apache → puente → langgraph → Gemini (VPS) | diagrama del grupo |
 
 > Mientras no existan, el empaquetado las marca como faltantes (no bloquea).

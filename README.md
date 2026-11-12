@@ -28,6 +28,17 @@ uv run langgraph dev          # levanta el agente de viajes en http://127.0.0.1:
 > el agente se construye con Gemini al importar. La clave va **solo** en `.env`
 > (ignorado por git); nunca en el código ni en `.env.example`.
 
+## Despliegue permanente (VPS)
+
+Además de la demo por túneles efímeros, el **Agente de Ezequiel** está publicado de forma
+permanente, con **HTTPS y URL fija**:
+
+- **Agente (A2A):** https://agente.etmk.cl · ficha en `/.well-known/agent-card.json`
+- **Backoffice web del log (login):** https://monitor.etmk.cl
+
+Corre en un VPS (Ubuntu 24) detrás de Apache (reverse proxy + Let's Encrypt), con auto-arranque
+por `systemd`. Detalle en [`entrega/documento-entrega.md`](entrega/documento-entrega.md) §11.1.
+
 ## Comandos útiles (con uv)
 
 ```bash

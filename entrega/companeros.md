@@ -10,6 +10,11 @@
 Agentes de otros integrantes/grupos que nuestro coordinador puede invocar por A2A (se suman por
 `URLS_AGENTES`). La URL del túnel es efímera: se intercambia al momento de la ronda.
 
+> **Nuestro agente, para que los compañeros lo consuman (URL permanente):**
+> `https://agente.etmk.cl` — A2A clásico, `POST /` con `message/send`, ficha en
+> `https://agente.etmk.cl/.well-known/agent-card.json`. Reemplaza al túnel efímero del Mac;
+> está siempre activo (VPS, HTTPS). Detalle en `documento-entrega.md` §11.1.
+
 ## agente_meteorologo — autor: Gustavo Reyes
 
 - **Skill:** pronósticos (ficticios) del clima de hoy y de los próximos 7 días para **Santiago,
@@ -41,4 +46,6 @@ Agentes de otros integrantes/grupos que nuestro coordinador puede invocar por A2
   su agente, y la ronda end-to-end del coordinador con `agente_meteorologo` en el catálogo).
 
 > Para que Gustavo consuma NUESTRO agente (sentido inverso) se usa el puente del prompt 49
-> (ver `src/puente_a2a/` y `guia_para_gustavo.md`).
+> (ver `src/puente_a2a/` y `guia_para_gustavo.md`). En producción ese puente está publicado de
+> forma permanente en **`https://agente.etmk.cl`** (ver `documento-entrega.md` §11.1), así que ya
+> no hace falta pasar una URL de túnel nueva cada vez.

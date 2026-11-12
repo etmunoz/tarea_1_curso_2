@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 690" font-family="Helvetica,Arial,sans-serif">
+  <rect x="0" y="0" width="1000" height="690" fill="#ffffff"/>
+  <text x="500" y="38" text-anchor="middle" font-size="24" font-weight="bold" fill="#14243b">Despliegue actual · Agente de Ezequiel (A2A)</text>
+  <text x="500" y="64" text-anchor="middle" font-size="15" fill="#5a6b82">URL fija con HTTPS, siempre activa en un VPS — https://agente.etmk.cl</text>
+
+  <!-- Consumidores -->
+  <rect x="28" y="150" width="236" height="300" rx="12" fill="#eef3fb" stroke="#4b6fa5" stroke-width="1.5"/>
+  <text x="146" y="178" text-anchor="middle" font-size="16" font-weight="bold" fill="#23395b">Consumidores A2A</text>
+  <rect x="48" y="196" width="196" height="54" rx="8" fill="#ffffff" stroke="#9db4d4"/>
+  <text x="146" y="217" text-anchor="middle" font-size="13" font-weight="bold" fill="#23395b">Gustavo</text>
+  <text x="146" y="235" text-anchor="middle" font-size="11.5" fill="#55657c">agente_meteorologo (SDK clásico)</text>
+  <rect x="48" y="262" width="196" height="46" rx="8" fill="#ffffff" stroke="#9db4d4"/>
+  <text x="146" y="283" text-anchor="middle" font-size="13" font-weight="bold" fill="#23395b">Fabio · Tomás</text>
+  <text x="146" y="299" text-anchor="middle" font-size="11.5" fill="#55657c">clientes A2A / langgraph</text>
+  <rect x="48" y="320" width="196" height="46" rx="8" fill="#ffffff" stroke="#9db4d4"/>
+  <text x="146" y="341" text-anchor="middle" font-size="13" font-weight="bold" fill="#23395b">Coordinador (Mac)</text>
+  <text x="146" y="357" text-anchor="middle" font-size="11.5" fill="#55657c">supervisor multi-agente</text>
+  <text x="146" y="398" text-anchor="middle" font-size="11.5" fill="#55657c">Hablan JSON-RPC:</text>
+  <text x="146" y="416" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#2f6b3a">message/send</text>
+  <text x="146" y="433" text-anchor="middle" font-size="11.5" fill="#55657c">(y SendMessage de Gustavo)</text>
+
+  <!-- Flecha consumidores -> VPS -->
+  <line x1="264" y1="300" x2="330" y2="300" stroke="#2f6b3a" stroke-width="2.5"/>
+  <polygon points="330,300 318,294 318,306" fill="#2f6b3a"/>
+  <text x="297" y="290" text-anchor="middle" font-size="11" fill="#2f6b3a">HTTPS</text>
+
+  <!-- VPS -->
+  <rect x="330" y="96" width="644" height="560" rx="14" fill="#f7f9fc" stroke="#14243b" stroke-width="2"/>
+  <text x="652" y="122" text-anchor="middle" font-size="16" font-weight="bold" fill="#14243b">VPS · Ubuntu 24 · etmk.cl  (69.197.134.192)</text>
+
+  <!-- Apache -->
+  <rect x="360" y="146" width="584" height="96" rx="10" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="652" y="172" text-anchor="middle" font-size="16" font-weight="bold" fill="#8e2a20">Apache — reverse proxy + Let's Encrypt (TLS)</text>
+  <text x="652" y="194" text-anchor="middle" font-size="13" fill="#7a4a44">Puerto público :443 · candado válido</text>
+  <text x="652" y="214" text-anchor="middle" font-size="13" font-weight="bold" fill="#8e2a20">https://agente.etmk.cl</text>
+  <text x="652" y="232" text-anchor="middle" font-size="12" fill="#7a4a44">(además: www.etmk.cl → LinkedIn)</text>
+
+  <line x1="652" y1="242" x2="652" y2="288" stroke="#c0392b" stroke-width="2.5"/>
+  <polygon points="652,288 646,276 658,276" fill="#c0392b"/>
+  <text x="762" y="270" text-anchor="middle" font-size="11.5" fill="#8e2a20">ProxyPass → 127.0.0.1:8790</text>
+
+  <!-- Puente -->
+  <rect x="360" y="292" width="584" height="104" rx="10" fill="#eafaf1" stroke="#1e8449" stroke-width="1.5"/>
+  <text x="652" y="318" text-anchor="middle" font-size="16" font-weight="bold" fill="#176b3a">Puente A2A clásico — Python http.server</text>
+  <text x="652" y="340" text-anchor="middle" font-size="13" fill="#2f6b3a">127.0.0.1:8790 · dialecto estándar (message/send, Agent Card)</text>
+  <text x="652" y="360" text-anchor="middle" font-size="12.5" fill="#2f6b3a">Guardrails entrada/salida · allow-list · log de accesos (backoffice)</text>
+  <text x="652" y="380" text-anchor="middle" font-size="12" fill="#55657c">(no uvicorn / no WSGI aquí: es la stdlib)</text>
+
+  <line x1="652" y1="396" x2="652" y2="440" stroke="#1e8449" stroke-width="2.5"/>
+  <polygon points="652,440 646,428 658,428" fill="#1e8449"/>
+  <text x="762" y="422" text-anchor="middle" font-size="11.5" fill="#176b3a">A2A nativo → 127.0.0.1:2024</text>
+
+  <!-- langgraph -->
+  <rect x="360" y="444" width="584" height="110" rx="10" fill="#eef1fb" stroke="#3b4fb0" stroke-width="1.5"/>
+  <text x="652" y="470" text-anchor="middle" font-size="16" font-weight="bold" fill="#2a3a90">langgraph dev — uvicorn / ASGI</text>
+  <text x="652" y="492" text-anchor="middle" font-size="13" fill="#3b4fb0">127.0.0.1:2024 · motor del agente (LangGraph)</text>
+  <rect x="430" y="506" width="200" height="34" rx="7" fill="#ffffff" stroke="#8a97d6"/>
+  <text x="530" y="528" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2a3a90">agente_ezequiel</text>
+  <rect x="674" y="506" width="200" height="34" rx="7" fill="#ffffff" stroke="#8a97d6"/>
+  <text x="774" y="528" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2a3a90">agente_cocina</text>
+
+  <!-- Gemini -->
+  <line x1="652" y1="554" x2="652" y2="596" stroke="#8a7d2a" stroke-width="2.5"/>
+  <polygon points="652,596 646,584 658,584" fill="#8a7d2a"/>
+  <rect x="512" y="600" width="280" height="40" rx="10" fill="#fdf6e3" stroke="#b7950b" stroke-width="1.5"/>
+  <text x="652" y="625" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#8a6d0b">Google Gemini (API del modelo)</text>
+
+  <!-- footer -->
+  <text x="500" y="676" text-anchor="middle" font-size="11.5" fill="#8795a8">Grupo: Fabio Durán · Gustavo Reyes · Ezequiel Muñoz — Taller A2A</text>
+</svg>

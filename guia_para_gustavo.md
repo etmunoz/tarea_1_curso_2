@@ -11,6 +11,11 @@ Hola Gustavo. Probamos conectar tu `agente_meteorologo` con nuestro coordinador 
 encontramos que **usamos dos variantes distintas de A2A**. Esta guía explica el problema,
 te deja **una URL lista para que consumas nuestro agente**, y lo que necesitamos de tu lado.
 
+> **✅ URL permanente (úsala, ya no cambia):** `https://agente.etmk.cl`
+> Está desplegado en un VPS con HTTPS fijo (antes te pasábamos un túnel de Cloudflare que
+> caducaba). La ficha: `https://agente.etmk.cl/.well-known/agent-card.json`. Habla tu mismo
+> dialecto: card sin `assistant_id` y `POST /` con `message/send`.
+
 ## 1. El problema (no es culpa de nadie: son dos "dialectos" A2A)
 
 | | Tú (SDK a2a-protocol.org) | Nosotros (LangGraph `langgraph dev`) |

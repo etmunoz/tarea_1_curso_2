@@ -31,7 +31,10 @@ MD = RAIZ / "entrega" / "documento-entrega.md"
 PDF = RAIZ / "entrega" / "documento-entrega.pdf"
 
 # Glifos que Helvetica no dibuja -> equivalente ASCII (solo para el PDF).
-SUSTITUCIONES = {"→": " -> ", "↔": " <-> ", "⟨": "<", "⟩": ">", "…": "..."}
+SUSTITUCIONES = {"→": " -> ", "↔": " <-> ", "⟨": "<", "⟩": ">", "…": "...",
+                 # Glifos de caja (diagramas ASCII) que Helvetica/Courier no dibujan:
+                 "─": "-", "│": "|", "└": "+", "┘": "+", "┌": "+", "┐": "+",
+                 "├": "+", "┤": "+", "┬": "+", "┴": "+", "┼": "+"}
 
 CSS = """
 body { font-family: Helvetica; font-size: 11px; color: #222; }

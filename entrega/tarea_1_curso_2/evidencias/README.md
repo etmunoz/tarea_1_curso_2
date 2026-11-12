@@ -22,5 +22,10 @@ Las que requieren el agente vivo necesitan `GOOGLE_API_KEY` + `uv run langgraph 
 | `08-arquitectura.svg` | arquitectura A2A de todos los agentes (2 equipos por Cloudflare) | diagrama del grupo |
 | `09-diagramas.md` | índice de los diagramas (mermaid auténtico + SVG) | — |
 | `10-interop-puente-mac.md` | interoperabilidad A2A: puente al formato clásico (para Gustavo) | `uv run python -m src.puente_a2a.servidor` + túnel |
+| `11-robustez-48-mac.md` | robustecimiento final (prompt 48): resiliencia, guardrails, auth/authz, allow-list | ronda de ataques + `tools/evidencia_robustez.py` |
+| `12-backoffice-monitor-mac.svg` | el monitor Tkinter del puente mostrando accesos (quién consume el agente) | `tools/monitor_puente.py` sobre `logs/puente-acceso.log` |
+| `13-interop-gustavo-mac.md` | interoperabilidad NOSOTROS → agente de Gustavo (dialecto `SendMessage`) | cliente A2A contra el túnel de Gustavo |
+| `14-ronda-mac-windows-gustavo-mac.md` | ronda end-to-end Mac ↔ Windows ↔ Gustavo (3 orígenes por A2A) | `./scripts/mac_coordinador.sh "<túnel-windows>"` con el catálogo cargado |
+| `15-backoffice-tomas-mac.md` | el monitor de Tomás (Windows) registra el tráfico entrante desde el Mac | `win_puente.ps1` + `win_fichas_auto.ps1` en Windows; cliente A2A desde el Mac |
 
 > Mientras no existan, el empaquetado las marca como faltantes (no bloquea).

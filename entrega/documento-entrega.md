@@ -356,6 +356,14 @@ Lista y cómo producir cada una: `evidencias/README.md`.
 - `05-ronda-mac.md`, `05-ronda-windows.md` — ronda de preguntas en cada equipo (A2A bidireccional).
 - `06-robustez-mac.md` — resiliencia + guardrails + allow-list (prompts 44-47).
 - `07-grafo-coordinador.svg`, `08-arquitectura.svg`, `09-diagramas.md` — diagramas.
+- `10-interop-puente-mac.md` — puente al dialecto A2A clásico (para que un cliente estándar
+  nos consuma).
+- `11-robustez-48-mac.md` — robustecimiento final (resiliencia, guardrails, auth/authz, allow-list).
+- `12-backoffice-monitor-mac.svg` — monitor del puente (quién consume el agente).
+- `13-interop-gustavo-mac.md` — interoperabilidad nosotros → agente de Gustavo (dialecto `SendMessage`).
+- `14-ronda-mac-windows-gustavo-mac.md` — ronda end-to-end con los tres orígenes por A2A.
+- `15-backoffice-tomas-mac.md` + `15-backoffice-tomas.png` — el monitor de Tomás (Windows)
+  registrando, en vivo, el tráfico entrante desde el Mac.
 
 ## 14. Convenciones y trazabilidad del grupo
 

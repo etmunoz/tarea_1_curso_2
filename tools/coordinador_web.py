@@ -30,10 +30,12 @@ from __future__ import annotations
 import hmac
 import json
 import os
+import smtplib
 import sys
 import traceback
 import uuid
 from base64 import b64decode
+from email.message import EmailMessage
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -55,6 +57,17 @@ CLAVE = os.environ.get("COORD_WEB_PASS", "")
 HOST = os.environ.get("COORD_WEB_HOST", "127.0.0.1")
 PORT = int(os.environ.get("COORD_WEB_PORT", "8794"))
 TITULO = os.environ.get("COORD_WEB_TITULO", "Coordinador A2A")
+
+# Envío de correo del coordinador. Credenciales SOLO vía EnvironmentFile del servicio
+# (/etc/agente-coordinador.env); nunca en el repo. Sin credenciales, el envío queda deshabilitado.
+SMTP_HOST = os.environ.get("COORD_SMTP_HOST", "localhost")
+SMTP_PORT = int(os.environ.get("COORD_SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("COORD_SMTP_USER", "")
+SMTP_PASS = os.environ.get("COORD_SMTP_PASS", "")
+MAIL_FROM = os.environ.get("COORD_MAIL_FROM", SMTP_USER)
+# Allowlist de destinatarios: hoy solo el dueño; sumar compañeros = agregar a COORD_MAIL_ALLOW.
+MAIL_ALLOW = [x.strip() for x in os.environ.get(
+    "COORD_MAIL_ALLOW", os.environ.get("COORD_MAIL_TO", "")).split(",") if x.strip()]
 
 # Import diferido del grafo (necesita GOOGLE_API_KEY al importar).
 _graph = None
@@ -146,6 +159,39 @@ def _guardar_config(cfg: dict) -> dict:
     URLS_FILE.write_text(json.dumps(limpio, ensure_ascii=False, indent=2), "utf-8")
     _aplicar_config(limpio)
     return limpio
+
+
+def _enviar_correo(para: str, asunto: str, cuerpo: str) -> dict:
+    """Envía un correo desde coordinador@etmk.cl por SMTP submission (STARTTLS 587).
+
+    Guardrail: el destinatario DEBE estar en la allowlist (MAIL_ALLOW). Este endpoint solo
+    lo dispara el usuario desde la UI; nunca se auto-envía a partir de respuestas de agentes
+    (contenido no confiable). Sin credenciales SMTP configuradas, queda deshabilitado.
+    """
+    para = (para or "").strip()
+    if not (SMTP_USER and SMTP_PASS):
+        return {"ok": False, "error": "correo no configurado (faltan credenciales SMTP en el servicio)"}
+    if not MAIL_ALLOW:
+        return {"ok": False, "error": "no hay destinatarios permitidos (COORD_MAIL_ALLOW vacío)"}
+    if para not in MAIL_ALLOW:
+        return {"ok": False, "error": f"destinatario no permitido: {para!r}"}
+    cuerpo = (cuerpo or "").strip()
+    if not cuerpo:
+        return {"ok": False, "error": "el cuerpo está vacío"}
+    asunto = (asunto or "Mensaje del coordinador A2A").strip()[:200]
+    msg = EmailMessage()
+    msg["From"] = MAIL_FROM
+    msg["To"] = para
+    msg["Subject"] = asunto
+    msg.set_content(cuerpo)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as s:
+            s.starttls()
+            s.login(SMTP_USER, SMTP_PASS)
+            s.send_message(msg)
+        return {"ok": True, "detalle": f"enviado a {para}"}
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "error": f"fallo SMTP: {exc}"}
 
 
 PAGINA = r"""<!doctype html><html lang="es"><head><meta charset="utf-8">
@@ -284,6 +330,18 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d2ff}
     <div class="sheet-ft"><button id="cfgCancel" class="btn-ghost">Cancelar</button><button id="cfgSave" class="btn-acc">Guardar</button></div>
   </div>
 </div>
+<div id="mailModal" class="modal">
+  <div class="sheet">
+    <div class="sheet-hd">✉️ Enviar por correo <button id="mailX" class="x">&times;</button></div>
+    <p class="hint">Se envía desde <b>coordinador@etmk.cl</b> (firmado DKIM/SPF/DMARC). Solo a
+      destinatarios de la <b>allowlist</b>.</p>
+    <label>Para<select id="m_para"></select></label>
+    <label>Asunto<input id="m_asunto"></label>
+    <label>Mensaje<textarea id="m_cuerpo" rows="7" style="resize:vertical;font-family:inherit"></textarea></label>
+    <div id="m_estado" class="hint"></div>
+    <div class="sheet-ft"><button id="mailCancel" class="btn-ghost">Cancelar</button><button id="mailSend" class="btn-acc">Enviar</button></div>
+  </div>
+</div>
 <script>
 const thread = (sessionStorage.getItem('coord_thread') || (()=>{const t=crypto.randomUUID();sessionStorage.setItem('coord_thread',t);return t})());
 const chat = document.getElementById('chat'), ruteo = document.getElementById('ruteo');
@@ -327,7 +385,10 @@ function burbuja(cls, texto, nombre){
   if(cls==='me'){av.textContent='🧑';bub.textContent=texto;}
   else{const mt=meta(nombre);av.textContent=mt.e;av.style.background='linear-gradient(135deg,'+mt.c+',rgba(255,255,255,.05))';
        if(nombre){const w=document.createElement('div');w.className='who';w.textContent=nombre;bub.appendChild(w);}
-       bub.appendChild(document.createTextNode(texto));}
+       bub.appendChild(document.createTextNode(texto));
+       if(nombre && window.__correoOK){const a=document.createElement('button');a.type='button';a.textContent='✉️ Enviar por correo';
+         a.style.cssText='margin-top:8px;display:block;font-size:12px;padding:4px 10px;border-radius:8px;cursor:pointer;border:1px solid var(--bd,#3a3d46);background:transparent;color:inherit;opacity:.85';
+         a.addEventListener('click',()=>abrirMail(texto,nombre));bub.appendChild(a);}}
   m.appendChild(av);m.appendChild(bub);chat.appendChild(m);chat.scrollTop=chat.scrollHeight;return bub;
 }
 function typing(){
@@ -403,6 +464,38 @@ document.getElementById('cfgSave').addEventListener('click',()=>{
    .catch(()=>{}).finally(()=>{b.disabled=false;b.textContent='Guardar';});
 });
 
+// --- envío de correo (lo dispara SOLO el usuario desde la UI) ---
+window.__correoOK=false; let __dest=[];
+function cargarCorreo(){
+  fetch('api/correo').then(r=>r.json()).then(c=>{window.__correoOK=!!c.configurado;__dest=c.destinatarios||[];}).catch(()=>{});
+}
+const mailModal=document.getElementById('mailModal');
+function abrirMail(texto,elegido){
+  const sel=document.getElementById('m_para');
+  sel.innerHTML=(__dest.length?__dest:['(sin destinatarios)']).map(d=>'<option>'+d+'</option>').join('');
+  document.getElementById('m_asunto').value='Respuesta del coordinador A2A'+(elegido?(' — '+elegido):'');
+  document.getElementById('m_cuerpo').value=texto;
+  document.getElementById('m_estado').textContent='';
+  mailModal.classList.add('show');
+}
+function cerrarMail(){mailModal.classList.remove('show');}
+document.getElementById('mailX').addEventListener('click',cerrarMail);
+document.getElementById('mailCancel').addEventListener('click',cerrarMail);
+mailModal.addEventListener('click',e=>{if(e.target===mailModal)cerrarMail();});
+document.getElementById('mailSend').addEventListener('click',()=>{
+  const para=document.getElementById('m_para').value;
+  const asunto=document.getElementById('m_asunto').value;
+  const cuerpo=document.getElementById('m_cuerpo').value;
+  const b=document.getElementById('mailSend'),est=document.getElementById('m_estado');
+  b.disabled=true;b.textContent='Enviando…';est.textContent='';
+  fetch('api/enviar-correo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({para,asunto,cuerpo})})
+   .then(r=>r.json()).then(d=>{
+     if(d.ok){est.style.color='#34d399';est.textContent='✓ '+(d.detalle||'enviado');setTimeout(cerrarMail,1300);}
+     else{est.style.color='#f87171';est.textContent='✗ '+(d.error||'no se pudo enviar');}
+   }).catch(err=>{est.style.color='#f87171';est.textContent='✗ '+err;})
+   .finally(()=>{b.disabled=false;b.textContent='Enviar';});
+});
+cargarCorreo();
 cargarChips();setInterval(cargarChips,30000);
 </script></body></html>"""
 
@@ -454,6 +547,9 @@ class Handler(BaseHTTPRequestHandler):
                 self._json(200, [])
         elif ruta == "/api/config":
             self._json(200, _cargar_config())
+        elif ruta == "/api/correo":
+            self._json(200, {"configurado": bool(SMTP_USER and SMTP_PASS),
+                             "destinatarios": MAIL_ALLOW, "from": MAIL_FROM})
         else:
             self._json(404, {"error": "not found"})
 
@@ -468,6 +564,9 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(400, {"error": "cuerpo inválido"})
         if ruta == "/api/config":
             return self._json(200, {"ok": True, "config": _guardar_config(payload)})
+        if ruta == "/api/enviar-correo":
+            return self._json(200, _enviar_correo(
+                payload.get("para", ""), payload.get("asunto", ""), payload.get("cuerpo", "")))
         if ruta != "/api/preguntar":
             return self._json(404, {"error": "not found"})
         try:

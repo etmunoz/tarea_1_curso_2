@@ -126,3 +126,23 @@ def test_cache_metodo_evita_reintento(monkeypatch):
     a2a.enviar_mensaje("https://comp.example", "agente", "2da", "ctx-2")   # directo
     assert metodos == ["SendMessage"]
     a2a._cache_metodo.clear()
+
+
+def test_contextid_se_coacciona_a_uuid(monkeypatch):
+    """Regresión: un contextId 'humano' se coacciona a UUID estable antes de enviarlo (langgraph
+    exige un thread_id UUID: 'Invalid thread ID' si no lo es). Vale para todos los dialectos."""
+    import uuid
+
+    card = {"name": "agente_x", "supportedInterfaces": [{"url": "https://comp.example"}]}
+    monkeypatch.setattr(a2a.httpx, "get", lambda *a, **k: _R(card))
+    cuerpos = []
+
+    def post(url, **k):
+        cuerpos.append(k.get("json") or {})
+        return _R({"result": {"parts": [{"kind": "text", "text": "ok"}]}})
+
+    monkeypatch.setattr(a2a.httpx, "post", post)
+    a2a.enviar_mensaje("https://comp.example", "agente", "hola", "contexto-humano-no-uuid")
+    enviado = cuerpos[0]["params"]["message"]["contextId"]
+    assert enviado == a2a.a_uuid("contexto-humano-no-uuid")   # estable
+    uuid.UUID(enviado)                                        # y es un UUID válido

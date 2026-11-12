@@ -334,6 +334,10 @@ def enviar_mensaje(base_url: str, graph: str, texto: str, context_id: str, timeo
     Lanza AgenteNoDisponible si el agente no responde (conexión/timeout/HTTP/JSON).
     Habla ambos dialectos: langgraph (`/a2a/<assistant_id>`) y clásico (URL base)."""
     base = base_url.rstrip("/")
+    # langgraph usa el contextId como thread_id y exige un UUID ('Invalid thread ID' si no lo es);
+    # lo coaccionamos para TODOS los dialectos (un UUID estable es válido también en el clásico y
+    # en SendMessage), así el cliente tolera cualquier contextId que le pase quien llama.
+    context_id = a_uuid(context_id)
     cuerpo = _cuerpo_message_send(texto, context_id)
     destino = f"{base} ({graph})"
     es_clasico = dialecto(base, timeout) == "clasico"

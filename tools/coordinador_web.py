@@ -180,6 +180,7 @@ AGENTES_CFG = [
     ("tomas", "agente_tomas", True),
     ("fabio", "agente_fabio", False),
     ("gustavo", "agente_meteorologo", False),
+    ("proteinman", "agente_proteinman", False),
 ]
 
 
@@ -390,6 +391,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d2ff}
     <label>🧘 Tomás<input id="u_tomas" placeholder="vacío = local (agente_tomas)"></label>
     <label>🧬 Fabio<input id="u_fabio" placeholder="https://…trycloudflare.com"></label>
     <label>⛅ Gustavo<input id="u_gustavo" placeholder="https://…trycloudflare.com"></label>
+    <label>🦸 Proteinman<input id="u_proteinman" placeholder="https://…trycloudflare.com"></label>
     <div class="sheet-ft"><button id="cfgCancel" class="btn-ghost">Cancelar</button><button id="cfgSave" class="btn-acc">Guardar</button></div>
   </div>
 </div>
@@ -442,6 +444,7 @@ function meta(n){
   if(n.includes('tomás')||n.includes('tomas')||n.includes('reiki'))return{e:'🧘',c:'#34d399'};
   if(n.includes('fabio'))return{e:'🧬',c:'#2dd4bf'};
   if(n.includes('meteor')||n.includes('clima')||n.includes('gustavo'))return{e:'⛅',c:'#22d3ee'};
+  if(n.includes('protein'))return{e:'🦸',c:'#f472b6'};
   return{e:'🛰️',c:'#9aa3b6'};
 }
 const PASOS={
@@ -541,7 +544,7 @@ document.getElementById('form').addEventListener('submit', async(e)=>{
   }finally{btn.disabled=false;inp.focus();}
 });
 // --- configuración de URLs de agentes ---
-const modal=document.getElementById('modal'), CLAVES=['ezequiel','tomas','fabio','gustavo'];
+const modal=document.getElementById('modal'), CLAVES=['ezequiel','tomas','fabio','gustavo','proteinman'];
 function abrirCfg(){
   fetch('api/config').then(r=>r.json()).then(c=>{
     CLAVES.forEach(k=>document.getElementById('u_'+k).value=c[k]||'');

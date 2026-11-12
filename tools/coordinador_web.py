@@ -134,10 +134,17 @@ def _detalle_destino(cat, elegido: str, ruta: list) -> dict | None:
 def _preguntar(texto: str, thread: str) -> dict:
     from langchain_core.messages import HumanMessage  # noqa: PLC0415
     g, cat = _cargar()
-    r = g.invoke({"messages": [HumanMessage(content=texto)]},
-                 {"configurable": {"thread_id": thread or str(uuid.uuid4())}})
+    cfg = {"configurable": {"thread_id": thread or str(uuid.uuid4())}}
+    # 'ruta' se ACUMULA por thread (operator.add + checkpointer). Para mostrar solo los pasos de
+    # ESTA pregunta, medimos cuántos pasos había antes y nos quedamos con los nuevos.
+    try:
+        previos = len((g.get_state(cfg).values or {}).get("ruta", []))
+    except Exception:  # noqa: BLE001
+        previos = 0
+    r = g.invoke({"messages": [HumanMessage(content=texto)]}, cfg)
     elegido = r.get("elegido", "")
-    ruta = r.get("ruta", [])
+    ruta_total = r.get("ruta", [])
+    ruta = ruta_total[previos:] if 0 <= previos <= len(ruta_total) else ruta_total
     return {
         "respuesta": r.get("respuesta", ""),
         "ruta": ruta,
@@ -354,8 +361,10 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d2ff}
       <div class="sub">Supervisor A2A · enruta tu pregunta al agente correcto</div>
     </div>
     <div class="chips" id="chips"></div>
+    <button id="nuevo" class="tbtn" title="Nueva conversación (reinicia el hilo)">🔄</button>
     <button id="cfg" class="tbtn" title="Configurar agentes">⚙️</button>
     <button id="theme" class="tbtn" title="Cambiar tema">🌙</button>
+    <button id="salir" class="tbtn" title="Salir (cerrar sesión)">🚪</button>
   </header>
   <div class="grid">
     <div class="card">
@@ -397,7 +406,22 @@ code{font-family:'JetBrains Mono',monospace;font-size:12px;color:#c9d2ff}
   </div>
 </div>
 <script>
-const thread = (sessionStorage.getItem('coord_thread') || (()=>{const t=crypto.randomUUID();sessionStorage.setItem('coord_thread',t);return t})());
+let thread = (sessionStorage.getItem('coord_thread') || (()=>{const t=crypto.randomUUID();sessionStorage.setItem('coord_thread',t);return t})());
+const CHAT_VACIO='<div class="empty">Escribe una pregunta — el supervisor la enviará al agente<br>que corresponda (Ezequiel, Tomás, Fabio, Gustavo…).</div>';
+const RUTEO_VACIO='<div class="empty">Aquí verás, por cada pregunta, a qué<br>agente enrutó el supervisor y el camino<br>que recorrió.</div>';
+function nuevaConversacion(){
+  thread=crypto.randomUUID();sessionStorage.setItem('coord_thread',thread);
+  chat.innerHTML=CHAT_VACIO;ruteo.innerHTML=RUTEO_VACIO;
+  const inp=document.getElementById('inp');if(inp){inp.value='';inp.focus();}
+}
+document.getElementById('nuevo').addEventListener('click',nuevaConversacion);
+document.getElementById('salir').addEventListener('click',()=>{
+  if(!confirm('¿Cerrar sesión? Se limpiará esta conversación.'))return;
+  try{sessionStorage.removeItem('coord_thread');}catch(e){}
+  // Intento de logout de Basic Auth: pedir con credenciales inválidas para que el navegador las olvide.
+  fetch('api/agentes',{headers:{Authorization:'Basic '+btoa('salir:'+Date.now())}})
+    .finally(()=>{document.body.innerHTML='<div style="max-width:520px;margin:18vh auto;padding:28px;text-align:center;font-size:15px;line-height:1.6;opacity:.85">Sesión cerrada.<br>Para volver a entrar, recarga la página.<br><br><button onclick="location.reload()" style="padding:8px 16px;border-radius:10px;cursor:pointer">Entrar de nuevo</button></div>';});
+});
 const chat = document.getElementById('chat'), ruteo = document.getElementById('ruteo');
 
 // --- tema dark/light (persistente) ---

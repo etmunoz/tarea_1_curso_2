@@ -23,6 +23,7 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import tkinter as tk
 from datetime import datetime
@@ -58,9 +59,13 @@ def _hora(ts: str) -> str:
 class Monitor(tk.Tk):
     """Objetivo: ventana que refleja en vivo los accesos al puente leyendo su log."""
 
-    def __init__(self, log: Path, captura: str | None = None, segundos: float = 3.0):
+    def __init__(self, log: Path, captura: str | None = None, segundos: float = 3.0,
+                 titulo: str | None = None):
         super().__init__()
         self.log = log
+        # Qué agente expone este puente (para el encabezado). Por defecto, el grafo del puente
+        # (PUENTE_GRAFO) o "agente_ezequiel"; así en el Windows de Tomás dice su propio agente.
+        self.agente = titulo or os.environ.get("PUENTE_GRAFO") or "agente_ezequiel"
         self._captura = captura
         self._offset = 0
         self._total = 0
@@ -74,7 +79,7 @@ class Monitor(tk.Tk):
 
         cab = ttk.Frame(self, padding=(10, 8))
         cab.pack(fill="x")
-        ttk.Label(cab, text="Accesos al Agente de Ezequiel (vía puente A2A)",
+        ttk.Label(cab, text=f"Accesos a {self.agente} (vía puente A2A)",
                   font=("-size", 13, "-weight", "bold")).pack(anchor="w")
         self.resumen = ttk.Label(cab, text="Esperando accesos…", foreground="#555")
         self.resumen.pack(anchor="w", pady=(2, 0))
@@ -161,8 +166,11 @@ def main() -> None:
     ap.add_argument("--log", default=str(LOG_DEF), help="Ruta del archivo de accesos del puente.")
     ap.add_argument("--captura", default=None, help="Si se indica, guarda un PNG de la ventana (evidencia).")
     ap.add_argument("--segundos", type=float, default=3.0, help="Segundos antes de capturar.")
+    ap.add_argument("--titulo", default=None,
+                    help="Nombre del agente a mostrar en el encabezado (def. PUENTE_GRAFO o agente_ezequiel).")
     args = ap.parse_args()
-    Monitor(Path(args.log), captura=args.captura, segundos=args.segundos).mainloop()
+    Monitor(Path(args.log), captura=args.captura, segundos=args.segundos,
+            titulo=args.titulo).mainloop()
 
 
 if __name__ == "__main__":

@@ -36,8 +36,31 @@ Cuatro consultas de Reiki a `agente_tomas`, todas respondidas por el puente (cod
 | demo-mac-3 | ¿Diferencia entre Shoden, Okuden y Shinpiden? | N1 físico/autotratamiento · N2 símbolos a distancia/mental-emocional · N3 maestría |
 | demo-mac-4 | ¿Reiki reemplaza al tratamiento médico? | **no reemplaza**; acudir a un profesional de la salud |
 
-Antes de estas, el monitor ya mostraba **dos lecturas de la ficha** (GET de la Agent Card) y una
-**consulta de prueba** del propio Tomás («¿Qué es Shoden?»).
+## Lo que mostró el monitor de Tomás (en vivo)
+
+Resumen del encabezado: **Total accesos 15 · IPs distintas 2 · Consultas 5 · Fichas leídas 9 ·
+Último 21:18:42 desde `190.215.226.163`** (log `logs\puente-tomas.log`). Las 2 IPs son el propio
+Windows (`127.0.0.1`, pruebas locales) y el **edge de Cloudflare `190.215.226.163`**, por el que
+entra todo el tráfico del Mac. Extracto de la tabla:
+
+| Hora | IP | Qué hizo | Ruta | Código |
+|---|---|---|---|---|
+| 21:09:28 | 127.0.0.1 | Leyó la ficha (descubrimiento) | `/.well-known/agent-card.json` | 200 |
+| 21:09:42 | 190.215.226.163 | Leyó la ficha (descubrimiento) | `/.well-known/agent-card.json` | 200 |
+| 21:09:50 | 190.215.226.163 | Envió una consulta (message/send) | `/` | 200 |
+| 21:16:36 | 127.0.0.1 | Leyó la ficha (descubrimiento) | `/.well-known/agent-card.json` | 200 |
+| 21:17:29 | 190.215.226.163 | GET / | `/` | 404 |
+| 21:18:17 | 190.215.226.163 | Envió una consulta (message/send) | `/` | 200 |
+| 21:18:33 | 190.215.226.163 | Envió una consulta (message/send) | `/` | 200 |
+| 21:18:39 | 190.215.226.163 | Envió una consulta (message/send) | `/` | 200 |
+| 21:18:42 | 190.215.226.163 | Envió una consulta (message/send) | `/` | 200 |
+
+Las **5 consultas** = 4 del Mac (Reiki) + 1 de prueba del propio Tomás («¿Qué es Shoden?»). Las
+**9 fichas leídas** son los GET de descubrimiento (el cliente clásico lee la Agent Card para
+resolver el endpoint antes de cada envío). El `404` del `21:17:29` fue un `GET /` suelto (ruta no
+servida por el puente): el catch-all responde sin filtrarse.
+
+![Monitor Tkinter de Tomás registrando los accesos del Mac](15-backoffice-tomas.png)
 
 ## Detalle técnico
 
@@ -57,7 +80,8 @@ Antes de estas, el monitor ya mostraba **dos lecturas de la ficha** (GET de la A
 - **Automatización:** fichas auto-mantenidas en Windows (`win_fichas_auto.ps1`), sin re-aplicar
   a mano tras cada recarga de `langgraph dev`.
 
-## Captura
+## Nota de implementación
 
-Tomás confirmó que su monitor Tkinter está abierto y registra el tráfico. Si envía un screenshot
-de la ventana, se incrusta aquí como `evidencias/15-backoffice-tomas.png`.
+Tras esta prueba se hizo configurable el encabezado del monitor (`tools/monitor_puente.py`,
+flag `--titulo` con default desde `PUENTE_GRAFO`): la captura original mostraba "Agente de
+Ezequiel" por una etiqueta fija; ahora en el Windows de Tomás refleja su propio agente.

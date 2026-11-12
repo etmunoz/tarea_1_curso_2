@@ -19,6 +19,7 @@ from __future__ import annotations
 import json
 import os
 import uuid
+from urllib.parse import urlparse
 
 import httpx
 
@@ -164,16 +165,40 @@ def _card_clasica(base: str, timeout: float) -> dict:
     return _json(httpx.get, f"{base}/.well-known/agent-card.json", base, timeout=timeout)
 
 
+def _host_privado(host: str) -> bool:
+    """Objetivo: ¿el host es local/privado (no accesible desde fuera)? Salida: bool."""
+    host = (host or "").lower()
+    if host in ("", "127.0.0.1", "localhost", "0.0.0.0", "::1"):
+        return True
+    if host.startswith("10.") or host.startswith("192.168."):
+        return True
+    if host.startswith("172."):
+        try:
+            return 16 <= int(host.split(".")[1]) <= 31
+        except Exception:  # noqa: BLE001
+            return False
+    return False
+
+
 def _endpoint_clasico(card: dict, base: str) -> str:
     """Objetivo: sacar la URL del endpoint de mensajes de una card clásica.
-    Usa `url` o la primera `supportedInterfaces[].url`; si no hay, la base. Salida: str."""
+    Usa `url` o la primera `supportedInterfaces[].url`; si no hay, la base.
+    PERO si la card anuncia un host LOCAL/privado (típico detrás de un túnel: p. ej.
+    `http://127.0.0.1:8003`), ese host no es accesible desde fuera, así que se usa la `base`
+    (el túnel por el que SÍ llegamos) conservando solo el path anunciado. Salida: str."""
     card = card if isinstance(card, dict) else {}
+    base = (base or "").rstrip("/")
     url = card.get("url")
     if not url:
         interfaces = card.get("supportedInterfaces") or card.get("additionalInterfaces") or []
         if isinstance(interfaces, list) and interfaces and isinstance(interfaces[0], dict):
             url = interfaces[0].get("url")
-    return (url if isinstance(url, str) and url else base).rstrip("/")
+    if not (isinstance(url, str) and url):
+        return base
+    p = urlparse(url if "://" in url else "http://" + url)
+    if _host_privado(p.hostname or ""):
+        return base + (p.path or "").rstrip("/")  # host interno: usa el túnel + su path
+    return url.rstrip("/")
 
 
 def _cuerpo_message_send(texto: str, context_id: str) -> dict:

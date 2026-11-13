@@ -38,6 +38,8 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 LOG = Path(os.environ.get("MONITOR_WEB_LOG") or os.environ.get("PUENTE_LOG")
            or (RAIZ / "logs" / "puente-acceso.log"))
+# Log de baneos de fail2ban (lo escribe la acción 'log-monitor'); solo lectura.
+BANEOS_LOG = Path(os.environ.get("MONITOR_BANEOS_LOG") or (RAIZ / "logs" / "baneos.log"))
 USUARIO = os.environ.get("MONITOR_WEB_USER", "monitor")
 CLAVE = os.environ.get("MONITOR_WEB_PASS", "")
 HOST = os.environ.get("MONITOR_WEB_HOST", "127.0.0.1")
@@ -85,6 +87,23 @@ def _leer_eventos(maximo: int = 1000) -> list[dict]:
     return eventos
 
 
+_RE_BAN = re.compile(r'^(?P<ts>\S+)\s+(?P<accion>BAN|UNBAN)\s+(?P<ip>\S+)\s+(?P<jail>\S+)')
+
+
+def _leer_baneos(maximo: int = 500) -> list[dict]:
+    """Objetivo: parsear logs/baneos.log (BAN/UNBAN de fail2ban) a una lista de dicts. Salida: list."""
+    out: list[dict] = []
+    try:
+        if BANEOS_LOG.exists():
+            for ln in BANEOS_LOG.read_text(encoding="utf-8", errors="replace").splitlines()[-maximo:]:
+                m = _RE_BAN.match(ln)
+                if m:
+                    out.append({"ts": m["ts"], "accion": m["accion"], "ip": m["ip"], "jail": m["jail"]})
+    except Exception:  # noqa: BLE001 - nunca romper el servidor
+        pass
+    return out
+
+
 PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Backoffice · __TITULO__</title>
@@ -95,6 +114,11 @@ PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8">
  h1{margin:0;font-size:18px}
  .sub{color:#5a6b82;margin-top:4px}
  .resumen{margin:10px 18px;padding:10px 14px;background:#eafaf1;border:1px solid #bfe6cd;border-radius:8px;color:#176b3a;font-weight:600}
+ .baneos{margin:10px 18px}
+ .baneos h2{font-size:14px;margin:0 0 6px;color:#9b1c1c}
+ .bchip{display:inline-block;margin:2px 6px 2px 0;padding:3px 8px;border-radius:6px;font-size:12px;font-variant-numeric:tabular-nums}
+ .bban{background:#fdecec;border:1px solid #f3b4b4;color:#9b1c1c}
+ .bunban{background:#eafaf1;border:1px solid #bfe6cd;color:#176b3a}
  table{width:calc(100% - 36px);margin:0 18px 24px;border-collapse:collapse;background:#fff;border:1px solid #e3e8f0;border-radius:8px;overflow:hidden}
  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #eef1f6;font-size:13px}
  th{background:#f0f3f8;color:#3a4a60;position:sticky;top:0}
@@ -106,6 +130,7 @@ PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8">
 <header><h1>Accesos a __TITULO__ · backoffice web</h1>
 <div class="sub">Traza del puente A2A (solo lectura). Autorefresco cada 2 s. Más reciente arriba. Horas en tu zona local.</div></header>
 <div class="resumen" id="resumen">Cargando…</div>
+<div class="baneos" id="baneos"></div>
 <div class="wrap"><table id="tabla"><thead><tr>
  <th>Hora</th><th>IP del cliente</th><th>Qué hizo</th><th>Ruta</th><th>Código</th></tr></thead>
 <tbody id="cuerpo"></tbody></table></div>
@@ -129,7 +154,22 @@ async function tick(){
     `Total accesos: ${ev.length}   ·   IPs distintas: ${ips.size}   ·   Consultas: ${cons}   ·   Fichas leídas: ${fich}   ·   Último: ${ult}`;
  }catch(e){}
 }
+async function tickBaneos(){
+ try{
+  const r = await fetch('api/baneos',{headers:{'Accept':'application/json'}});
+  if(!r.ok) return;
+  const b = await r.json();
+  const cont = document.getElementById('baneos');
+  if(!b.length){cont.innerHTML=''; return;}
+  const estado={}; b.forEach(x=>{estado[x.ip]=(estado[x.ip]||0)+(x.accion==='BAN'?1:-1)});
+  const activos=Object.entries(estado).filter(([,n])=>n>0).map(([ip])=>ip);
+  const ult=b.slice().reverse().slice(0,30);
+  cont.innerHTML='<h2>🚫 Baneos (fail2ban · apache-escaneos) — IPs baneadas ahora: '+activos.length+'</h2>'+
+    ult.map(x=>`<span class="bchip ${x.accion==='BAN'?'bban':'bunban'}">${hhmmss(x.ts)} · ${x.accion} · ${x.ip}</span>`).join('');
+ }catch(e){}
+}
 tick(); setInterval(tick, 2000);
+tickBaneos(); setInterval(tickBaneos, 5000);
 </script></body></html>"""
 
 
@@ -169,6 +209,13 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(cuerpo)
         elif ruta == "/api/eventos":
             datos = json.dumps(_leer_eventos(), ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(datos)))
+            self.end_headers()
+            self.wfile.write(datos)
+        elif ruta == "/api/baneos":
+            datos = json.dumps(_leer_baneos(), ensure_ascii=False).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Content-Length", str(len(datos)))

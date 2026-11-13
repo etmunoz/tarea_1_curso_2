@@ -1,82 +1,54 @@
-<!--encabezado-grupo-->
-> **Archivo:** `README.md`  
-> **Objetivo:** tarea_1_curso_2 · Taller A2A  
-> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261111 2049
-<!--/encabezado-grupo-->
+# Taller A2A
 
-# tarea_1_curso_2 · Taller A2A
+Proyecto de taller para crear agentes especializados que se comunican mediante el protocolo A2A. Incluye un supervisor coordinador que descubre agentes disponibles y deriva las consultas al más adecuado.
 
-Proyecto del **Taller · tu skill es un agente y habla por A2A** (Curso 2 · Sesión 1).
-Base: un agente de viajes (LangGraph) expuesto por **A2A de forma nativa** con el
-servidor de LangGraph, un **swarm** (vuelos + hoteles) y un **agente conversacional**
-pendiente de construir. Entorno con **uv + Python 3.13**.
+## Agentes disponibles
 
-- Material del taller (10 páginas, lectura): [`taller-a2a/`](taller-a2a/index.md)
-- Guía del proyecto base original: [`README_proyecto_base.md`](README_proyecto_base.md)
-- Reglas de arquitectura y flujo de trabajo: [`AGENTS.md`](AGENTS.md)
+- **Viajes:** busca vuelos y hoteles ficticios.
+- **Restaurantes:** recomienda restaurantes ficticios en LIM, BOG y EZE.
+- **Agente meteorólogo:** entrega pronósticos ficticios para Santiago, Concepción y Valdivia.
+- **Coordinador:** supervisa los agentes de viajes y restaurantes y delega la consulta al más adecuado.
 
-## Puesta en marcha
+## Uso desde la línea de comandos
+
+Activa el entorno principal para viajes, meteorología y coordinador:
 
 ```bash
-uv sync                       # crea .venv con Python 3.13 e instala todo
-cp .env.example .env          # pega tu GOOGLE_API_KEY (Gemini)
-uv run langgraph dev          # levanta el agente de viajes en http://127.0.0.1:2024
+source .venv/bin/activate
 ```
 
-> Sin `GOOGLE_API_KEY` el entorno se instala igual, pero los grafos no arrancan:
-> el agente se construye con Gemini al importar. La clave va **solo** en `.env`
-> (ignorado por git); nunca en el código ni en `.env.example`.
-
-## Despliegue permanente (VPS)
-
-Además de la demo por túneles efímeros, el **Agente de Ezequiel** está publicado de forma
-permanente, con **HTTPS y URL fija**:
-
-- **Agente (A2A):** https://agente.etmk.cl · ficha en `/.well-known/agent-card.json`
-- **Backoffice web del log (login):** https://monitor.etmk.cl
-
-Corre en un VPS (Ubuntu 24) detrás de Apache (reverse proxy + Let's Encrypt), con auto-arranque
-por `systemd`. Detalle en [`entrega/documento-entrega.md`](entrega/documento-entrega.md) §11.1.
-
-## Comandos útiles (con uv)
+Consulta viajes:
 
 ```bash
-# Verificar las herramientas (no requiere API key)
-uv run python -c "from src.agente_viajes.herramientas import buscar_vuelos; print(buscar_vuelos.invoke({'origen':'SCL','destino':'LIM','fecha':'2026-11-10'}))"
-
-# Demo del swarm (vuelos ↔ hoteles en un mismo hilo) — requiere API key
-uv run python -m src.swarm.graph
-
-# Pruebas del A2A del agente de viajes (con `uv run langgraph dev` corriendo en otra terminal)
-uv run pytest tests/test_a2a_viajes.py
+python main.py viajes "Busca vuelos de LIM a SCL para el 15 de diciembre"
+python main.py viajes "Busca hoteles en Lima para 3 noches" --saltos
+python main.py viajes --diagrama
 ```
 
-Obtener el `assistant_id`, la Agent Card y mandar un `message/send` por A2A: ver los
-`curl` en [`README_proyecto_base.md`](README_proyecto_base.md) o la colección
-[`bruno/`](bruno/) (entorno `local`).
+Consulta meteorología:
 
-## Estructura
-
-```
-src/agente_viajes/   graph.py · herramientas.py · prompts.py   (A2A nativo · hecho)
-src/swarm/           graph.py · prompts.py                     (vuelos+hoteles · hecho)
-src/consumidor/      README.md                                 (agente conversacional · por construir)
-bruno/               colección para probar tarjeta y message/send
-tests/               test_a2a_viajes.py
-plan.json            grupos y tareas (viajes · agente-conversacional · swarm)
-langgraph.json       grafos que publica `langgraph dev`
-taller-a2a/          las 10 páginas del taller, en Markdown (referencia)
+```bash
+python main.py meteorologo "Dame el pronóstico del tiempo para hoy en Valdivia"
+python main.py meteorologo "¿Cómo estará el clima esta semana en Santiago?" --saltos
+python main.py meteorologo --diagrama
 ```
 
-## Qué sigue (según `plan.json`)
+Consulta el coordinador:
 
-1. **Agente conversacional** (`src/consumidor/`): consume al de viajes por A2A; se
-   construye con OpenCode (`@spec` crea tareas, `@implementador` las ejecuta) — ver
-   sección 2 de `README_proyecto_base.md`.
-2. **Swarm · actividades:** agregar un tercer agente al swarm (tareas `s01…s05`).
-3. **Tu propio agente** (lo que pide el taller): tu skill real, su ficha, su túnel.
+```bash
+python main.py coordinador "Busca vuelos de LIM a SCL para el 15 de diciembre"
+python main.py coordinador "Busca restaurantes de comida argentina en EZE" --saltos
+python main.py coordinador --diagrama
+```
 
-## Nota
+Para restaurantes, activa primero su entorno aislado:
 
-Material de curso para uso personal/educativo. Pertenece a sus autores.
+```bash
+source .venv-crew/bin/activate
+python main.py restaurantes "Busca restaurantes de comida argentina en EZE"
+python main.py restaurantes "Dame el detalle de Parrilla Palermo" --saltos
+python main.py restaurantes --diagrama
+```
+
+La opción `--saltos` muestra los nodos y herramientas utilizados. La opción `--diagrama` imprime la estructura Mermaid sin ejecutar el agente.
+# taller_A2A_uai

@@ -1,0 +1,57 @@
+{
+    "name": "agente_meteorologo",
+    "description": "Entrego pronosticos ficticios del clima de hoy y de los proximos siete doas para Santiago, Concepcion y Valdivia, con temperaturas y condiciones meteorologicas. No respondo preguntas fuera de la Meteorologia ni pronosticos para otras ciudades, o para plazos superiores a siete dias.",
+    "supportedInterfaces": [
+        {
+            "url": "https://forest-optical-distributors-trinity.trycloudflare.com",
+            "protocolBinding": "JSONRPC",
+            "protocolVersion": "1.0"
+        }
+    ],
+    "version": "1.0.0",
+    "capabilities": {
+        "streaming": false
+    },
+    "defaultInputModes": [
+        "text/plain"
+    ],
+    "defaultOutputModes": [
+        "text/plain"
+    ],
+    "skills": [
+        {
+            "id": "pronostico-hoy",
+            "name": "Clima de hoy",
+            "description": "Informa el pronostico del clima para hoy solo en Santiago, Concepcion o Valdivia.",
+            "tags": [
+                "agente_meteorologo"
+            ],
+            "examples": [
+                "Dame el pronostico del tiempo para hoy en Valdivia."
+            ],
+            "inputModes": [
+                "text/plain"
+            ],
+            "outputModes": [
+                "text/plain"
+            ]
+        },
+        {
+            "id": "pronostico-semana",
+            "name": "Clima semanal",
+            "description": "Informa el pronostico de los proximos siete dias solo para Santiago, Concepcion o Valdivia.",
+            "tags": [
+                "agente_meteorologo"
+            ],
+            "examples": [
+                "Dame el pronostico del tiempo para la semana en Santiago."
+            ],
+            "inputModes": [
+                "text/plain"
+            ],
+            "outputModes": [
+                "text/plain"
+            ]
+        }
+    ]
+}

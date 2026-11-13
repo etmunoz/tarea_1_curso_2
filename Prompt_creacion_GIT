@@ -1,0 +1,21 @@
+Pasos para crear github
+************************
+
+Prepara el proyecto para GitHub:
+- Revisa .gitignore: deben quedar fuera .env, .venv/, __pycache__/, .langgraph_api/, .pytest_cache/ y cualquier archivo de datos local.
+- Verifica que .env.example tenga TODAS las variables que usa el código (recórrelo y compara con os.environ / os.getenv).
+- Completa README.md con: qué hace el proyecto, cómo correr el router en local, cómo levantar la API, cómo correr las pruebas, cómo desplegar en Heroku y cómo conectar Telegram. Con los comandos exactos.
+- Ya creé en GitHub un repositorio VACÍO (sin README ni .gitignore). Abajo te pego, tal cual, los comandos que GitHub muestra en "…or push an existing repository from the command line". Úsalos exactamente así (la URL del remoto y la rama son esas, no las inventes):
+
+echo "# taller_A2A_uai" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/guswolf-007/taller_A2A_uai.git
+git push -u origin main
+
+- Antes de eso hace falta: git init, agregar todo y el primer commit con mensaje "router + api + telegram". Dame la secuencia completa en orden (init → add → commit → los comandos de GitHub). No los ejecutes: los corro yo.
+- Antes del commit, corre `git status` y confírmame que .env NO aparece en la lista.
+
+

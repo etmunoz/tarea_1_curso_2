@@ -1,32 +1,17 @@
-# --8<-- encabezado-grupo
-# Archivo: .gitignore
-# Objetivo: Archivos y carpetas ignorados por git.
-# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-# Creación: 20261110 1450
-# Última modificación: 20261112 1508
-# --8<-- fin-encabezado-grupo
-
-# entorno y claves
 .env
 .venv/
+.venv-crew/
 __pycache__/
-*.pyc
-# langgraph / notebooks
 .langgraph_api/
-.ipynb_checkpoints/
-# uv
-uv.lock.bak
-# SO / editores
+.pytest_cache/
 .DS_Store
-.idea/
-.vscode/
 
-# empaquetado de entrega
-dist/
-
-# BD SQLite generada (se reconstruye sola)
-data/*.sqlite
-logs/
-
-# Credenciales del coordinador: local + en el zip, NUNCA en git
-CLAVE-COORDINADOR.txt
+# Datos locales y archivos generados
+data/
+datos/
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.jsonl
+*.parquet

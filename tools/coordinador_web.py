@@ -101,11 +101,18 @@ def _resolver_ip(host: str) -> str:
         socket.setdefaulttimeout(prev)
 
 
-def _detalle_destino(cat, elegido: str, ruta: list) -> dict | None:
-    """Objetivo: antecedentes del agente al que se accedió (tipo, grafo, endpoint, host, IP).
-    Entradas: cat (módulo catálogo), elegido (nombre del agente), ruta (pasos). Salida: dict | None."""
+def _detalle_destino(cat, elegido: str, ruta: list, origen: str = "") -> dict | None:
+    """Objetivo: antecedentes de DÓNDE salió la respuesta: remoto (sitio real), local, o
+    fallback local (el remoto no respondía y contestó la réplica en proceso).
+    Entradas: cat (catálogo), elegido (nombre), ruta (pasos), origen (del grafo). Salida: dict|None."""
     if not elegido or elegido.lower().startswith("ninguno"):
         return None
+    fuente = {
+        "remoto": "🌐 Remoto (sitio real)",
+        "local": "🏠 Local (este servidor)",
+        "fallback_local": "🏠 Fallback LOCAL (el remoto no respondía)",
+    }.get(origen, "")
+    es_fallback = origen == "fallback_local"
     a = None
     try:
         for x in cat.construir_catalogo():
@@ -117,17 +124,30 @@ def _detalle_destino(cat, elegido: str, ruta: list) -> dict | None:
                 continue
     except Exception:  # noqa: BLE001
         pass
-    if a is None:  # no se pudo mapear: al menos informa local/remoto por la ruta
-        tipo = "local" if "agente_local" in ruta else ("remoto" if "agente_remoto" in ruta else "?")
-        return {"tipo": tipo, "grafo": "", "endpoint": "", "host": "", "ip": ""}
+    if a is None:  # no se pudo mapear: al menos informa por la ruta
+        tipo = "fallback" if es_fallback else ("local" if "agente_local" in ruta else
+               ("remoto" if "agente_remoto" in ruta else "?"))
+        return {"tipo": tipo, "fuente": fuente, "grafo": "", "endpoint": "", "host": "", "ip": ""}
     base = (a.base_url or "").rstrip("/")
     host = urlparse(base).hostname or ""
-    d = {"tipo": "local" if a.local else "remoto", "grafo": a.graph,
-         "endpoint": base, "host": host, "ip": _resolver_ip(host)}
-    if a.local:  # el agente corre en este mismo servidor: muestra su identidad pública
+    d = {"grafo": a.graph, "fuente": fuente,
+         "tipo": "fallback" if es_fallback else ("local" if a.local else "remoto")}
+    if es_fallback:  # respondió la réplica LOCAL en proceso; mostramos el remoto que se intentó
+        d["servidor"] = os.environ.get("COORD_SERVIDOR", "réplica local (en proceso)")
+        d["remoto_intentado"] = base
+        d["host_remoto"] = host
+        d["ip_remoto"] = _resolver_ip(host)
+    elif a.local:
+        d["endpoint"] = base
+        d["host"] = host
+        d["ip"] = _resolver_ip(host)
         d["servidor"] = os.environ.get("COORD_SERVIDOR", "este servidor (VPS)")
         if os.environ.get("COORD_SERVIDOR_IP"):
             d["ip_publica"] = os.environ["COORD_SERVIDOR_IP"]
+    else:
+        d["endpoint"] = base
+        d["host"] = host
+        d["ip"] = _resolver_ip(host)
     return d
 
 
@@ -145,12 +165,14 @@ def _preguntar(texto: str, thread: str) -> dict:
     elegido = r.get("elegido", "")
     ruta_total = r.get("ruta", [])
     ruta = ruta_total[previos:] if 0 <= previos <= len(ruta_total) else ruta_total
+    origen = r.get("origen", "")
     return {
         "respuesta": r.get("respuesta", ""),
         "ruta": ruta,
         "elegido": elegido,
         "motivo": r.get("motivo", ""),
-        "destino": _detalle_destino(cat, elegido, ruta),
+        "origen": origen,
+        "destino": _detalle_destino(cat, elegido, ruta, origen),
     }
 
 
@@ -481,6 +503,10 @@ function burbuja(cls, texto, nombre, d){
   if(cls==='me'){av.textContent='🧑';bub.textContent=texto;}
   else{const mt=meta(nombre);av.textContent=mt.e;av.style.background='linear-gradient(135deg,'+mt.c+',rgba(255,255,255,.05))';
        if(nombre){const w=document.createElement('div');w.className='who';w.textContent=nombre;bub.appendChild(w);}
+       if(d && d.destino && d.destino.tipo==='fallback'){const fb=document.createElement('div');
+         fb.textContent='🏠 Respondió la réplica LOCAL (el remoto no estaba disponible)';
+         fb.style.cssText='margin-bottom:6px;font-size:11px;font-weight:700;color:#b45309;background:#fde68a66;border:1px solid #f59e0b66;border-radius:6px;padding:3px 8px;display:inline-block';
+         bub.appendChild(fb);}
        bub.appendChild(document.createTextNode(texto));
        const acc=document.createElement('div');acc.style.cssText='margin-top:8px;display:flex;gap:8px;flex-wrap:wrap';
        if(d && ((d.ruta&&d.ruta.length)||d.elegido))acc.appendChild(botonChat('🧭 Ver ruteo',()=>pintarRuteo(d)));
@@ -506,21 +532,22 @@ function pintarRuteo(d){
   if(d.destino){
     const t=d.destino;
     const esc=s=>(s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const col = t.tipo==='fallback' ? '#f59e0b' : (t.tipo==='remoto' ? '#34d399' : '#8aa0ff');
     const filas=[
-      ['Acceso', t.tipo==='local'?'🏠 Local (este servidor)':(t.tipo==='remoto'?'🌐 Remoto':'—')],
       ['Servidor', t.servidor],
       ['Grafo', t.grafo],
       ['Endpoint', t.endpoint],
-      ['Host', t.host],
-      ['IP', t.ip_publica||t.ip],
+      ['Remoto intentado', t.remoto_intentado],
+      ['Host', t.host||t.host_remoto],
+      ['IP', t.ip_publica||t.ip||t.ip_remoto],
     ].filter(f=>f[1]);
-    if(filas.length){
-      const det=document.createElement('div');
-      det.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid var(--bd,#2c2f3a);border-radius:12px;background:rgba(127,127,160,.06);font-size:12px';
-      det.innerHTML='<div style="text-transform:uppercase;letter-spacing:.04em;opacity:.55;font-size:11px;margin-bottom:6px">Antecedentes del acceso</div>'+
-        filas.map(f=>'<div style="display:flex;gap:10px;justify-content:space-between;padding:2px 0"><span style="opacity:.6;white-space:nowrap">'+f[0]+'</span><span style="font-family:ui-monospace,Menlo,monospace;text-align:right;word-break:break-all">'+esc(f[1])+'</span></div>').join('');
-      ruteo.appendChild(det);
-    }
+    const det=document.createElement('div');
+    det.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid '+col+'66;border-radius:12px;background:'+col+'14;font-size:12px';
+    let html='<div style="text-transform:uppercase;letter-spacing:.04em;opacity:.55;font-size:11px;margin-bottom:6px">Antecedentes del acceso</div>';
+    if(t.fuente) html+='<div style="font-weight:700;color:'+col+';margin-bottom:6px">'+esc(t.fuente)+'</div>';
+    html+=filas.map(f=>'<div style="display:flex;gap:10px;justify-content:space-between;padding:2px 0"><span style="opacity:.6;white-space:nowrap">'+f[0]+'</span><span style="font-family:ui-monospace,Menlo,monospace;text-align:right;word-break:break-all">'+esc(f[1])+'</span></div>').join('');
+    det.innerHTML=html;
+    ruteo.appendChild(det);
   } else {
     const det=document.createElement('div');
     det.style.cssText='margin:10px 0;padding:10px 12px;border:1px solid var(--bd,#2c2f3a);border-radius:12px;background:rgba(127,127,160,.06);font-size:12px';

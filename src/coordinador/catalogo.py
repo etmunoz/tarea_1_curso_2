@@ -123,28 +123,43 @@ class AgenteRemoto:
         Distingue 'desconectado pero conocido' de 'inexistente'. Salida: bool."""
         return self.card_conocida() is not None
 
+    def _ficha_local(self) -> dict:
+        """Objetivo: ficha LOCAL del grafo (src/fichas.py), para que el supervisor sepa qué hace
+        el agente aunque el remoto nunca haya respondido (habilita el fallback local)."""
+        try:
+            from src.fichas import FICHAS  # noqa: PLC0415 - import tardío (evita ciclos)
+
+            return FICHAS.get(self.graph, {})
+        except Exception:  # noqa: BLE001
+            return {}
+
     @property
     def nombre(self) -> str:
-        """Objetivo: nombre legible del agente, usando la ficha conocida si ahora no responde.
+        """Objetivo: nombre legible del agente, usando la ficha conocida o la LOCAL si no responde.
         Entradas: ninguna. Salida: str (nombre o id del grafo)."""
         conocida = self.card_conocida()
         if conocida and conocida.get("name"):
             return conocida["name"]
         try:
-            return self.card().get("name") or self.graph
-        except Exception:  # noqa: BLE001 - si el agente no responde ni hay ficha previa
-            return self.graph
+            n = self.card().get("name")
+            if n:
+                return n
+        except Exception:  # noqa: BLE001 - si el agente no responde, cae a la ficha local
+            pass
+        return self._ficha_local().get("name") or self.graph
 
     def descripcion(self) -> str:
         """Objetivo: descripción + skills para el prompt del supervisor, usando la ficha CONOCIDA
-        (capacidades) aunque esté caído. Entradas: ninguna. Salida: str ('(sin ficha)' si nunca
-        se descubrió)."""
+        (capacidades) aunque esté caído, o la ficha LOCAL si nunca se descubrió (así el supervisor
+        igual puede enrutar y disparar el fallback local). Salida: str."""
         c = self.card_conocida()
         if c is None:
             try:
                 c = self.card()
             except Exception:  # noqa: BLE001
-                return "(sin ficha)"
+                c = None
+        if c is None:
+            return self._ficha_local().get("description") or "(sin ficha)"
         skills = "; ".join(s.get("name", "") for s in c.get("skills", []) if s.get("name"))
         desc = c.get("description", "")
         return f"{desc} (skills: {skills})" if skills else (desc or "(sin descripción)")
@@ -213,6 +228,11 @@ def texto_catalogo(catalogo: list[AgenteRemoto]) -> str:
         elif a.conocido():
             lineas.append(f"- {a.nombre}: {a.descripcion()} "
                           "[estado: temporalmente NO disponible; elígelo igual si es el especialista]")
+        elif a._ficha_local():
+            # El remoto no está, pero hay RÉPLICA LOCAL del mismo grafo: sigue siendo elegible
+            # (al consultarlo responderá la réplica local en proceso = fallback).
+            lineas.append(f"- {a.nombre}: {a.descripcion()} "
+                          "[estado: remoto no disponible; responderá la réplica LOCAL si lo eliges]")
         else:
             lineas.append(f"- {a.nombre}: (agente no descubierto / sin ficha; no elegible ahora)")
     return "\n".join(lineas)

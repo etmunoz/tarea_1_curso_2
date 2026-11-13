@@ -64,8 +64,23 @@ class Estado(TypedDict):
     elegido: str
     motivo: str
     respuesta: str
+    origen: str
     bloqueado: bool
     ruta: Annotated[list[str], operator.add]
+
+
+def _responder_local(graph_name: str, pregunta: str, thread: str) -> str:
+    """Objetivo: responder con la RÉPLICA LOCAL en proceso de un agente (fallback cuando el túnel
+    remoto no está). Importa `src.<graph_name>.graph` y lo invoca. Salida: str (texto) o ''."""
+    import importlib  # noqa: PLC0415
+
+    mod = importlib.import_module(f"src.{graph_name}.graph")
+    r = mod.graph.invoke({"messages": [HumanMessage(content=pregunta)]},
+                         {"configurable": {"thread_id": f"local-{thread}"}})
+    msg = r["messages"][-1].content
+    if isinstance(msg, list):
+        return " ".join(p.get("text", "") for p in msg if isinstance(p, dict)).strip()
+    return msg or ""
 
 
 def _ultimo_texto(messages: list) -> str:
@@ -128,9 +143,19 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
     try:
         bruto = elegido.preguntar(pregunta, _ctx[clave])
     except a2a.ErrorA2A:
-        # Estado controlado (sin exponer trazas/URLs internas). Se distingue "el especialista
-        # existe pero está desconectado" de un agente desconocido: aquí el agente ESTÁ
-        # registrado (fue elegido), así que es indisponibilidad, no ausencia de capacidad.
+        # FALLBACK LOCAL: si el agente es REMOTO (túnel) y su túnel no responde, pero tenemos una
+        # RÉPLICA LOCAL en proceso del mismo grafo, respondemos con ella (marcando 'fallback_local').
+        if not elegido.local:
+            try:
+                texto_local = _responder_local(elegido.graph, pregunta, thread)
+            except Exception:  # noqa: BLE001 - no hay réplica local utilizable
+                texto_local = ""
+            if texto_local:
+                _d, contenido, _m = guardrails.evaluar_respuesta_remota(texto_local, elegido.nombre, str(thread)[:12])
+                return {"respuesta": f"[{elegido.nombre}] {contenido}",
+                        "origen": "fallback_local",
+                        "ruta": ["agente_remoto", "fallback_local"]}
+        # Sin remoto ni réplica local: estado controlado (sin exponer trazas/URLs internas).
         if elegido.conocido():
             texto = (f"El {elegido.nombre} es el especialista para esta consulta, pero actualmente "
                      "no está disponible. Puedes intentar nuevamente más tarde. Los demás agentes "
@@ -138,7 +163,7 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
         else:
             texto = (f"El {elegido.nombre} no está disponible temporalmente. Puedes intentar "
                      "nuevamente más tarde. Los demás agentes continúan operativos.")
-        return {"respuesta": texto, "ruta": ["agente_no_disponible"]}
+        return {"respuesta": texto, "origen": "no_disponible", "ruta": ["agente_no_disponible"]}
     # Guardrail A2A por capas: la respuesta del agente es un DATO (nunca se ejecuta). Según la
     # política (ALLOW/SANITIZE/BLOCK) se acepta, sanea o descarta.
     correlacion = str(thread)[:12]
@@ -146,7 +171,7 @@ def consultar(estado: Estado, config: RunnableConfig) -> dict:
     texto = f"[{elegido.nombre}] {contenido}"
     paso = "agente_local" if elegido.local else "agente_remoto"
     # La redacción/restricciones de salida las aplica el nodo guardia_salida (común a todo camino).
-    return {"respuesta": texto, "ruta": [paso]}
+    return {"respuesta": texto, "origen": ("local" if elegido.local else "remoto"), "ruta": [paso]}
 
 
 def sin_agente(estado: Estado) -> dict:

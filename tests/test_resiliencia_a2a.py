@@ -108,7 +108,7 @@ def test_catalogo_se_construye_con_un_agente_caido(monkeypatch):
     monkeypatch.setattr(catalogo.a2a, "agent_card", card_falsa)
     monkeypatch.setenv("A2A_BASE", "http://127.0.0.1:2024")
     monkeypatch.setenv("A2A_GRAFOS_LOCALES", "agente_ezequiel")
-    monkeypatch.setenv("URLS_AGENTES", "https://caido.example#agente_fabio")
+    monkeypatch.setenv("URLS_AGENTES", "https://caido.example#agente_inexistente")
 
     cat = catalogo.construir_catalogo()
     texto = catalogo.texto_catalogo(cat)  # no debe lanzar
@@ -117,11 +117,11 @@ def test_catalogo_se_construye_con_un_agente_caido(monkeypatch):
     # uno "temporalmente no disponible" (que sí tendría capacidades conocidas).
     assert "sin ficha" in texto
     vivo = next(a for a in cat if a.graph == "agente_ezequiel")
-    caido = next(a for a in cat if a.graph == "agente_fabio")
+    caido = next(a for a in cat if a.graph == "agente_inexistente")
     assert vivo.disponible() is True
     assert caido.disponible() is False
     assert caido.conocido() is False  # nunca se supo qué hace → inexistente, no "desconectado"
-    assert caido.nombre == "agente_fabio"  # fallback al id del grafo
+    assert caido.nombre == "agente_inexistente"  # sin réplica local: cae al id del grafo
 
 
 @pytest.mark.skipif(not os.environ.get("GOOGLE_API_KEY"), reason="requiere GOOGLE_API_KEY (importa el grafo)")
@@ -133,20 +133,49 @@ def test_consultar_devuelve_estado_controlado(monkeypatch):
     from src.coordinador import graph  # noqa: PLC0415
 
     class FakeAgente:
-        nombre = "Agente de Fabio"
-        graph = "agente_fabio"
+        nombre = "Agente Inexistente"
+        graph = "agente_inexistente"  # SIN réplica local → no hay fallback, va a estado controlado
         local = False
 
         def conocido(self):
             return True  # sí sabemos qué hace (es el especialista), pero está caído
 
         def preguntar(self, texto, ctx):
-            raise a2a.AgenteNoDisponible("Agente de Fabio", "no se pudo conectar (¿túnel caído?)")
+            raise a2a.AgenteNoDisponible("Agente Inexistente", "no se pudo conectar (¿túnel caído?)")
 
     monkeypatch.setattr(graph, "construir_catalogo", lambda: [FakeAgente()])
-    estado = {"messages": [HumanMessage(content="¿Qué símbolos hay en Reiki?")], "elegido": "Agente de Fabio"}
+    estado = {"messages": [HumanMessage(content="¿Qué símbolos hay en Reiki?")], "elegido": "Agente Inexistente"}
     out = graph.consultar(estado, {"configurable": {"thread_id": "t1"}})
     assert out["ruta"] == ["agente_no_disponible"]
     assert "es el especialista" in out["respuesta"]
     assert "no está disponible" in out["respuesta"]
     assert "continúan operativos" in out["respuesta"]
+
+
+def test_consultar_hace_fallback_local(monkeypatch):
+    """Si el REMOTO está caído pero existe RÉPLICA LOCAL del grafo, consultar responde con el
+    fallback local y lo marca (origen='fallback_local', ruta incluye 'fallback_local')."""
+    from langchain_core.messages import HumanMessage  # noqa: PLC0415
+
+    from src.coordinador import graph  # noqa: PLC0415
+
+    class FakeRemoto:
+        nombre = "agente_meteorologo"
+        graph = "agente_meteorologo"  # SÍ tiene réplica local (src/agente_meteorologo)
+        local = False
+
+        def conocido(self):
+            return False
+
+        def preguntar(self, texto, ctx):
+            raise a2a.AgenteNoDisponible("agente_meteorologo", "túnel caído")
+
+    monkeypatch.setattr(graph, "construir_catalogo", lambda: [FakeRemoto()])
+    monkeypatch.setattr(graph.auth, "autorizar", lambda g, a: (True, ""))
+    # No llamamos a Gemini: simulamos la respuesta de la réplica local.
+    monkeypatch.setattr(graph, "_responder_local", lambda g, p, t: "Hoy en Valdivia: lluvia intermitente.")
+    estado = {"messages": [HumanMessage(content="clima hoy en Valdivia")], "elegido": "agente_meteorologo"}
+    out = graph.consultar(estado, {"configurable": {"thread_id": "t2"}})
+    assert out["origen"] == "fallback_local"
+    assert "fallback_local" in out["ruta"]
+    assert out["respuesta"].startswith("[agente_meteorologo]")

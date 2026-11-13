@@ -75,6 +75,11 @@ def construir_carpeta_entrega() -> tuple[Path, list[str]]:
     else:
         avisos.append("falta entrega/LEEME.txt")
 
+    # REPOS.txt (repositorios de los tres integrantes)
+    repos = RAIZ / "entrega" / "REPOS.txt"
+    if repos.exists():
+        shutil.copy2(repos, base / "REPOS.txt")
+
     # Documento: PDF si existe, si no el .md (y avisa)
     pdf = RAIZ / "entrega" / "documento-entrega.pdf"
     md = RAIZ / "entrega" / "documento-entrega.md"

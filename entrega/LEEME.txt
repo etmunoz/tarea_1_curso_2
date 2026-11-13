@@ -3,7 +3,7 @@
 # Objetivo: LEEME.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2321
-# Última modificación: 20261112 1508
+# Última modificación: 20261112 2213
 # --8<-- fin-encabezado-grupo
 
 ================================================================================
@@ -19,11 +19,16 @@ nombre del repositorio) con TODO lo que pide el taller:
 
   tarea_1_curso_2/
   ├── LEEME.txt                 <- este archivo
+  ├── REPOS.txt                 <- repositorios GitHub de los TRES integrantes del grupo
   ├── documento-entrega.pdf     <- documento de entrega (o .md si no se exportó)
-  ├── blueprint-ezequiel.md     <- blueprint del agente de Ezequiel
-  ├── companeros.md             <- plantilla / agentes de los compañeros
-  ├── evidencias/               <- fichas (JSON), catálogos y rondas (Mac y Windows)
+  ├── blueprint-*.md            <- blueprints: ezequiel, fabio (Fabio+ProteinMAN),
+  │                                gustavo y blueprint-agentes (diseño del sistema)
+  ├── companeros.md             <- agentes de los compañeros sumados al coordinador
+  ├── evidencias/               <- fichas (JSON), catálogos, rondas y evidencias del coordinador
   └── proyecto/                 <- el proyecto COMPLETO (código versionado en git)
+
+El archivo REPOS.txt lista los repositorios de GitHub de los tres integrantes del
+grupo (Fabio, Gustavo y Ezequiel).
 
 Nota: "proyecto/" NO incluye secretos: el .env real y el .venv están en
 .gitignore y nunca entran al paquete. El código completo también está público en:

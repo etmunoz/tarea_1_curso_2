@@ -1,8 +1,8 @@
 <!--encabezado-grupo-->
 > **Archivo:** `evidencias/16-e2e-gustavo-mac.md`  
-> **Objetivo:** Interoperabilidad A2A end-to-end con Gustavo · evidencia (mac)  
+> **Objetivo:** Interoperabilidad A2A end-to-end con el agente de Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 2135 · **Última modificación:** 20261112 1508
+> **Creación:** 20261111 2135 · **Última modificación:** 20261111 2135
 <!--/encabezado-grupo-->
 
 # Interoperabilidad A2A end-to-end con Gustavo · evidencia (mac)

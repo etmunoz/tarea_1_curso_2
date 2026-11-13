@@ -80,6 +80,14 @@ def construir_carpeta_entrega() -> tuple[Path, list[str]]:
     if repos.exists():
         shutil.copy2(repos, base / "REPOS.txt")
 
+    # CLAVE-COORDINADOR.txt: credenciales del coordinador. Está en .gitignore (NUNCA en git),
+    # pero SÍ se incluye en el zip para la evaluación. Si no existe, se avisa.
+    clave = RAIZ / "entrega" / "CLAVE-COORDINADOR.txt"
+    if clave.exists():
+        shutil.copy2(clave, base / "CLAVE-COORDINADOR.txt")
+    else:
+        avisos.append("falta entrega/CLAVE-COORDINADOR.txt (credenciales del coordinador para el zip)")
+
     # Documento: PDF si existe, si no el .md (y avisa)
     pdf = RAIZ / "entrega" / "documento-entrega.pdf"
     md = RAIZ / "entrega" / "documento-entrega.md"

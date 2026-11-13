@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/companeros.md`  
 > **Objetivo:** Compañeros · agentes ajenos sumados al coordinador  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261112 1508
+> **Creación:** 20261110 1941 · **Última modificación:** 20261112 2218
 <!--/encabezado-grupo-->
 
 # Compañeros · agentes ajenos sumados al coordinador
@@ -84,6 +84,34 @@ Lo **consumimos en vivo** durante la sesión. Esto es exactamente lo que observa
 
 - **Evidencia:** la interacción (resolución de `assistant_id`, respuestas de bioinformática y el bug
   `Invalid thread ID` → fix) está en `respuestas/55-despliegue-vps-interop-backoffice.md` (§4).
+
+## ProteinMAN — autor: Fabio Durán (segundo agente)
+
+Segundo agente de Fabio, consumido en vivo desde nuestro coordinador en producción. Lo observado:
+
+- Endpoint **LangGraph nativo** (igual que Fabio): `GET /.well-known/agent-card.json` **sin**
+  `assistant_id` → HTTP 400; `POST /assistants/search` → **`graph_id = proteinman`**,
+  **`assistant_id = 988d2098-af3e-5d3f-9bec-7ace332b7936`**.
+- **Nombre / skill:** `ProteinMAN` — **IA y Data Science aplicada a bioinformática**: recomienda
+  técnicas de ML para datos biológicos, métricas y modelo según el tipo de dato (secuencias,
+  expresión génica, estructuras). Deriva la biología de fondo al Agente Fabio.
+- **Entrada en la config del coordinador (`URLS_AGENTES`):** `https://<tunel-de-proteinman>#proteinman`.
+- **Ficha (Agent Card) — formato LangGraph nativo, observada:**
+
+```json
+{
+  "name": "ProteinMAN",
+  "description": "Especialista en IA y Data Science aplicada a bioinformatica. Puede: recomendar tecnicas de machine learning para problemas con datos biologicos, sugerir metricas para evaluar modelos bioinformaticos, elegir un modelo segun el tipo de dato biologico (secuencias, expresion genica, estructuras).",
+  "graph_id": "proteinman",
+  "assistant_id": "988d2098-af3e-5d3f-9bec-7ace332b7936",
+  "card_url": "/.well-known/agent-card.json?assistant_id=988d2098-af3e-5d3f-9bec-7ace332b7936"
+}
+```
+
+- **Diseño completo:** `blueprint-agentes.md` y `blueprint-fabio.md` (Fabio documenta Agente Fabio +
+  ProteinMAN y su colaboración A→B→A).
+- **Evidencia:** ruteo real del coordinador a `proteinman` (antecedentes remotos) y derivación a
+  Fabio en `evidencias/evidencias_coordinador.md` y `respuestas/59-agente-proteinman-configurable.md`.
 
 > Para que Gustavo consuma NUESTRO agente (sentido inverso) se usa el puente del prompt 49
 > (ver `src/puente_a2a/` y `guia_para_gustavo.md`). En producción ese puente está publicado de

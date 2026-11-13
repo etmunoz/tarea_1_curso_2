@@ -2,7 +2,7 @@
 > **Archivo:** `entrega/documento-entrega.md`  
 > **Objetivo:** Documento de entrega · Taller A2A (Curso 2 · Sesión 1)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1941 · **Última modificación:** 20261112 1542
+> **Creación:** 20261110 1941 · **Última modificación:** 20261112 2218
 <!--/encabezado-grupo-->
 
 # Documento de entrega · Taller A2A (Curso 2 · Sesión 1)
@@ -12,7 +12,9 @@
 > implementamos sobre el coordinador (10). El PDF se genera con
 > `uv run tools/exportar_pdf.py`. Las capturas `01-saltos.png` / `03-tunel.png` se
 > generaron desde la corrida real (son reemplazables por capturas de pantalla
-> manuales). Fabio y Gustavo completan sus blueprints (plantillas ya creadas).
+> manuales). Fabio y Gustavo ya entregaron sus blueprints (ver §2). La prueba final del
+> coordinador en producción con los agentes de todos está en §11.1 y en
+> `evidencias/evidencias_coordinador.md`.
 
 ## 0. Resumen ejecutivo
 
@@ -31,8 +33,10 @@ agentes permitidos.
 
 Como cierre, llevamos el agente más allá de la demo: lo dejamos **desplegado de forma
 permanente en un VPS propio** con **HTTPS y URL fija** (`https://agente.etmk.cl`), con
-auto-arranque por `systemd` y un **backoffice web** del log (`https://monitor.etmk.cl`).
-Ver la sección **11.1**.
+auto-arranque por `systemd`, un **backoffice web** del log (`https://monitor.etmk.cl`) y un
+**coordinador web** (`https://coordinador.etmk.cl`) con el que probamos, desde un mismo lugar en
+producción, el ruteo a los agentes de los tres integrantes (Ezequiel, Tomás, Fabio, ProteinMAN y
+Gustavo). Ver la sección **11.1**.
 
 - **Stack:** uv + Python 3.13 · LangGraph (A2A nativo, `langgraph dev` en `:2024`) ·
   Gemini vía `langchain-google-genai` (embeddings `models/gemini-embedding-001`) ·
@@ -333,14 +337,17 @@ Internet → Apache (reverse proxy + Let's Encrypt, :443)
 
 - El agente escucha **solo en `127.0.0.1`**; se publica por Apache con **certificado Let's Encrypt**
   (ver `evidencias/17-despliegue-vps.svg`).
-- **Persistencia real:** cuatro servicios **`systemd`** (`agente-langgraph`, `agente-puente`,
-  `agente-monitor`, `agente-coordinador`), `enabled` (arrancan al bootear) y `Restart=always`
-  (reviven si se caen). **Probado con un reinicio** del servidor: volvieron solos. Esto reemplaza el
-  modo manual (`configurar_fichas.py` a mano) del taller.
+- **Persistencia real:** cinco servicios **`systemd`** (`agente-langgraph`, `agente-fichas`,
+  `agente-puente`, `agente-monitor`, `agente-coordinador`), `enabled` (arrancan al bootear) y
+  `Restart=always` (reviven si se caen). **Probado con un reinicio** del servidor: volvieron solos.
+  `agente-fichas` corre `configurar_fichas.py --vigilar` y re-aplica las Agent Cards cuando
+  `langgraph dev` las borra al hot-reload, reemplazando el paso manual del taller.
 - **Coordinador web** (`tools/coordinador_web.py`, `https://coordinador.etmk.cl`): chat del
   coordinador A2A con panel de ruteo y configuración de las URLs de cada agente (Ezequiel, Tomás,
-  Fabio, Gustavo); puede enviar correo desde `coordinador@etmk.cl` (allowlist, solo por acción del
-  usuario). Detrás de HTTPS + Basic Auth.
+  Fabio, Gustavo y **ProteinMAN**). Muestra los **antecedentes del acceso** (local/remoto, grafo,
+  endpoint, host, IP), guarda el ruteo por respuesta y puede enviar correo desde `coordinador@etmk.cl`
+  (allowlist, solo por acción del usuario). Detrás de HTTPS + Basic Auth. Evidencias en
+  `evidencias/evidencias_coordinador.md`.
 - **Backoffice web** (`tools/monitor_web.py`): la misma traza del log de accesos que el monitor Tkinter,
   pero en el navegador, autorefrescante y protegida con **HTTP Basic Auth** (detrás de HTTPS).
 - **Seguridad del despliegue:** MySQL atado a `127.0.0.1`, el token `A2A_TOKEN` nunca se envía a

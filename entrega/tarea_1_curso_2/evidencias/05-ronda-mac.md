@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/05-ronda-mac.md`  
 > **Objetivo:** Ronda de preguntas · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 2137 · **Última modificación:** 20261112 1508
+> **Creación:** 20261110 2137 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Ronda de preguntas · evidencia (mac)

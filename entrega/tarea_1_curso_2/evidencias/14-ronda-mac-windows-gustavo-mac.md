@@ -2,7 +2,7 @@
 > **Archivo:** `evidencias/14-ronda-mac-windows-gustavo-mac.md`  
 > **Objetivo:** Ronda end-to-end Mac ↔ Windows ↔ Gustavo · evidencia (mac)  
 > **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261111 2004 · **Última modificación:** 20261112 1508
+> **Creación:** 20261111 2004 · **Última modificación:** 20261111 2049
 <!--/encabezado-grupo-->
 
 # Ronda end-to-end Mac ↔ Windows ↔ Gustavo · evidencia (mac)

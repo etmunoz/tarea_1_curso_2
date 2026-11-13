@@ -27,3 +27,6 @@ dist/
 # BD SQLite generada (se reconstruye sola)
 data/*.sqlite
 logs/
+
+# Credenciales del coordinador: local + en el zip, NUNCA en git
+CLAVE-COORDINADOR.txt

@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Un taller para transformar el agente de viajes en un agente con tu personalidad, conocimientos y habilidades, y hacerlo conversar con otros.">
+  <title>Taller · crea y conecta tu agente</title>
+  <style>
+    :root { --paper:#f7f6f2; --ink:#282535; --muted:#655f70; --line:#e4e0e9; --purple:#6942b7; --purple-dark:#4e2d92; --lavender:#eee8fa; --green:#266449; --mint:#eef6f0; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:24px; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:16px; line-height:1.65; }
+    a { color:var(--purple-dark); text-underline-offset:4px; }
+    a:hover { text-decoration-thickness:2px; }
+    button, input { font:inherit; }
+    button { cursor:pointer; }
+    :focus-visible { outline:3px solid var(--purple); outline-offset:4px; }
+    .skip { position:absolute; left:18px; top:-80px; padding:12px; background:white; z-index:5; }
+    .skip:focus { top:10px; }
+    .shell { max-width:1160px; padding:0 36px; margin:auto; }
+    .masthead { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:24px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .brand { display:flex; gap:10px; align-items:center; }
+    .brand-mark { color:white; background:var(--purple); width:30px; height:30px; display:grid; place-items:center; border-radius:9px; font-size:13px; letter-spacing:0; }
+    .masthead>span { color:var(--muted); text-align:right; }
+    .hero { display:grid; grid-template-columns:1.25fr 1fr; align-items:center; gap:55px; padding:55px 0 42px; }
+    .eyebrow { margin:0 0 15px; color:var(--purple-dark); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; }
+    h1 { margin:0 0 20px; font-size:clamp(34px,5vw,58px); line-height:1.08; letter-spacing:-.045em; font-weight:750; }
+    h1 span { color:var(--purple); }
+    .lede { max-width:530px; color:var(--muted); font-size:18px; line-height:1.65; }
+    .hero-link { display:inline-flex; align-items:center; gap:18px; padding:11px 18px; margin-top:12px; color:white; background:var(--purple); border-radius:8px; text-decoration:none; font-size:14px; font-weight:600; }
+    .hero-link:hover { background:var(--purple-dark); }
+    .scene { background:var(--lavender); padding:27px; border-radius:22px; }
+    .scene-label { text-align:center; color:var(--purple-dark); font-size:11px; letter-spacing:.13em; text-transform:uppercase; font-weight:700; margin:0 0 19px; }
+    .bubble { margin:0 18px 16px; padding:14px; background:white; border-radius:12px 12px 12px 2px; text-align:center; font-size:14px; }
+    .supervisor { text-align:center; background:var(--purple-dark); color:white; padding:16px 12px; border-radius:12px; }
+    .supervisor strong { display:block; font-size:17px; }
+    .supervisor span { font-size:12px; color:#e8dffb; }
+    .connector { width:1px; height:20px; background:#b4a4d0; margin:auto; }
+    .agent-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; position:relative; padding-top:18px; }
+    .agent-row::before { content:""; position:absolute; top:0; left:25%; width:50%; border-top:1px solid #b4a4d0; }
+    .agent { position:relative; background:white; border-radius:10px; padding:14px 10px; text-align:center; }
+    .agent::before { content:""; position:absolute; top:-18px; left:50%; height:18px; border-left:1px solid #b4a4d0; }
+    .agent strong { display:block; font-size:14px; }
+    .agent small { display:block; color:var(--muted); font-size:12px; }
+    .prep { display:grid; grid-template-columns:180px 1fr; gap:28px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:22px 0; margin-bottom:34px; }
+    .prep h2 { font-size:16px; margin:0; }
+    .prep ul { display:flex; flex-wrap:wrap; gap:8px 28px; margin:0; padding-left:18px; font-size:14px; }
+    .route { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-bottom:45px; }
+    .route a { display:flex; gap:14px; padding:17px; border-radius:10px; text-decoration:none; color:var(--ink); background:#fff; border:1px solid var(--line); }
+    .route a:hover { border-color:var(--purple); }
+    .route .num { color:var(--purple); font-size:22px; line-height:1.3; font-weight:600; }
+    .route strong { display:block; font-size:14px; }
+    .route small { font-size:12px; color:var(--muted); }
+    .layout { display:grid; grid-template-columns:190px minmax(0,1fr); gap:34px; align-items:start; }
+    aside { position:sticky; top:24px; font-size:13px; }
+    .aside-title { margin:0 0 10px; font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+    .progress-label { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:0 0 8px; }
+    progress { width:100%; height:6px; display:block; accent-color:var(--purple); border:0; background:#e3ddec; border-radius:10px; overflow:hidden; }
+    progress::-webkit-progress-bar { background:#e3ddec; }
+    progress::-webkit-progress-value { background:var(--purple); }
+    progress::-moz-progress-bar { background:var(--purple); }
+    aside nav { display:grid; gap:10px; padding:20px 0; border-bottom:1px solid var(--line); }
+    aside nav a { color:var(--muted); text-decoration:none; }
+    aside nav a:hover { color:var(--purple); }
+    aside details { margin-top:18px; border:0; padding:0; background:transparent; }
+    aside summary { font-size:13px; padding:0; }
+    dl { margin:13px 0 0; }
+    dt { font-weight:600; margin-top:10px; }
+    dd { margin:2px 0 0; color:var(--muted); }
+    main { min-width:0; }
+    .lesson { padding:30px; margin-bottom:26px; background:#fff; border:1px solid var(--line); border-radius:16px; }
+    .delivery { margin-top:24px; }
+    .lesson-head { display:flex; gap:18px; align-items:flex-start; margin-bottom:20px; }
+    .step-number { flex:0 0 42px; display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:var(--lavender); color:var(--purple); font-size:20px; font-weight:600; }
+    h2 { margin:0 0 6px; font-size:25px; line-height:1.3; letter-spacing:-.025em; }
+    .lesson-head p { color:var(--muted); font-size:14px; margin:0; }
+    h3 { margin:25px 0 9px; font-size:17px; line-height:1.4; }
+    p { margin:0 0 13px; }
+    .lesson p, .lesson li { font-size:15px; }
+    .actions { padding-left:22px; margin:14px 0 18px; }
+    .actions li { padding-left:4px; margin:10px 0; }
+    .actions li::marker { color:var(--purple); font-weight:600; }
+    code { background:#f0eef4; border-radius:4px; padding:2px 5px; font:0.86em/1.5 "SF Mono",Menlo,Consolas,monospace; overflow-wrap:anywhere; }
+    .hint { background:#f7f5fa; border-left:3px solid #bda9df; padding:12px 15px; border-radius:0 8px 8px 0; margin:17px 0; font-size:14px; }
+    details { margin:12px 0; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+    summary { padding:13px 16px; cursor:pointer; font-weight:600; font-size:14px; }
+    summary::marker { color:var(--purple); }
+    .detail-body { padding:0 16px 5px; }
+    .detail-body p { font-size:14px; }
+    .copybox { margin:12px 0 16px; background:#272334; border-radius:9px; overflow:hidden; }
+    .code-head { display:flex; flex-wrap:wrap; align-items:center; gap:9px; padding:10px 13px; border-bottom:1px solid #454052; }
+    .code-label { min-width:0; overflow-wrap:anywhere; color:#dcd0f4; font-size:11px; }
+    .copy-actions { display:flex; align-items:center; gap:8px; margin-left:auto; }
+    .copy-button { background:#454052; color:#fff; border:1px solid #6f667e; font-size:11px; font-weight:600; padding:5px 10px; border-radius:5px; }
+    .copy-button:hover { background:#625676; }
+    .copy-status { color:#bbebce; font-size:11px; }
+    pre { color:#f1edf7; margin:0; padding:16px; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.75 "SF Mono",Menlo,Consolas,monospace; }
+    pre code { background:none; padding:0; color:inherit; font:inherit; }
+    .table-wrap { overflow-x:auto; margin:12px 0 16px; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th, td { padding:10px 12px; text-align:left; vertical-align:top; border:1px solid var(--line); }
+    th { background:#f7f5fa; font-weight:600; }
+    th[scope="row"] { width:22%; }
+    td.fill { color:var(--muted); font-style:italic; }
+    .file-list { display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); border-radius:9px; margin:16px 0; overflow:hidden; }
+    .file-list div { padding:12px 14px; font-size:13px; }
+    .file-list div:nth-child(-n+2) { border-bottom:1px solid var(--line); }
+    .file-list div:nth-child(odd) { border-right:1px solid var(--line); }
+    .file-list span { display:block; color:var(--muted); margin-top:4px; }
+    .deliver { border:1px solid #cfe5d6; background:var(--mint); border-radius:9px; padding:14px 16px; margin-top:22px; }
+    .deliver-title { margin:0 0 8px; color:#24523c; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .deliver ul { margin:0; padding-left:20px; }
+    .deliver li { font-size:14px; margin:6px 0; }
+    .check { display:flex; gap:11px; align-items:flex-start; background:var(--mint); color:#24523c; padding:14px; border-radius:9px; margin-top:22px; cursor:pointer; }
+    .check input { width:18px; height:18px; flex:0 0 18px; margin:4px 0 0; accent-color:var(--green); }
+    .check strong { display:block; font-size:14px; }
+    .check span { font-size:13px; }
+    .try { border-left:2px solid #bca9db; padding-left:16px; margin:15px 0; }
+    .try small { display:block; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--muted); letter-spacing:.06em; }
+    .try p { margin:4px 0 0; }
+    .try .expected { color:var(--green); font-size:13px; }
+    .questions { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .questions .try { margin:12px 0; }
+    .extra { padding:0 3px 18px; }
+    .extra>h2 { font-size:21px; }
+    .extra>p { color:var(--muted); font-size:14px; }
+    .finish { border-top:1px solid var(--line); padding:25px 3px 35px; }
+    .finish h2 { font-size:23px; }
+    .finish p { font-size:14px; }
+    footer { border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; padding:20px 0 28px; color:var(--muted); font-size:12px; }
+    [hidden] { display:none !important; }
+    @media (max-width:940px) { .hero { gap:28px; } .layout { grid-template-columns:155px minmax(0,1fr); gap:22px; } .lesson { padding:24px; } .scene { padding:20px; } }
+    @media (max-width:740px) {
+      .shell { padding:0 20px; } .hero { grid-template-columns:1fr; gap:24px; padding:34px 0; } .scene { max-width:480px; width:100%; } .lede { font-size:17px; }
+      .prep { grid-template-columns:1fr; gap:12px; } .route { grid-template-columns:1fr; gap:8px; margin-bottom:28px; } .route a { padding:12px 15px; }
+      .layout { display:block; } aside { position:static; margin-bottom:24px; } aside nav { display:none; } aside details { margin-top:12px; } .lesson { padding:22px; }
+      h2 { font-size:22px; } .lesson-head { gap:12px; } .questions { grid-template-columns:1fr; } .masthead>span { font-size:10px; }
+    }
+    @media (max-width:410px) { .shell { padding:0 14px; } .lesson { padding:18px 15px; } .file-list { grid-template-columns:1fr; } .file-list div:not(:last-child) { border-bottom:1px solid var(--line); } .file-list div:nth-child(odd) { border-right:0; } .scene { padding:18px; } .brand { gap:7px; } .masthead { letter-spacing:.04em; } .code-head { align-items:flex-start; } }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      body { background:white; color:#222; font-size:11pt; } .shell { max-width:none; padding:0; } .hero { padding:24px 0; } h1 { font-size:32pt; }
+      .layout { display:block; } aside,.route,.hero-link,.copy-actions,.skip { display:none !important; } .lesson { padding:18px; } .lesson-head,.check,.copybox { break-inside:avoid; }
+      details { overflow:visible; } details::details-content { content-visibility:visible; } details:not([open]) > :not(summary) { display:block !important; } .check input { appearance:auto; }
+      pre { background:#f5f5f5; color:#222; font-size:9pt; } .code-head { background:#eee; } .code-label { color:#333; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip" href="#paso-1">Ir al taller</a>
+<div class="shell">
+  <header>
+    <div class="masthead"><div class="brand"><span class="brand-mark" aria-hidden="true">a</span> Laboratorio de agentes</div><span>Taller práctico · A2A</span></div>
+    <section class="lesson delivery" aria-labelledby="titulo-entrega">
+      <p class="eyebrow">Entrega del taller</p>
+      <h2 id="titulo-entrega">Entrega todo lo que utilizaste</h2>
+      <p>Al finalizar, entrega el material completo con el que realizaste el taller, tanto el que creaste tú como el que utilizaste de tus compañeros.</p>
+      <ul class="actions">
+        <li><strong>Documento de entrega</strong> (Word, notebook de Jupyter o PDF, tú eliges): identificación del grupo, blueprint, evidencias de cada etapa (capturas de terminal y de las respuestas), qué ajustaste y los comentarios finales. Todo lo que no es código va aquí, documentado.</li>
+        <li><strong><code>blueprint.md</code>:</strong> el blueprint de tu agente como archivo aparte, en la raíz del zip (y el del segundo agente dentro de su carpeta).</li>
+        <li><strong>Código completo, con los prompts:</strong> cada agente es el proyecto <code>agente-viajes-a2a</code> entero (todos sus archivos tal cual venían) más la información extra que pide este taller: tus prompts, tus apuntes y skills, tu herramienta y tu nombre de grafo. Identifica al autor de cada agente. Nunca incluyas <code>.env</code>; sí <code>.env.example</code>.</li>
+        <li><strong>Notebook ejecutado:</strong> <code>a2a-test.ipynb</code> con las celdas corridas y sus salidas, dentro de <code>mi-agente/notebooks/</code>.</li>
+      </ul>
+      <h3>Entregables por etapa</h3>
+      <div class="table-wrap">
+        <table aria-label="Entregables por etapa">
+          <thead><tr><th scope="col">Etapa</th><th scope="col">Qué entregas</th><th scope="col">Dónde</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1 · Crear</th><td>Blueprint en archivo propio; proyecto completo del agente con tus prompts, apuntes y nombre de grafo; captura del servidor en el 2025.</td><td><code>blueprint.md</code> · <code>mi-agente/</code> · documento de entrega</td></tr>
+            <tr><th scope="row">2 · Probar</th><td>Notebook con el <code>assistant_id</code>, las tres preguntas respondidas, la tarjeta y un envío por A2A; capturas y párrafo de qué ajustaste.</td><td><code>mi-agente/notebooks/a2a-test.ipynb</code> · documento de entrega</td></tr>
+            <tr><th scope="row">3 · Conversar</th><td>Notebook con tarjetas actualizadas, descubrimiento de dos agentes, decisión del supervisor y conversación de tres turnos; proyecto completo del segundo agente con su autor; reto y comentarios.</td><td><code>mi-agente/notebooks/a2a-test.ipynb</code> · <code>segundo-agente/</code> · documento de entrega</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Todo va en <strong>un solo <code>.zip</code></strong> con esta estructura:</p>
+      <div class="copybox"><div class="code-head"><span class="code-label">estructura del zip de entrega</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar estructura del zip de entrega">Copiar</button></span></div><pre data-language="text"><code>grupo-N-taller-a2a.zip
+├── documento-entrega.docx  (o .ipynb / .pdf)   ← integrantes, grupo, blueprint, evidencias, ajustes, reto y comentarios
+├── blueprint.md                                 ← el blueprint de tu agente, en su propio archivo
+├── mi-agente/                                   ← el proyecto COMPLETO, igual que agente-viajes-a2a, con tus cambios
+│   ├── README.md · langgraph.json · requirements.txt · pyproject.toml · .env.example · .gitignore
+│   ├── src/agente_viajes/{prompts.py, herramientas.py, graph.py}   ← tus prompts, tus apuntes, tu nombre de grafo
+│   ├── src/consumidor/ · tests/ · bruno/ · plan.json · .opencode/   ← tal como venían (src/swarm/ NO va: el swarm no es parte del taller)
+│   └── notebooks/a2a-test.ipynb                 ← ejecutado, con salidas
+├── segundo-agente/                              ← mismo formato, con su blueprint.md, autor y grupo
+└── (sin .venv, sin .langgraph_api, sin .env en ninguna carpeta)</code></pre></div>
+      <p class="hint"><strong>Identificación obligatoria:</strong> incluye los <strong>nombres y apellidos completos</strong> de los integrantes y el <strong>nombre o número del grupo</strong>. Añade un archivo <code>README.md</code> con estos datos, qué aportó cada persona y cómo ejecutar el trabajo. Para el material de compañeros, indica también sus nombres, apellidos y grupo de origen.</p>
+    </section>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">De un agente a un equipo</p>
+        <h1>Crea tu agente.<br><span>Ponlo a conversar.</span></h1>
+        <p class="lede">Transforma el agente de viajes en un agente que refleje tu personalidad, tus conocimientos y tus habilidades. Después, hazlo conversar con otro especialista para resolver un reto juntos.</p>
+        <a class="hero-link" href="#paso-1">Empezar el taller <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="scene" role="img" aria-label="Dos agentes aportan sus conocimientos a un reto compartido. El notebook pasa los mensajes de uno al otro.">
+        <p class="scene-label">Así funcionará tu equipo</p>
+        <div class="bubble">Un reto para resolver juntos</div>
+        <div class="supervisor"><strong>Conversación A2A</strong><span>El notebook lleva los mensajes</span></div>
+        <div class="connector"></div>
+        <div class="agent-row"><div class="agent"><strong>Tu agente</strong><small>Tu forma de pensar</small></div><div class="agent"><strong>Otro especialista</strong><small>Una mirada diferente</small></div></div>
+      </div>
+    </div>
+    <div class="prep">
+      <h2>Antes de empezar</h2>
+      <ul><li>La carpeta <code>agente-viajes-a2a</code> funcionando.</li><li>El notebook <code>a2a-test.ipynb</code> de la clase, con la sección «Ejemplo real».</li><li>Tu clave de Gemini en <code>.env</code>.</li></ul>
+    </div>
+    <div class="prep">
+      <h2>Qué se edita en cada etapa</h2>
+      <ul><li><strong>Etapa 1 · Crear:</strong> solo la copia de <code>agente-viajes-a2a</code> (sus archivos de prompt, herramientas, grafo y <code>langgraph.json</code>). El notebook no se toca.</li><li><strong>Etapas 2 y 3 · Probar y conversar:</strong> solo el notebook <code>a2a-test.ipynb</code>. El código del agente no se toca.</li></ul>
+    </div>
+    <nav class="route" aria-label="Etapas del taller">
+      <a href="#paso-1"><span class="num">01</span><span><strong>Dale tu identidad</strong><small>Editas: la copia de agente-viajes-a2a</small></span></a>
+      <a href="#paso-2"><span class="num">02</span><span><strong>Prueba tu agente</strong><small>Editas: a2a-test.ipynb</small></span></a>
+      <a href="#paso-3"><span class="num">03</span><span><strong>Hazlos conversar</strong><small>Editas: a2a-test.ipynb</small></span></a>
+    </nav>
+  </header>
+  <div class="layout">
+    <aside aria-label="Tu recorrido">
+      <p class="aside-title">Tu recorrido</p>
+      <div class="progress-label"><strong id="progress-text" role="status">0 de 3 etapas</strong><span aria-hidden="true">✓</span></div>
+      <progress id="workshop-progress" value="0" max="3" aria-label="Etapas completadas"></progress>
+      <nav aria-label="Navegación del taller"><a href="#paso-1">01 · Crear</a><a href="#paso-2">02 · Probar</a><a href="#paso-3">03 · Conversar</a><a href="#extra">Opcional · Compartir</a></nav>
+      <details><summary>Palabras útiles</summary><dl><dt>A2A</dt><dd>Una forma común de enviar mensajes entre agentes.</dd><dt>Agent Card</dt><dd>La ficha que dice qué hace un agente y cómo conectarse a él.</dd><dt>Skill</dt><dd>Una habilidad concreta: explicar, comparar, diseñar o planificar algo de tu área.</dd><dt>Prompt</dt><dd>Las instrucciones que definen cómo se comporta tu agente.</dd><dt>Supervisor</dt><dd>El agente que decide a qué especialista consultar.</dd></dl></details>
+    </aside>
+    <main>
+      <section class="lesson" id="paso-1" aria-labelledby="titulo-1">
+        <div class="lesson-head"><span class="step-number" aria-hidden="true">1</span><div><h2 id="titulo-1">Dale tu identidad al agente</h2><p>Tu meta: transformar la base de viajes en un agente con tu perfil.</p></div></div>
+        <p class="hint"><strong>En esta etapa solo editas la copia de <code>agente-viajes-a2a</code>.</strong> Cuatro archivos: <code>prompts.py</code>, <code>herramientas.py</code>, <code>graph.py</code> y <code>langgraph.json</code>. El notebook <code>a2a-test.ipynb</code> no se toca todavía.</p>
+        <p>El agente de viajes será tu punto de partida. Vas a cambiar sus instrucciones y herramientas para que use <strong>tu experiencia, tus conocimientos y tu forma de comunicarte</strong>.</p>
+        <p><strong>José, el profesor, trabaja en TI.</strong> Tu agente puede saber de educación, diseño, marketing, administración, cocina o cualquier otra área que conozcas.</p>
+        <h3>Primero, define tu perfil</h3>
+        <div class="file-list"><div><strong>Mi personalidad</strong><span>¿Soy cercano, directo, creativo, paciente? ¿Cómo quiero que responda?</span></div><div><strong>Mis conocimientos</strong><span>¿Qué conceptos, experiencias y ejemplos puedo compartir?</span></div><div><strong>Mis skills</strong><span>Elige tres habilidades: explicar conceptos, comparar opciones, diseñar una propuesta…</span></div><div><strong>Mis instrucciones</strong><span>¿Qué debe hacer, cuándo debe preguntar y cuáles son sus límites?</span></div></div>
+        <p class="hint"><strong>Por ejemplo:</strong> una docente puede enseñar con ejemplos, un diseñador puede revisar una propuesta visual y alguien de marketing puede planificar una campaña. Elige habilidades que puedas probar.</p>
+        <h3>Después, escribe el blueprint de tu agente</h3>
+        <p>Antes de tocar código, completa la misma tabla de diseño que viste en la clase de A2A, ahora para <strong>tu</strong> agente. La columna del medio es el ejemplo de viajes; la tuya va a la derecha. Lo que escribas aquí es lo que luego irá en tu prompt, en tu herramienta y en tu tarjeta.</p>
+        <div class="table-wrap">
+          <table aria-label="Blueprint de tu agente">
+            <thead><tr><th scope="col">Qué definir</th><th scope="col">Agente de viajes (ejemplo)</th><th scope="col">Tu agente</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Rol y alcance</th><td>Busca vuelos y hoteles. No gestiona seguros, visas ni pagos.</td><td class="fill">¿Qué hace y qué NO hace? Una frase de cada.</td></tr>
+              <tr><th scope="row">Herramientas</th><td><code>buscar_vuelos</code> y <code>buscar_hoteles</code>.</td><td class="fill">¿Qué funciones puede ejecutar? (por ejemplo <code>consultar_mis_apuntes</code>)</td></tr>
+              <tr><th scope="row">Autonomía</th><td>Puede buscar y responder sin aprobación previa. Eso no lo autoriza a reservar ni pagar.</td><td class="fill">¿Qué decide solo y qué nunca debe hacer sin una persona?</td></tr>
+              <tr><th scope="row">Cuándo pide ayuda</th><td>Si falta una ciudad o una fecha, pide ese dato. El operador puede intervenir.</td><td class="fill">¿Qué dato falta para que pregunte? ¿Qué deriva a otro especialista?</td></tr>
+              <tr><th scope="row">Dónde se ejecuta</th><td>Servidor <code>http://127.0.0.1:2024</code>, grafo <code>agente_viajes</code>.</td><td class="fill">Servidor <code>http://127.0.0.1:2025</code>, grafo <code>agente_tu_nombre</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Guárdalo en el <code>README.md</code> de tu proyecto: forma parte de la entrega. Puedes copiar esta plantilla:</p>
+        <div class="copybox"><div class="code-head"><span class="code-label">README.md · blueprint de mi agente</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar README.md · blueprint de mi agente">Copiar</button></span></div><pre data-language="markdown"><code>## Blueprint · Agente TU_NOMBRE
+
+| Qué definir       | Mi agente |
+|-------------------|-----------|
+| Rol y alcance     | Hace: … No hace: … |
+| Herramientas      | consultar_mis_apuntes (…) |
+| Autonomía         | Decide solo: … Nunca sin una persona: … |
+| Cuándo pide ayuda | Pregunta si falta: … Deriva a otro especialista cuando: … |
+| Dónde se ejecuta  | http://127.0.0.1:2025 · grafo agente_tu_nombre |</code></pre></div>
+        <p class="hint"><strong>Úsalo como guía al programar:</strong> "Rol y alcance" y "Cuándo pide ayuda" se convierten en reglas del prompt; "Herramientas" es la lista <code>HERRAMIENTAS</code>; "Dónde se ejecuta" es tu <code>langgraph.json</code> y el puerto; "Rol" y "Herramientas" resumidos son la descripción de tu tarjeta en la etapa 3.</p>
+        <h3>A. Prepara una copia</h3>
+        <p>Copia el proyecto de viajes a <code>mi-agente</code>. Crea un entorno virtual nuevo e instala las dependencias.</p>
+        <details><summary>Ver comandos para macOS / Linux</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Terminal · macOS / Linux</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Terminal · macOS / Linux">Copiar</button></span></div><pre data-language="bash"><code># Ejecuta desde la carpeta que contiene agente-viajes-a2a.
+rsync -a --exclude .venv --exclude .langgraph_api --exclude .git agente-viajes-a2a/ mi-agente/
+cd mi-agente
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt</code></pre></div></div></details>
+        <details><summary>Ver instrucciones para Windows</summary><div class="detail-body"><p>En el Explorador, copia el proyecto a <code>mi-agente</code> y elimina <code>.venv</code>, <code>.langgraph_api</code> y <code>.git</code> únicamente de la copia, si existen. Abre PowerShell en la carpeta que contiene ambos proyectos:</p><div class="copybox"><div class="code-head"><span class="code-label">Terminal · Windows / PowerShell</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Terminal · Windows / PowerShell">Copiar</button></span></div><pre data-language="powershell"><code>cd mi-agente
+py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt</code></pre></div></div></details>
+        <p class="hint">La copia debe conservar tu <code>.env</code>. Ese archivo contiene tu clave: mantenlo en tu equipo.</p>
+        <h3>B. Escribe tus prompts, conocimientos y skills</h3>
+        <p>Completa las plantillas con tu perfil y edita <strong>cuatro archivos</strong>. Reemplaza los campos <code>TU_NOMBRE</code>, <code>TU_ESPECIALIDAD</code> y los textos entre corchetes antes de ejecutar.</p>
+        <div class="file-list"><div><code>prompts.py</code><span>Tu personalidad, instrucciones y habilidades.</span></div><div><code>herramientas.py</code><span>Tus apuntes y las funciones que puede ejecutar.</span></div><div><code>graph.py</code><span>Une las piezas y nombra al agente.</span></div><div><code>langgraph.json</code><span>Indica al servidor qué grafo cargar.</span></div></div>
+        <details><summary>1. Tu personalidad y tus skills · prompts.py</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">src/agente_viajes/prompts.py · reemplaza su contenido</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar src/agente_viajes/prompts.py · reemplaza su contenido">Copiar</button></span></div><pre data-language="python"><code>NOMBRE = &quot;TU_NOMBRE&quot;
+ESPECIALIDAD = &quot;TU_ESPECIALIDAD&quot;
+PERSONALIDAD = &quot;Cercano, paciente y directo. Uso ejemplos sencillos.&quot;
+SOBRE_MI = &quot;[Describe tu experiencia, tus intereses y tu forma de trabajar.]&quot;
+
+SKILLS = [
+    &quot;[Habilidad 1: por ejemplo, explicar conceptos de mi área.]&quot;,
+    &quot;[Habilidad 2: por ejemplo, comparar opciones con criterios claros.]&quot;,
+    &quot;[Habilidad 3: por ejemplo, proponer un plan paso a paso.]&quot;,
+]
+
+SYSTEM_VIAJES = f&quot;&quot;&quot;Eres el agente de {NOMBRE}, especialista en {ESPECIALIDAD}.
+Tu personalidad: {PERSONALIDAD}
+Sobre la persona que representas: {SOBRE_MI}
+Tus habilidades: {&#x27;, &#x27;.join(SKILLS)}
+
+Instrucciones:
+- Responde en español y conserva la personalidad indicada.
+- Consulta mis apuntes cuando necesites conocimientos que te he entregado.
+- Distingue lo que dicen mis apuntes de tus propias sugerencias.
+- No inventes experiencias personales ni datos que no tienes.
+- Si falta información, pregunta. Si algo queda fuera de tu área, dilo.
+- Al conversar con otro agente, considera su aporte y contribuye desde tu especialidad.
+- Responde de forma breve, salvo que te pidan más detalle.
+&quot;&quot;&quot;</code></pre></div></div></details>
+        <details><summary>2. Tus conocimientos y una herramienta para consultarlos · herramientas.py</summary><div class="detail-body"><p>Completa estos apuntes con conocimientos que quieras darle a tu agente: conceptos, criterios y un caso de tu experiencia. La herramienta permite que los consulte al responder.</p><div class="copybox"><div class="code-head"><span class="code-label">src/agente_viajes/herramientas.py · reemplaza su contenido</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar src/agente_viajes/herramientas.py · reemplaza su contenido">Copiar</button></span></div><pre data-language="python"><code>from langchain_core.tools import tool
+
+APUNTES = {
+    &quot;conceptos&quot;: &quot;[Escribe tres conceptos importantes de tu especialidad.]&quot;,
+    &quot;criterios&quot;: &quot;[Explica cómo evalúas una buena solución en tu área.]&quot;,
+    &quot;caso&quot;: &quot;[Cuenta un ejemplo que conozcas y qué aprendiste de él.]&quot;,
+}
+
+@tool
+def consultar_mis_apuntes(tema: str = &quot;&quot;) -&gt; str:
+    &quot;&quot;&quot;Consulta mis apuntes: conceptos, criterios o caso. Vacío devuelve todos.&quot;&quot;&quot;
+    clave = tema.lower().strip()
+    if not clave:
+        return &quot;\n&quot;.join(f&quot;{nombre}: {texto}&quot; for nombre, texto in APUNTES.items())
+    return APUNTES.get(clave, &quot;No tengo ese tema registrado. Consulta conceptos, criterios o caso.&quot;)
+
+HERRAMIENTAS = [consultar_mis_apuntes]</code></pre></div></div></details>
+        <details><summary>3. Tu nombre de grafo · graph.py</summary><div class="detail-body"><p>Conserva los imports y la configuración del modelo. En el bloque <code>create_agent</code>, elige un nombre único, por ejemplo <code>agente_ana</code>. Sustituye <code>agente_tu_nombre</code> por ese nombre aquí y en el archivo siguiente:</p><div class="copybox"><div class="code-head"><span class="code-label">src/agente_viajes/graph.py · actualiza el bloque create_agent</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar src/agente_viajes/graph.py · actualiza el bloque create_agent">Copiar</button></span></div><pre data-language="python"><code>graph = create_agent(
+    model=modelo,
+    tools=HERRAMIENTAS,
+    system_prompt=SYSTEM_VIAJES,
+    name=&quot;agente_tu_nombre&quot;,
+)</code></pre></div></div></details>
+        <details><summary>4. Registro del grafo · langgraph.json</summary><div class="detail-body"><p>Usa el mismo nombre. Si trabajas con compañeros, cada grafo debe tener un nombre distinto.</p><div class="copybox"><div class="code-head"><span class="code-label">langgraph.json · conserva esta ruta al grafo</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar langgraph.json · conserva esta ruta al grafo">Copiar</button></span></div><pre data-language="json"><code>{
+  &quot;dependencies&quot;: [&quot;.&quot;],
+  &quot;graphs&quot;: {
+    &quot;agente_tu_nombre&quot;: &quot;./src/agente_viajes/graph.py:graph&quot;
+  },
+  &quot;env&quot;: &quot;.env&quot;
+}</code></pre></div></div></details>
+        <p class="hint"><strong>Skills y herramientas:</strong> una skill describe lo que tu agente sabe hacer; una herramienta es una función que puede ejecutar. Escribir una skill en el prompt no crea una conexión a una API. Puedes añadir más funciones a <code>HERRAMIENTAS</code> cuando tu especialidad las necesite.</p>
+        <p class="hint">Conserva la carpeta <code>src/agente_viajes</code> y la variable <code>SYSTEM_VIAJES</code>. Así siguen funcionando los imports del proyecto original.</p>
+        <h3>C. Enciéndelo</h3>
+        <p>Desde <code>mi-agente</code>, con el entorno activado, ejecuta:</p>
+        <div class="copybox"><div class="code-head"><span class="code-label">Terminal · macOS / Linux</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Terminal · macOS / Linux">Copiar</button></span></div><pre data-language="bash"><code>langgraph dev --port 2025</code></pre></div>
+        <p>En Windows usa <code>.venv\Scripts\langgraph.exe dev --port 2025</code>. Deja esta terminal abierta.</p>
+        <div class="deliver"><p class="deliver-title">Entregables de la etapa 1</p><ul><li><strong><code>blueprint.md</code></strong>: la tabla del blueprint de tu agente en <strong>su propio archivo</strong> (la plantilla de arriba), en la raíz del zip.</li><li><strong>El proyecto completo <code>mi-agente/</code></strong>: <strong>todos</strong> los archivos que trae <code>agente-viajes-a2a</code> (README, <code>langgraph.json</code>, <code>requirements.txt</code>, <code>pyproject.toml</code>, <code>.env.example</code>, <code>src/</code>, <code>tests/</code>, <code>bruno/</code>, <code>plan.json</code>, <code>.opencode/</code>) tal cual venían, <strong>salvo <code>src/swarm/</code>, que no va</strong> (el swarm no es parte del taller), más tus cambios: <code>prompts.py</code> con tu personalidad y skills, <code>herramientas.py</code> con tus apuntes, <code>graph.py</code> y <code>langgraph.json</code> con tu nombre de grafo. Sin <code>.venv</code>, sin <code>.langgraph_api</code> y <strong>sin <code>.env</code></strong>.</li><li><strong>En el documento de entrega</strong> (Word, notebook o PDF): identificación del grupo, el blueprint y la <strong>evidencia</strong> de que enciende: captura de la terminal con <code>langgraph dev --port 2025</code> corriendo.</li></ul></div>
+        <label class="check"><input type="checkbox" data-step="1"><span><strong>Lo logré: mi agente tiene mi perfil</strong>Escribí mi blueprint, completé mi personalidad, mis apuntes y tres skills. El servidor funciona en <code>http://127.0.0.1:2025</code>.</span></label>
+      </section>
+
+      <section class="lesson" id="paso-2" aria-labelledby="titulo-2">
+        <div class="lesson-head"><span class="step-number" aria-hidden="true">2</span><div><h2 id="titulo-2">Hazle preguntas a tu agente</h2><p>Tu meta: conversar desde el notebook y comprobar cómo usa tu personalidad, tus conocimientos y tus skills.</p></div></div>
+        <p class="hint"><strong>Desde aquí solo editas <code>a2a-test.ipynb</code>.</strong> El código de tu agente ya está listo; si quieres cambiar su comportamiento, vuelve a la etapa 1 y reinicia <code>langgraph dev</code>.</p>
+        <ol class="actions">
+          <li>Guarda <code>a2a-test.ipynb</code> en <code>mi-agente/notebooks/</code>. Ábrelo y elige el Python de <code>mi-agente/.venv</code> como kernel.</li>
+          <li>En la primera celda, cambia la conexión al puerto <strong>2025</strong>. Ejecuta de nuevo la configuración.</li>
+          <li>Ejecuta «Encontrar el Id de tu agente». Busca el nombre de grafo que elegiste y copia su UUID en <code>ASSISTANT_ID</code>.</li>
+          <li>Ejecuta las celdas que definen <code>crear_entrada</code>, <code>extraer_texto</code> y <code>consultar_langgraph</code>. Después usa la celda de preguntas de abajo.</li>
+        </ol>
+        <details><summary>Ver la configuración del notebook</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Notebook · primera celda de configuración</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · primera celda de configuración">Copiar</button></span></div><pre data-language="python"><code>LANGGRAPH_URL = &quot;http://127.0.0.1:2025&quot;
+A2A_HOST = &quot;127.0.0.1&quot;
+A2A_PORT = 2025
+A2A_URL = f&quot;http://{A2A_HOST}:{A2A_PORT}&quot;</code></pre></div></div></details>
+
+
+        <h3>Escribe tu pregunta y ejecuta la celda</h3>
+        <p>Cambia el texto de <code>PREGUNTA</code> y vuelve a ejecutar. Verás la respuesta de tu agente en texto.</p>
+        <div class="copybox"><div class="code-head"><span class="code-label">Notebook · hacer una pregunta</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar celda para hacer una pregunta">Copiar</button></span></div><pre data-language="python"><code># Cambia esta pregunta por una de tu especialidad.
+PREGUNTA = &quot;Hola, ¿quién eres y en qué me puedes ayudar?&quot;
+
+estado = await lg.runs.wait(
+    None,
+    ASSISTANT_ID,
+    input=crear_entrada(PREGUNTA),
+)
+print(extraer_texto(estado))</code></pre></div>
+        <p class="hint">Esta celda hace una consulta independiente. Para continuar una conversación, usa el bloque de memoria del notebook con el mismo <code>thread_id</code>.</p>
+        <h3>Prueba estas preguntas</h3>
+        <div class="try"><small>Personalidad</small><p>«Preséntate y cuéntame cómo me puedes ayudar».</p><p class="expected">Debe usar tu nombre, tu especialidad y el tono que definiste.</p></div>
+        <div class="try"><small>Conocimientos y skills</small><p>«Usa el caso de tus apuntes y aplica una de tus habilidades para proponer una solución».</p><p class="expected">Revisa que consulte tus apuntes, use datos de tu caso y haga lo que prometiste en sus skills.</p></div>
+        <div class="try"><small>Memoria</small><p>«Mi objetivo para este proyecto es…» → «¿Qué objetivo te acabo de contar?»</p><p class="expected">En el bloque de memoria, conserva el mismo <code>thread_id</code> entre las dos llamadas.</p></div>
+        <h3>Ahora repite una consulta por A2A</h3>
+        <p>Continúa con «Vamos a Agent2Agent». Primero descarga la tarjeta y después ejecuta el envío del mensaje que trae el notebook.</p>
+        <details><summary>La tarjeta necesita el assistant_id · código correcto</summary><div class="detail-body"><p>En la celda de conexión, conserva la creación de <code>http_a2a</code> y del cliente. Usa este bloque para descargar la tarjeta:</p><div class="copybox"><div class="code-head"><span class="code-label">Notebook · descargar la tarjeta</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · descargar la tarjeta">Copiar</button></span></div><pre data-language="python"><code>from a2a.client import A2ACardResolver
+from google.protobuf.json_format import MessageToDict
+
+# Usa http_a2a creado en la celda de conexión del notebook.
+resolver = A2ACardResolver(http_a2a, A2A_URL)
+card_remota = await resolver.get_agent_card(
+    http_kwargs={&quot;params&quot;: {&quot;assistant_id&quot;: ASSISTANT_ID}}
+)
+mostrar(MessageToDict(card_remota))</code></pre></div><p>El servidor necesita saber de qué agente quieres la tarjeta. Si omites <code>assistant_id</code>, puede responder con un error 400.</p></div></details>
+        <p class="hint"><strong>Qué estás viendo:</strong> envías un <em>Message</em> (mensaje), el servidor atiende una <em>Task</em> (tarea) y entrega su resultado como <em>artifact</em>.</p>
+        <div class="deliver"><p class="deliver-title">Entregables de la etapa 2</p><ul><li><strong><code>mi-agente/notebooks/a2a-test.ipynb</code> ejecutado</strong>, con las salidas guardadas (no lo limpies): la celda «Encontrar el Id» con tu <code>assistant_id</code>, las <strong>tres preguntas</strong> de esta etapa con sus respuestas, la tarjeta descargada por A2A y el envío de un mensaje por A2A con su Task.</li><li><strong>En el documento de entrega:</strong> capturas o copias de esas respuestas, y un párrafo que diga si reflejan tu perfil y qué ajustaste en el prompt o en los apuntes después de probar.</li></ul></div>
+        <label class="check"><input type="checkbox" data-step="2"><span><strong>Lo logré: puedo hacerle preguntas a mi agente</strong>Sus respuestas reflejan mi personalidad, mis conocimientos y las habilidades que definí.</span></label>
+      </section>
+
+      <section class="lesson" id="paso-3" aria-labelledby="titulo-3">
+        <div class="lesson-head"><span class="step-number" aria-hidden="true">3</span><div><h2 id="titulo-3">Haz conversar a los especialistas</h2><p>Tu meta: que dos agentes combinen sus conocimientos para resolver un reto.</p></div></div>
+        <p class="hint"><strong>En esta etapa solo editas <code>a2a-test.ipynb</code>:</strong> la tarjeta, el bloque de descubrimiento y la celda de conversación son celdas del notebook. El segundo perfil se crea repitiendo la etapa 1 en otra copia.</p>
+        <p>Elijan un reto que necesite dos especialidades: diseñar una actividad, mejorar un servicio o preparar una propuesta. Pueden trabajar en pareja usando <strong>un solo computador</strong>.</p>
+        <p>El ejercicio principal conecta <strong>dos agentes locales</strong>: uno en el puerto 2025 y otro en el 2026. Así pueden completar la conversación sin instalar Cloudflare.</p>
+        <p>Crea un segundo perfil en otra copia del proyecto y ejecútalo con <code>langgraph dev --port 2026</code> (en Windows: <code>.venv\Scripts\langgraph.exe dev --port 2026</code>). Usa nombres de grafo y de tarjeta distintos. Tu primer agente sigue en 2025.</p>
+        <h3>Prepara la presentación de cada agente</h3>
+        <p>Antes de usar el supervisor, actualiza el nombre y las habilidades de cada tarjeta. Ejecuta esta celda en el notebook de cada perfil, conectado a su servidor (2025 o 2026) y con su propio <code>ASSISTANT_ID</code>.</p>
+        <details><summary>Preparar las tarjetas para que el supervisor reconozca a los agentes</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Notebook · después de elegir ASSISTANT_ID</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · después de elegir ASSISTANT_ID">Copiar</button></span></div><pre data-language="python"><code># Completa los mismos datos que elegiste para tu prompt.
+nombre = &quot;TU_NOMBRE&quot;
+especialidad = &quot;TU_ESPECIALIDAD&quot;
+skills = &quot;[Escribe tus tres habilidades, separadas por comas.]&quot;
+
+await lg.assistants.update(
+    ASSISTANT_ID,
+    name=f&quot;Agente {nombre}&quot;,
+    description=f&quot;Especialista en {especialidad}. Puede: {skills}.&quot;,
+)
+print(&quot;Tarjeta actualizada con mi especialidad y mis habilidades.&quot;)</code></pre></div></div></details>
+        <p>Esta descripción permite que el supervisor elija a quién preguntar. Las instrucciones y conocimientos de cada agente siguen definidos en sus archivos.</p>
+        <h3>Descubre los dos agentes</h3>
+        <ol class="actions"><li>Busca «Ejemplo real» en el notebook de la clase.</li><li>Reemplaza su <strong>bloque 1 de descubrimiento</strong> por el siguiente. Ahora buscará agentes en ambos servidores.</li><li>Ejecuta ese bloque y comprueba que aparecen los dos nombres. Después ejecuta los bloques 2 a 5 del mismo ejemplo.</li></ol>
+        <details><summary>Copiar el bloque para encontrar los agentes</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Notebook · reemplaza el bloque 1 de «Ejemplo real»</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · reemplaza el bloque 1 de «Ejemplo real»">Copiar</button></span></div><pre data-language="python"><code>import httpx
+from langgraph_sdk import get_client
+from a2a.client import A2ACardResolver, ClientConfig, create_client
+
+SERVIDORES = [
+    &quot;http://127.0.0.1:2025&quot;,  # Tu agente
+    &quot;http://127.0.0.1:2026&quot;,  # Segundo perfil en el mismo computador
+]
+
+# Libera las conexiones de este bloque si lo ejecutas otra vez.
+for cliente in globals().get(&quot;clientes_a2a&quot;, {}).values():
+    await cliente.close()
+if &quot;http_supervisor&quot; in globals():
+    await http_supervisor.aclose()
+
+http_supervisor = httpx.AsyncClient(timeout=120, trust_env=False)
+config_a2a = ClientConfig(
+    httpx_client=http_supervisor,
+    streaming=False,
+    supported_protocol_bindings=[&quot;JSONRPC&quot;],
+)
+catalogo, agentes_por_nombre, clientes_a2a = [], {}, {}
+
+for base in SERVIDORES:
+    base = base.rstrip(&quot;/&quot;)
+    try:
+        async with get_client(url=base, api_key=None, timeout=30) as remoto:
+            lista = await remoto.assistants.search(limit=100, response_format=&quot;array&quot;)
+    except Exception as error:
+        print(f&quot;No pude consultar {base}: {type(error).__name__}&quot;)
+        continue
+
+    resolver = A2ACardResolver(http_supervisor, base)
+    for asistente in lista:
+        aid = asistente[&quot;assistant_id&quot;]
+        if aid in clientes_a2a:
+            raise ValueError(&quot;ID repetido: usa un nombre de grafo distinto y reinicia el servidor.&quot;)
+
+        card = await resolver.get_agent_card(
+            http_kwargs={&quot;params&quot;: {&quot;assistant_id&quot;: aid}}
+        )
+        for interfaz in card.supported_interfaces:
+            if interfaz.protocol_binding.upper() == &quot;JSONRPC&quot;:
+                interfaz.protocol_binding = &quot;JSONRPC&quot;
+                interfaz.url = f&quot;{base}/a2a/{aid}&quot;
+
+        nombre = card.name
+        if nombre in agentes_por_nombre:
+            raise ValueError(f&quot;Nombre repetido: {nombre}. Cambia el nombre de la tarjeta.&quot;)
+
+        clientes_a2a[aid] = await create_client(card, client_config=config_a2a)
+        agentes_por_nombre[nombre] = aid
+        habilidades = &quot;, &quot;.join(skill.name for skill in card.skills)
+        catalogo.append(
+            f&quot;- Nombre: {nombre}\n&quot;
+            f&quot;  Descripción: {card.description}\n&quot;
+            f&quot;  Habilidades: {habilidades}&quot;
+        )
+
+print(&quot;Agentes disponibles:&quot;, list(agentes_por_nombre))</code></pre></div></div></details>
+        <h3>Primero, comprueba sus tarjetas</h3>
+        <p>En el ejemplo del supervisor, prueba una pregunta de cada especialidad y revisa la línea <code>[Supervisor]</code>. La descripción de cada tarjeta debe ayudarle a elegir.</p>
+        <h3>Después, haz que intercambien ideas</h3>
+        <ol class="actions"><li><strong>A propone:</strong> tu agente aporta tres ideas desde sus conocimientos.</li><li><strong>B mejora:</strong> el otro agente recibe esas ideas y añade su perspectiva.</li><li><strong>A integra:</strong> tu agente recibe la respuesta del compañero y propone un plan conjunto.</li></ol>
+        <p>Añade esta celda después del descubrimiento. Cambia los dos nombres y el reto. El notebook pasa las respuestas de un agente al otro y conserva una conversación por agente.</p>
+        <details><summary>Celda nueva: conversación entre dos especialistas</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Notebook · tres turnos A → B → A</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · tres turnos A → B → A">Copiar</button></span></div><pre data-language="python"><code>from a2a.helpers import new_text_message, get_stream_response_text, get_message_text
+from a2a.types import Role, SendMessageRequest
+
+async def preguntar(cliente, texto, contexto=None):
+    peticion = SendMessageRequest(message=new_text_message(
+        texto, role=Role.ROLE_USER, context_id=contexto
+    ))
+    partes = []
+    async for evento in cliente.send_message(peticion):
+        fragmento = get_stream_response_text(evento)
+        if evento.HasField(&quot;task&quot;):
+            contexto = evento.task.context_id or contexto
+            if not fragmento and evento.task.status.HasField(&quot;message&quot;):
+                fragmento = get_message_text(evento.task.status.message)
+        elif evento.HasField(&quot;message&quot;):
+            contexto = evento.message.context_id or contexto
+        if fragmento:
+            partes.append(fragmento)
+    if not partes:
+        raise RuntimeError(&quot;El agente no devolvió texto. Revisa su terminal.&quot;)
+    return &quot;\n&quot;.join(partes), contexto
+
+# Copia dos nombres exactos de la lista «Agentes disponibles».
+NOMBRE_A = &quot;Agente TU_NOMBRE&quot;
+NOMBRE_B = &quot;Agente SEGUNDO_PERFIL&quot;
+A = clientes_a2a[agentes_por_nombre[NOMBRE_A]]
+B = clientes_a2a[agentes_por_nombre[NOMBRE_B]]
+
+# Cambien este reto por uno que necesite sus dos especialidades.
+reto = &quot;Organicemos una actividad de bienvenida para estudiantes.&quot;
+
+aporte_a, contexto_a = await preguntar(
+    A, f&quot;Reto: {reto} Propón tres ideas desde tu especialidad.&quot;
+)
+aporte_b, contexto_b = await preguntar(
+    B, f&quot;Reto: {reto} Tu colega propone: {aporte_a}\n&quot;
+       &quot;Mejora su propuesta desde tu especialidad y explica qué cambiarías.&quot;
+)
+acuerdo, contexto_a = await preguntar(
+    A, f&quot;Tu colega responde: {aporte_b}\n&quot;
+       &quot;Integra ambos aportes en un plan conjunto breve.&quot;,
+    contexto_a,
+)
+
+for nombre, texto in [(NOMBRE_A, aporte_a), (NOMBRE_B, aporte_b), (NOMBRE_A, acuerdo)]:
+    print(f&quot;\n{nombre}:\n{texto}&quot;)</code></pre></div></div></details>
+        <p class="hint"><strong>Para comentar en clase:</strong> ¿se reconoce la personalidad de cada agente? ¿Qué conocimiento aportó cada uno? ¿La propuesta final incorpora ideas de ambos?</p>
+        <div class="deliver"><p class="deliver-title">Entregables de la etapa 3</p><ul><li><strong>El mismo notebook</strong> con las celdas de esta etapa ejecutadas: la tarjeta actualizada de cada agente, el bloque de descubrimiento mostrando los <strong>dos nombres</strong>, la línea <code>[Supervisor]</code> para una pregunta de cada especialidad, y la celda de conversación con los <strong>tres turnos</strong> y la propuesta final.</li><li><strong><code>segundo-agente/</code></strong>: el proyecto completo del otro perfil (tuyo o de tu compañero), en el mismo formato que <code>mi-agente/</code>, con su <code>blueprint.md</code>. Sin <code>.env</code>.</li><li><strong>En el documento de entrega:</strong> el reto elegido, los nombres y autores de los dos agentes, la conversación de tres turnos (captura o copia) y tus respuestas a las tres preguntas de «Para comentar en clase».</li></ul></div>
+        <label class="check"><input type="checkbox" data-step="3"><span><strong>Lo logré: nuestros agentes conversaron</strong>Veo tres turnos y una propuesta final que combina sus habilidades y conocimientos.</span></label>
+      </section>
+
+        <details><summary>Si algo no funciona</summary><div class="detail-body"><dl><dt>No conecta al puerto 2025</dt><dd>Comprueba que la terminal de tu especialista sigue abierta y que el notebook usa ese puerto.</dd><dt>Error 400 al leer la tarjeta</dt><dd>Incluye el <code>assistant_id</code> elegido, como en el código de la etapa 2.</dd><dt>Solo aparece un agente</dt><dd>Comprueba que ambos servidores están activos y revisa los mensajes del bloque de descubrimiento.</dd><dt>Nombre o ID repetido</dt><dd>Usa un nombre de grafo distinto en <code>graph.py</code> y <code>langgraph.json</code>. Reinicia, vuelve a obtener el ID y actualiza la tarjeta.</dd></dl><p></p></div></details>
+
+      <section class="extra" id="extra" aria-labelledby="titulo-extra">
+        <p class="eyebrow">Extra opcional · Cloudflare</p><h2 id="titulo-extra">Opcional: comparte la conexión con tu compañero</h2>
+        <p><strong>Puedes omitir toda esta actividad.</strong> El taller ya funciona con los dos agentes en tu computador. Usa esta opción solo si quieres conectar equipos distintos y cuentas con ayuda del profesor para usar Cloudflare.</p>
+        <p>Quien recibe la URL la agrega a <code>SERVIDORES</code> en lugar de la segunda dirección local.</p>
+        <details><summary>Ver el extra opcional con Cloudflare</summary><div class="detail-body"><ol class="actions"><li>Con tu especialista activo en 2025 y <code>cloudflared</code> instalado, abre otra terminal y ejecuta el comando de abajo.</li><li>Comparte la URL <code>https://…trycloudflare.com</code> que aparezca. Tu compañero debe añadirla a <code>SERVIDORES</code> y volver a ejecutar el descubrimiento.</li><li>Usen nombres distintos para sus grafos y sus tarjetas.</li></ol><div class="copybox"><div class="code-head"><span class="code-label">Terminal · solo si tienes cloudflared instalado</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Terminal · solo si tienes cloudflared instalado">Copiar</button></span></div><pre data-language="bash"><code>cloudflared tunnel --url http://localhost:2025</code></pre></div><p class="hint">El túnel hace accesible tu servidor desde internet. Otras personas podrían enviar solicitudes que consuman tu cuota de Gemini. Usa datos de prueba, comparte la URL solo durante la clase y cierra el túnel con <kbd>Ctrl+C</kbd> al terminar.</p><p>El bloque ajusta la dirección de la tarjeta para usar la URL compartida. Conserva la versión de protocolo que anuncia el servidor.</p></div></details>
+
+      </section>
+      <section class="finish" aria-labelledby="titulo-cierre"><p class="eyebrow">Al terminar</p><h2 id="titulo-cierre">Tu experiencia ya conversa con otras.</h2><p>Transformaste la base de viajes con tus prompts, tu personalidad, tus conocimientos y tus skills. Después, tu agente intercambió ideas con otro especialista. Para cerrar el taller, detén los servidores con <kbd>Ctrl+C</kbd> y también el túnel si lo abriste.</p><details><summary>Cerrar las conexiones del notebook</summary><div class="detail-body"><div class="copybox"><div class="code-head"><span class="code-label">Notebook · al terminar las pruebas</span><span class="copy-actions"><span class="copy-status" role="status"></span><button class="copy-button" type="button" data-copy hidden aria-label="Copiar Notebook · al terminar las pruebas">Copiar</button></span></div><pre data-language="python"><code>for cliente in globals().get(&quot;clientes_a2a&quot;, {}).values():
+    await cliente.close()
+if &quot;http_supervisor&quot; in globals():
+    await http_supervisor.aclose()
+if &quot;cliente_a2a&quot; in globals():
+    await cliente_a2a.close()
+if &quot;http_a2a&quot; in globals():
+    await http_a2a.aclose()</code></pre></div></div></details></section>
+    </main>
+  </div>
+  <footer><span>Taller · crea y conecta tu agente</span><span>Tu personalidad · tus conocimientos · tus habilidades</span></footer>
+</div>
+<script>
+(() => {
+  const checks = Array.from(document.querySelectorAll('[data-step]'));
+  const progress = document.getElementById('workshop-progress');
+  const label = document.getElementById('progress-text');
+  const storageKey = 'taller-mi-agente-a2a-perfil-v2';
+  function updateProgress() {
+    const completed = checks.filter(check => check.checked).length;
+    progress.value = completed;
+    label.textContent = completed + ' de 3 etapas';
+  }
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey));
+    if (Array.isArray(saved)) checks.forEach(check => { check.checked = saved.includes(check.dataset.step); });
+  } catch {}
+  updateProgress();
+  checks.forEach(check => check.addEventListener('change', () => {
+    updateProgress();
+    try { localStorage.setItem(storageKey, JSON.stringify(checks.filter(item => item.checked).map(item => item.dataset.step))); } catch {}
+  }));
+  document.querySelectorAll('[data-copy]').forEach(button => {
+    button.hidden = false;
+    let timer;
+    button.addEventListener('click', async () => {
+      const box = button.closest('.copybox');
+      const status = box.querySelector('.copy-status');
+      const text = box.querySelector('pre').textContent;
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      } catch {
+        const area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.cssText = 'position:fixed;left:-9999px;top:0';
+        document.body.appendChild(area);
+        try { area.focus({preventScroll:true}); area.select(); copied = document.execCommand('copy'); }
+        catch { copied = false; }
+        finally { area.remove(); button.focus({preventScroll:true}); }
+      }
+      status.textContent = copied ? 'Copiado' : 'Selecciona el texto y usa Cmd/Ctrl+C';
+      clearTimeout(timer);
+      timer = setTimeout(() => { status.textContent = ''; }, 3500);
+    });
+  });
+})();
+</script>
+</body>
+</html>

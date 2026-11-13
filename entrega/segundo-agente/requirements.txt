@@ -1,0 +1,19 @@
+# runtime del agente (familia LangChain 1.x)
+langchain>=1.3,<2
+langchain-core>=1.6,<2
+langgraph>=1.2,<2
+langchain-google-genai>=4.3,<5
+langgraph-swarm>=0.1.0
+pydantic>=2.7,<3
+python-dotenv>=1.0
+httpx>=0.27
+# servidor local de LangGraph (expone A2A en /a2a/{assistant_id})
+langgraph-cli[inmem]>=0.4
+langgraph-api>=0.15.1
+# consumir agentes desde el notebook (langgraph_sdk + protocolo A2A)
+langgraph-sdk>=0.4
+a2a-sdk>=1.2
+# pruebas y notebooks
+pytest>=8
+nbformat>=5.10
+ipykernel>=6

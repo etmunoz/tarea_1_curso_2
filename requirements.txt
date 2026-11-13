@@ -1,27 +1,20 @@
-# --8<-- encabezado-grupo
-# Archivo: requirements.txt
-# Objetivo: Dependencias del proyecto (pip).
-# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
-# Creación: 20261110 1514
-# Última modificación: 20261111 2049
-# --8<-- fin-encabezado-grupo
+# Taller 05 · herramientas de la raíz (herramientas/*.py y ejecución de los notebooks).
+# Cada agente tiene además su propio entorno: entrega/mi-agente/requirements.txt y
+# entrega/segundo-agente/requirements.txt (los del proyecto base, sin cambios).
+# Probado con Python 3.13 (servidores) y 3.14 (herramientas y notebooks).
 
-# runtime del agente (familia LangChain 1.x)
-langchain>=1.3,<2
-langchain-core>=1.6,<2
-langgraph>=1.2,<2
-langchain-google-genai>=4.3,<5
-langgraph-swarm>=0.1.0
-pydantic>=2.7,<3
-python-dotenv>=1.0
-httpx>=0.27
-# servidor local de LangGraph (expone A2A en /a2a/{assistant_id})
-langgraph-cli[inmem]>=0.4
-langgraph-api>=0.15.1
-# consumir agentes desde el notebook (langgraph_sdk + protocolo A2A)
-langgraph-sdk>=0.4
-a2a-sdk>=1.2
-# pruebas y notebooks
-pytest>=8
-nbformat>=5.10
-ipykernel>=6
+# cliente A2A y API de LangGraph (preguntar.py, puente.py, notebooks)
+a2a-sdk>=1.3,<2
+langgraph-sdk>=0.4.7,<0.5
+httpx>=0.28,<1
+
+# supervisor de preguntar.py y de los notebooks (Gemini con salida estructurada)
+langchain-core>=1.7,<2
+langchain-google-genai>=4.4,<5
+pydantic>=2.14,<3
+python-dotenv>=1.2
+
+# ejecutar los notebooks desde la terminal o Jupyter
+nbformat>=5.11
+nbclient>=0.11
+ipykernel>=7

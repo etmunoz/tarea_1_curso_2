@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagramas de agentes</title>
+<style>
+  :root { --bg:#f6f7f4; --panel:#fff; --ink:#1d2320; --muted:#5f6b65; --line:#dfe3dd; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#121614; --panel:#1a1f1c; --ink:#e6ebe7; --muted:#9aa69f; --line:#2c3430; } }
+  :root[data-theme="dark"] { --bg:#121614; --panel:#1a1f1c; --ink:#e6ebe7; --muted:#9aa69f; --line:#2c3430; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:1000px; margin:0 auto; padding:16px; }
+  h1 { font-size:20px; margin:8px 0 4px; } h2 { font-size:16px; margin:0 0 4px; }
+  p { color:var(--muted); margin:0 0 10px; }
+  section { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0; }
+  .diagrama { overflow-x:auto; background:#fff; border-radius:8px; padding:8px; }
+  code { font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Diagramas de los agentes · Taller 05</h1>
+  <p>Generado por <code>herramientas/diagramas.py</code>. Los grafos internos salen del código de cada proyecto.</p>
+  <section><h2>Arquitectura A2A del taller</h2><p>Cada agente corre en su propio servidor <code>langgraph dev</code>. El notebook y el supervisor les hablan por A2A, y los túneles de Cloudflare los publican para tus compañeros.</p><div class="diagrama"><pre class="mermaid">flowchart LR
+  subgraph PC[&quot;Tu computador (Debian)&quot;]
+    direction LR
+    NB[&quot;Notebook a2a-test.ipynb&lt;br/&gt;preguntar.py · chat.html&quot;]
+    SUP{{&quot;Supervisor&lt;br/&gt;Gemini + Decision&lt;br/&gt;(lee las tarjetas)&quot;}}
+    subgraph S1[&quot;langgraph dev :2025&quot;]
+      F[&quot;Agente Fabio&lt;br/&gt;grafo agente_fabio&quot;]
+      FT[(&quot;consultar_mis_apuntes&quot;)]
+    end
+    subgraph S2[&quot;langgraph dev :2026&quot;]
+      E[&quot;ProteinMAN&lt;br/&gt;grafo proteinman&quot;]
+      ET[(&quot;recomendar_tecnica · metricas_recomendadas&lt;br/&gt;elegir_modelo · consultar_modelos (SQLite)&quot;)]
+    end
+    NB --&gt; SUP
+    SUP -- &quot;A2A message/send&quot; --&gt; F
+    SUP -- &quot;A2A message/send&quot; --&gt; E
+    F --- FT
+    E --- ET
+  end
+  CF1([&quot;Túnel Cloudflare&lt;br/&gt;https://….trycloudflare.com&quot;]) --&gt; F
+  CF2([&quot;Túnel Cloudflare&lt;br/&gt;https://….trycloudflare.com&quot;]) --&gt; E
+  COMP[&quot;Compañeros&lt;br/&gt;(su notebook / chat.html)&quot;] -- &quot;A2A por internet&quot; --&gt; CF1
+  COMP -- &quot;A2A por internet&quot; --&gt; CF2
+  G[[&quot;Gemini API&quot;]]
+  F -. &quot;LLM&quot; .-&gt; G
+  E -. &quot;LLM&quot; .-&gt; G
+  SUP -. &quot;LLM&quot; .-&gt; G</pre></div></section><section><h2>Conversación de tres turnos (A → B → A)</h2><p>El notebook lleva los mensajes de un agente al otro. Fabio conserva su <code>contextId</code> entre el turno 1 y el 3, así recuerda su propuesta.</p><div class="diagrama"><pre class="mermaid">sequenceDiagram
+  autonumber
+  participant N as Notebook
+  participant A as Agente Fabio (:2025)
+  participant B as ProteinMAN (:2026)
+  N-&gt;&gt;A: Reto + «Propón tres ideas desde tu especialidad»
+  A-&gt;&gt;A: consultar_mis_apuntes()
+  A--&gt;&gt;N: 3 flujos (BLASTp/Swiss-Prot, HMMER/Pfam, API de UniProt)
+  N-&gt;&gt;B: Reto + ideas de Fabio + «Mejora la propuesta»
+  B-&gt;&gt;B: recomendar_tecnica · elegir_modelo · metricas_recomendadas
+  B--&gt;&gt;N: Partición por identidad (MMseqs2) + ESM-2 + clasificador, F1 macro
+  N-&gt;&gt;A: Respuesta de ProteinMAN + «Integra un plan conjunto» (mismo contextId)
+  A-&gt;&gt;A: consultar_mis_apuntes()
+  A--&gt;&gt;N: Plan conjunto en 4 pasos, con el autor de cada paso</pre></div></section><section><h2>Grafo interno · Agente Fabio · bioinformática</h2><p>Generado desde el código (<code>entrega/mi-agente/src/agente_viajes/graph.py</code>, grafo <code>agente_fabio</code>, puerto 2025). Es un agente ReAct: el modelo decide si llama a una herramienta, lee el resultado y vuelve a decidir, hasta responder.</p><div class="diagrama"><pre class="mermaid">---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([&lt;p&gt;__start__&lt;/p&gt;]):::first
+	model(model)
+	tools(tools&lt;hr/&gt;&lt;small&gt;&lt;em&gt;__tools = consultar_mis_apuntes&lt;/em&gt;&lt;/small&gt;)
+	__end__([&lt;p&gt;__end__&lt;/p&gt;]):::last
+	__start__ --&gt; model;
+	model -.-&gt; __end__;
+	model -.-&gt; tools;
+	tools -.-&gt; model;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc</pre></div></section><section><h2>Grafo interno · ProteinMAN · IA y Data Science aplicada a bioinformática</h2><p>Generado desde el código (<code>entrega/segundo-agente/src/agente_viajes/graph.py</code>, grafo <code>proteinman</code>, puerto 2026). Es un agente ReAct: el modelo decide si llama a una herramienta, lee el resultado y vuelve a decidir, hasta responder.</p><div class="diagrama"><pre class="mermaid">---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([&lt;p&gt;__start__&lt;/p&gt;]):::first
+	model(model)
+	tools(tools&lt;hr/&gt;&lt;small&gt;&lt;em&gt;__tools = recomendar_tecnica, metricas_recomendadas, elegir_modelo, consultar_modelos&lt;/em&gt;&lt;/small&gt;)
+	__end__([&lt;p&gt;__end__&lt;/p&gt;]):::last
+	__start__ --&gt; model;
+	model -.-&gt; __end__;
+	model -.-&gt; tools;
+	tools -.-&gt; model;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc</pre></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" integrity="sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr" crossorigin="anonymous"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "default", securityLevel: "loose", flowchart: { htmlLabels: true } });
+</script>
+</body>
+</html>

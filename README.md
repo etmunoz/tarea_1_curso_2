@@ -1,82 +1,85 @@
-<!--encabezado-grupo-->
-> **Archivo:** `README.md`  
-> **Objetivo:** tarea_1_curso_2 · Taller A2A  
-> **Grupo del curso:** Fabio Durán - Gustavo Reyes - Ezequiel Muñoz  
-> **Creación:** 20261110 1450 · **Última modificación:** 20261111 2049
-<!--/encabezado-grupo-->
+# Taller 05 · Agentes especialistas que conversan por A2A
 
-# tarea_1_curso_2 · Taller A2A
+**Curso:** Agentes de IA · Curso 2 · Taller 05 «Mi agente especialista habla por A2A»
+**Grupo ⟨GRUPO⟩:** Fabio Durán Verdugo · Gustavo Reyes · Ezequiel Muñoz
 
-Proyecto del **Taller · tu skill es un agente y habla por A2A** (Curso 2 · Sesión 1).
-Base: un agente de viajes (LangGraph) expuesto por **A2A de forma nativa** con el
-servidor de LangGraph, un **swarm** (vuelos + hoteles) y un **agente conversacional**
-pendiente de construir. Entorno con **uv + Python 3.13**.
+## Contexto
+Este directorio tiene la solución completa del taller y las herramientas que se usaron para probarla y compartirla. El enunciado está en `docs/05-taller-mi-agente-especialista-habla-por-a2a.html`.
 
-- Material del taller (10 páginas, lectura): [`taller-a2a/`](taller-a2a/index.md)
-- Guía del proyecto base original: [`README_proyecto_base.md`](README_proyecto_base.md)
-- Reglas de arquitectura y flujo de trabajo: [`AGENTS.md`](AGENTS.md)
+**El problema.** Un solo agente generalista responde peor que varios especialistas bien delimitados. El taller pide:
+1. construir un agente especialista a partir del proyecto base `agente-viajes-a2a`;
+2. publicarlo con el protocolo **A2A (Agent2Agent)**;
+3. hacerlo colaborar con un segundo especialista, tanto a través de un supervisor que enruta preguntas como en una conversación directa entre los dos agentes.
 
-## Puesta en marcha
+**El caso.** Clasificar proteínas por familia funcional a partir de datos de UniProt. Necesita dos especialidades:
 
-```bash
-uv sync                       # crea .venv con Python 3.13 e instala todo
-cp .env.example .env          # pega tu GOOGLE_API_KEY (Gemini)
-uv run langgraph dev          # levanta el agente de viajes en http://127.0.0.1:2024
-```
+| Agente | Especialidad | Autor | Puerto · grafo |
+|---|---|---|---|
+| **Agente Fabio** | Bioinformática: conceptos, herramientas y bases de datos, pipelines reproducibles | Fabio Durán Verdugo | 2025 · `agente_fabio` |
+| **ProteinMAN** | IA y Data Science aplicada a bioinformática: técnica, métricas y modelo | Fabio Durán Verdugo | 2026 · `proteinman` |
 
-> Sin `GOOGLE_API_KEY` el entorno se instala igual, pero los grafos no arrancan:
-> el agente se construye con Gemini al importar. La clave va **solo** en `.env`
-> (ignorado por git); nunca en el código ni en `.env.example`.
+**Arquitectura.**
+- Cada agente es un grafo ReAct (LangChain/LangGraph + Gemini) que sirve `langgraph dev`. Ese servidor publica de forma nativa la tarjeta A2A (`/.well-known/agent-card.json?assistant_id=…`) y el endpoint `/a2a/<assistant_id>`.
+- Un supervisor (Gemini con salida estructurada) lee las tarjetas y elige a qué agente enviar cada pregunta, o responde «ninguno».
+- Para compartir los agentes con el curso se usan túneles de Cloudflare. Hay también un puente opcional que publica cada agente como un servicio A2A «clásico».
 
-## Despliegue permanente (VPS)
-
-Además de la demo por túneles efímeros, el **Agente de Ezequiel** está publicado de forma
-permanente, con **HTTPS y URL fija**:
-
-- **Agente (A2A):** https://agente.etmk.cl · ficha en `/.well-known/agent-card.json`
-- **Backoffice web del log (login):** https://monitor.etmk.cl
-
-Corre en un VPS (Ubuntu 24) detrás de Apache (reverse proxy + Let's Encrypt), con auto-arranque
-por `systemd`. Detalle en [`entrega/documento-entrega.md`](entrega/documento-entrega.md) §11.1.
-
-## Comandos útiles (con uv)
-
-```bash
-# Verificar las herramientas (no requiere API key)
-uv run python -c "from src.agente_viajes.herramientas import buscar_vuelos; print(buscar_vuelos.invoke({'origen':'SCL','destino':'LIM','fecha':'2026-11-10'}))"
-
-# Demo del swarm (vuelos ↔ hoteles en un mismo hilo) — requiere API key
-uv run python -m src.swarm.graph
-
-# Pruebas del A2A del agente de viajes (con `uv run langgraph dev` corriendo en otra terminal)
-uv run pytest tests/test_a2a_viajes.py
-```
-
-Obtener el `assistant_id`, la Agent Card y mandar un `message/send` por A2A: ver los
-`curl` en [`README_proyecto_base.md`](README_proyecto_base.md) o la colección
-[`bruno/`](bruno/) (entorno `local`).
+**Especificación.** Los prompts de los dos agentes están escritos como **requisitos funcionales (RF)** y **no funcionales (RNF)** con identificadores estables, en `entrega/*/src/agente_viajes/prompts.py`. Los blueprints y el documento de entrega los citan por su ID, y las pruebas del notebook comprueban requisitos concretos, por ejemplo la derivación (RF-05) o la trazabilidad (RNF-02).
 
 ## Estructura
-
 ```
-src/agente_viajes/   graph.py · herramientas.py · prompts.py   (A2A nativo · hecho)
-src/swarm/           graph.py · prompts.py                     (vuelos+hoteles · hecho)
-src/consumidor/      README.md                                 (agente conversacional · por construir)
-bruno/               colección para probar tarjeta y message/send
-tests/               test_a2a_viajes.py
-plan.json            grupos y tareas (viajes · agente-conversacional · swarm)
-langgraph.json       grafos que publica `langgraph dev`
-taller-a2a/          las 10 páginas del taller, en Markdown (referencia)
+taller1/
+├── README.md               este archivo (contexto y uso)
+├── requirements.txt        dependencias de las herramientas de la raíz y de los notebooks
+├── lanzar.sh               levanta los dos agentes, sus tarjetas y (opcional) túneles y puentes
+├── entrega/                lo que se entrega (el zip se arma desde aquí)
+│   ├── README.md · blueprint.md · documento-entrega.ipynb
+│   ├── mi-agente/          Agente Fabio (proyecto completo, con su .venv local)
+│   └── segundo-agente/     ProteinMAN (proyecto completo, con su .venv local)
+├── herramientas/
+│   ├── preguntar.py        cliente A2A de terminal (un agente o el supervisor)
+│   ├── puente.py           publica un agente como A2A clásico (tarjeta sin parámetros y POST /)
+│   ├── chat.html           chat web con los dos agentes
+│   ├── diagramas.py        genera docs/diagramas.html (los grafos salen del código)
+│   └── empaquetar.sh       arma grupo-N-taller-a2a.zip sin secretos
+├── docs/
+│   ├── 05-taller-…html     enunciado
+│   ├── blueprints.md         blueprints de los dos agentes (formato del grupo)
+│   ├── blueprint-agentes.md  blueprint del sistema (los dos agentes y cómo colaboran)
+│   ├── compartir-con-cloudflare.md
+│   └── diagramas.html
+├── logs/                   salida de lanzar.sh (servidores, túneles, puentes)
+└── innecesario/            material de consulta y versiones anteriores; no se usa ni se sube al repositorio
 ```
 
-## Qué sigue (según `plan.json`)
+## Puesta en marcha
+```bash
+# 1. Entorno de cada agente (una vez)
+cd entrega/mi-agente      && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && cp .env.example .env
+cd ../segundo-agente      && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && cp .env.example .env
+#    → pegar GOOGLE_API_KEY en los dos .env
 
-1. **Agente conversacional** (`src/consumidor/`): consume al de viajes por A2A; se
-   construye con OpenCode (`@spec` crea tareas, `@implementador` las ejecuta) — ver
-   sección 2 de `README_proyecto_base.md`.
-2. **Swarm · actividades:** agregar un tercer agente al swarm (tareas `s01…s05`).
-3. **Tu propio agente** (lo que pide el taller): tu skill real, su ficha, su túnel.
+# 2. Entorno de las herramientas (una vez, en la raíz)
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
-## Nota
+# 3. Levantar los agentes
+bash lanzar.sh --sin-tunel        # solo local
+bash lanzar.sh                    # + túnel de Cloudflare para cada agente
+bash lanzar.sh --puente           # + puente: cualquier cliente A2A estándar, sin assistant_id
 
-Material de curso para uso personal/educativo. Pertenece a sus autores.
+# 4. Usarlos
+python herramientas/preguntar.py fabio "¿Qué es el e-value de BLAST?"
+python herramientas/preguntar.py proteinman "¿Qué métricas uso con familias desbalanceadas?"
+python herramientas/preguntar.py supervisor "Tengo lecturas FASTQ de baja calidad, ¿qué hago?"
+xdg-open herramientas/chat.html
+```
+Los notebooks (`entrega/segundo-agente/notebooks/a2a-test.ipynb` y después `entrega/mi-agente/notebooks/a2a-test.ipynb`) recorren las etapas 2 y 3 del taller y quedan ejecutados en la entrega.
+
+## Entrega
+```bash
+bash herramientas/empaquetar.sh 7     # → grupo-7-taller-a2a.zip (reemplaza 7 por el número de grupo)
+```
+Antes de entregar, completa los marcadores ⟨GRUPO⟩, ⟨APORTE GUSTAVO⟩ y ⟨APORTE EZEQUIEL⟩ en `entrega/README.md`, `entrega/blueprint.md` y en el documento de entrega.
+
+## Seguridad
+- Las claves viven solo en `entrega/*/.env`. Ningún `.env` entra al zip (`empaquetar.sh` lo comprueba).
+- Una URL de túnel deja usar tu cuota de Gemini a quien la tenga: compártela solo en clase y detén `lanzar.sh` con Ctrl+C al terminar.

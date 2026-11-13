@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat A2A · Taller 05</title>
+<style>
+  :root {
+    --bg: #f6f7f4; --panel: #ffffff; --ink: #1d2320; --muted: #5f6b65; --line: #dfe3dd;
+    --accent: #1f7a5a; --accent-ink: #ffffff; --user: #e7f3ee; --agent: #ffffff; --err: #b3261e;
+    --code: #eef1ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121614; --panel: #1a1f1c; --ink: #e6ebe7; --muted: #9aa69f; --line: #2c3430;
+      --accent: #4cc59a; --accent-ink: #0d1411; --user: #1f3a2f; --agent: #1a1f1c; --err: #ff8a80; --code: #222a26;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121614; --panel: #1a1f1c; --ink: #e6ebe7; --muted: #9aa69f; --line: #2c3430;
+    --accent: #4cc59a; --accent-ink: #0d1411; --user: #1f3a2f; --agent: #1a1f1c; --err: #ff8a80; --code: #222a26;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .app { max-width: 860px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; min-height: 100vh; gap: 12px; }
+  header h1 { font-size: 18px; margin: 0; }
+  header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  .config { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 8px; }
+  .config label { font-size: 12px; color: var(--muted); display: grid; gap: 3px; }
+  .config input { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--ink); font: inherit; font-size: 14px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; font: inherit; font-size: 14px; }
+  .tab[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .card { font-size: 13px; color: var(--muted); min-height: 1.5em; }
+  .card b { color: var(--ink); }
+  .log { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 4px 0; }
+  .msg { max-width: 92%; padding: 10px 13px; border-radius: 12px; border: 1px solid var(--line); overflow-wrap: anywhere; }
+  .msg.user { align-self: flex-end; background: var(--user); }
+  .msg.agent { align-self: flex-start; background: var(--agent); }
+  .msg.err { align-self: stretch; color: var(--err); background: transparent; border-style: dashed; }
+  .msg .who { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .msg p { margin: 0 0 8px; } .msg p:last-child { margin-bottom: 0; }
+  .msg pre { background: var(--code); padding: 8px; border-radius: 7px; overflow-x: auto; font-size: 13px; }
+  .msg code { background: var(--code); padding: 0 4px; border-radius: 4px; font-size: 13px; }
+  .msg pre code { padding: 0; background: none; }
+  .msg ul, .msg ol { margin: 4px 0 8px 20px; padding: 0; }
+  form { display: flex; gap: 8px; position: sticky; bottom: 0; background: var(--bg); padding: 8px 0; }
+  textarea { flex: 1; resize: vertical; min-height: 44px; max-height: 200px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--ink); font: inherit; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 9px; padding: 0 18px; font: inherit; font-weight: 600; cursor: pointer; }
+  button.primary:disabled { opacity: .55; cursor: wait; }
+  .tools { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .link { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; font-size: 12px; padding: 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Chat A2A · Taller 05</h1>
+    <p>Habla con el Agente Fabio (bioinformática) y ProteinMAN (IA y Data Science aplicada a bioinformática) por A2A (<code>message/send</code>).</p>
+  </header>
+
+  <section class="config" aria-label="Servidores">
+    <div class="row">
+      <label>Servidor del Agente Fabio
+        <input id="url-fabio" value="http://127.0.0.1:2025" spellcheck="false">
+      </label>
+      <label>Servidor de ProteinMAN
+        <input id="url-proteinman" value="http://127.0.0.1:2026" spellcheck="false">
+      </label>
+    </div>
+    <div class="tools">
+      <span>Para usar un túnel, pega aquí la URL <code>https://….trycloudflare.com</code>.</span>
+      <button class="link" id="reconectar" type="button">Reconectar</button>
+    </div>
+  </section>
+
+  <div class="tabs" role="group" aria-label="Agente">
+    <button class="tab" data-agente="fabio" aria-pressed="true">Agente Fabio</button>
+    <button class="tab" data-agente="proteinman" aria-pressed="false">ProteinMAN</button>
+  </div>
+  <div class="card" id="card">Conectando…</div>
+
+  <main class="log" id="log" aria-live="polite"></main>
+
+  <div class="tools">
+    <span id="ctx"></span>
+    <button class="link" id="nueva" type="button">Nueva conversación</button>
+  </div>
+  <form id="form">
+    <textarea id="texto" placeholder="Escribe tu pregunta… (Enter envía, Shift+Enter nueva línea)" required></textarea>
+    <button class="primary" id="enviar">Enviar</button>
+  </form>
+</div>
+
+<script>
+const AGENTES = {
+  fabio:    { grafo: "agente_fabio",    input: "url-fabio" },
+  proteinman: { grafo: "proteinman", input: "url-proteinman" },
+};
+const estado = {                // una conversación (contextId) e historial por agente
+  fabio:    { aid: null, base: null, nombre: "Agente Fabio", contexto: null, mensajes: [] },
+  proteinman: { aid: null, base: null, nombre: "ProteinMAN", contexto: null, mensajes: [] },
+};
+let actual = "fabio";
+const $ = (id) => document.getElementById(id);
+
+function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function uuid() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16);
+  });
+}
+function escapar(s) { return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+// Markdown mínimo y seguro: se escapa todo y luego se aplican bloques de código, negritas, cursivas, código y listas.
+function markdown(texto) {
+  const bloques = [];
+  let s = escapar(texto).replace(/```[a-z]*\n?([\s\S]*?)```/g, (_, c) => { bloques.push(c); return `\u0000${bloques.length - 1}\u0000`; });
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>")
+       .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+       .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<i>$2</i>")
+       .replace(/^#{1,6}\s*(.+)$/gm, "<b>$1</b>");
+  const html = s.split(/\n{2,}/).map((p) => {
+    const lineas = p.split("\n");
+    if (lineas.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) {
+      const ord = /^\s*\d+\./.test(lineas[0]);
+      const items = lineas.map((l) => `<li>${l.replace(/^\s*([-*•]|\d+\.)\s+/, "")}</li>`).join("");
+      return ord ? `<ol>${items}</ol>` : `<ul>${items}</ul>`;
+    }
+    return `<p>${p.replace(/\n/g, "<br>")}</p>`;
+  }).join("");
+  return html.replace(/\u0000(\d+)\u0000/g, (_, i) => `<pre><code>${bloques[+i]}</code></pre>`);
+}
+
+function pintar() {
+  const log = $("log"); log.innerHTML = "";
+  for (const m of estado[actual].mensajes) {
+    const div = document.createElement("div");
+    div.className = `msg ${m.tipo}`;
+    const quien = m.tipo === "user" ? "Tú" : m.tipo === "err" ? "Error" : estado[actual].nombre;
+    div.innerHTML = `<div class="who">${escapar(quien)}</div>` + (m.tipo === "agent" ? markdown(m.texto) : `<p>${escapar(m.texto)}</p>`);
+    log.appendChild(div);
+  }
+  log.scrollTop = log.scrollHeight;
+  const c = estado[actual].contexto;
+  $("ctx").textContent = c ? `Conversación (contextId): ${c.slice(0, 8)}…` : "Conversación nueva";
+}
+
+async function conectar(clave) {
+  const e = estado[clave];
+  const base = $(AGENTES[clave].input).value.trim().replace(/\/+$/, "");
+  if (e.base !== base) { e.aid = null; e.base = base; }
+  if (e.aid) return e;
+  const r = await fetch(`${base}/assistants/search`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ graph_id: AGENTES[clave].grafo, limit: 1 }),
+  });
+  if (!r.ok) throw new Error(`El servidor respondió ${r.status} al buscar el agente.`);
+  const lista = await r.json();
+  if (!lista.length) throw new Error(`No existe el grafo ${AGENTES[clave].grafo} en ${base}.`);
+  e.aid = lista[0].assistant_id;
+  const card = await (await fetch(`${base}/.well-known/agent-card.json?assistant_id=${e.aid}`)).json();
+  e.nombre = card.name || e.nombre;
+  e.descripcion = card.description || "";
+  return e;
+}
+
+async function mostrarTarjeta() {
+  $("card").textContent = "Conectando…";
+  try {
+    const e = await conectar(actual);
+    $("card").innerHTML = `<b>${escapar(e.nombre)}</b> · ${escapar(e.descripcion)}`;
+  } catch (err) {
+    $("card").innerHTML = `<span style="color:var(--err)">Sin conexión con ${escapar($(AGENTES[actual].input).value)}: ${escapar(err.message)} ¿Está corriendo <code>lanzar.sh</code>?</span>`;
+  }
+}
+
+async function enviar(texto) {
+  const e = estado[actual];
+  e.mensajes.push({ tipo: "user", texto }); pintar();
+  $("enviar").disabled = true; $("enviar").textContent = "…";
+  try {
+    await conectar(actual);
+    if (!e.contexto) e.contexto = uuid();      // contextId = thread_id del servidor: así el agente recuerda
+    const r = await fetch(`${e.base}/a2a/${e.aid}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: uuid(), method: "message/send", params: { message: {
+        role: "user", messageId: uuid(), contextId: e.contexto, parts: [{ kind: "text", text: texto }],
+      } } }),
+    });
+    const datos = await r.json();
+    if (datos.error) throw new Error(datos.error.message || JSON.stringify(datos.error));
+    const tarea = datos.result;
+    const partes = (tarea.artifacts || []).flatMap((a) => a.parts || []).filter((p) => p.text).map((p) => p.text);
+    if (!partes.length && tarea.status && tarea.status.message) {
+      partes.push(...tarea.status.message.parts.filter((p) => p.text).map((p) => p.text));
+    }
+    e.contexto = tarea.contextId || e.contexto;
+    e.mensajes.push({ tipo: "agent", texto: partes.join("\n\n") || `(sin texto · estado: ${tarea.status && tarea.status.state})` });
+  } catch (err) {
+    e.mensajes.push({ tipo: "err", texto: `${err.message}. Revisa que el servidor esté arriba y la URL sea correcta.` });
+  } finally {
+    $("enviar").disabled = false; $("enviar").textContent = "Enviar"; pintar();
+  }
+}
+
+// Eventos
+for (const b of document.querySelectorAll(".tab")) {
+  b.addEventListener("click", () => {
+    actual = b.dataset.agente;
+    document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-pressed", String(t === b)));
+    pintar(); mostrarTarjeta();
+  });
+}
+for (const clave of Object.keys(AGENTES)) {
+  const inp = $(AGENTES[clave].input);
+  const guardada = leer(`chat-a2a-${clave}`); if (guardada) inp.value = guardada;
+  inp.addEventListener("change", () => { guardar(`chat-a2a-${clave}`, inp.value.trim()); estado[clave].contexto = null; if (clave === actual) mostrarTarjeta(); });
+}
+$("reconectar").addEventListener("click", () => { estado[actual].aid = null; mostrarTarjeta(); });
+$("nueva").addEventListener("click", () => { estado[actual].contexto = null; estado[actual].mensajes = []; pintar(); });
+$("form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const t = $("texto").value.trim(); if (!t) return;
+  $("texto").value = ""; enviar(t);
+});
+$("texto").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); $("form").requestSubmit(); }
+});
+pintar(); mostrarTarjeta();
+</script>
+</body>
+</html>

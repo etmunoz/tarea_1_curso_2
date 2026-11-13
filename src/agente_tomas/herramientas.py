@@ -107,13 +107,17 @@ def info_simbolo(nombre: str) -> dict:
 
 @tool
 def buscar_reiki(consulta: str) -> list[dict] | dict:
-    """Busca en los documentos de Reiki (niveles 1 a 4) cargados en el RAG (Redis) y
+    """Busca en los documentos de Reiki (niveles 1 a 4) cargados en el RAG (local o Redis) y
     devuelve los fragmentos más relevantes [{texto, fuente}]. Úsala para responder con
     el material de los documentos (niveles, símbolos, prácticas, iniciaciones). Si el RAG
     no está disponible, lo dice en una línea."""
-    if not rag.disponible():
-        return {"nota": "El RAG (Redis) no está disponible. Levanta Redis (docker compose up) y carga los documentos con tools/cargar_rag_reiki.py."}
     try:
+        if not rag.disponible():
+            if rag.BACKEND == "local":
+                rag.cargar()  # construye el índice local embebido la primera vez (requiere GOOGLE_API_KEY)
+            else:
+                return {"nota": "El RAG (Redis) no está disponible. Levanta Redis y carga con "
+                                "tools/cargar_rag_reiki.py, o usa RAG_BACKEND=local (sin Docker)."}
         res = rag.buscar(consulta)
         return res or {"nota": "No encontré fragmentos para esa consulta en los documentos de Reiki."}
     except Exception as exc:  # noqa: BLE001 - reportar sin romper

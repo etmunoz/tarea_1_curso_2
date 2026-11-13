@@ -3,7 +3,7 @@
 # Objetivo: LEEME.txt del proyecto.
 # Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
 # Creación: 20261110 2321
-# Última modificación: 20261112 2214
+# Última modificación: 20261112 2215
 # --8<-- fin-encabezado-grupo
 
 ================================================================================
@@ -33,6 +33,49 @@ grupo (Fabio, Gustavo y Ezequiel).
 Nota: "proyecto/" NO incluye secretos: el .env real y el .venv están en
 .gitignore y nunca entran al paquete. El código completo también está público en:
     https://github.com/etmunoz/tarea_1_curso_2
+
+EL COORDINADOR: LA PRUEBA FINAL CON TODOS LOS AGENTES DE TODOS
+-------------------------------------------------------------
+Como cierre del taller creamos un COORDINADOR web y lo dejamos corriendo de forma
+PERMANENTE en nuestra VPS, accesible por HTTPS en:
+
+    https://coordinador.etmk.cl        (usuario: coordinador + clave)
+
+¿Qué es? Un "supervisor A2A": recibe una pregunta en lenguaje natural, lee las
+fichas (Agent Cards) de TODOS los agentes del catálogo, DECIDE a cuál corresponde,
+se la envía por A2A y muestra la respuesta junto con el ruteo que hizo.
+
+Lo importante: con este coordinador hicimos la PRUEBA FINAL end-to-end reuniendo
+en un mismo lugar a los agentes de los TRES integrantes del grupo (y de más de
+uno), sin importar en qué computador corre cada uno:
+
+  - Agentes LOCALES del VPS:
+      * Agente de cocina chilena   (recetas + costeo en CLP)
+      * (según configuración, también Ezequiel y/o Tomás pueden correr locales)
+
+  - Agentes REMOTOS por túnel de Cloudflare, que se agregan desde la propia web
+    en la sección de Configuración (engranaje ⚙️), pegando la URL de cada uno:
+      * Agente de Ezequiel     — IA / Machine Learning           (Mac)
+      * Agente de Tomás        — Reiki, con RAG                   (Windows)
+      * Agente Fabio           — bioinformática                  (Fabio)
+      * ProteinMAN             — IA / Data Science en bioinfo.   (Fabio)
+      * agente_meteorologo     — pronóstico del clima            (Gustavo)
+
+Así, un ÚNICO coordinador enruta a Ezequiel, Tomás, Fabio, Gustavo y ProteinMAN
+estén donde estén: basta cambiar su URL en ⚙️. El panel derecho ("Ruteo del
+coordinador") muestra, por cada pregunta: el agente elegido por el supervisor, el
+motivo, el camino del grafo (guardia_entrada -> supervisor -> agente_local /
+agente_remoto -> guardia_salida) y los "Antecedentes del acceso" (si fue local o
+remoto, el grafo, el endpoint, el host y la IP a la que realmente se accedió).
+
+De esta forma validamos la interoperación A2A completa: desde un mismo coordinador
+en PRODUCCIÓN (HTTPS) preguntamos y enrutamos a los agentes de todos los
+integrantes, consumiéndolos en vivo, y lo hicimos desde DISTINTAS máquinas (nuestro
+Mac y el PC de Gustavo). El coordinador trata cada respuesta remota como un DATO
+(guardrails), nunca como instrucciones.
+
+  Evidencias (12 capturas):   evidencias/evidencias_coordinador.md
+  Detalle técnico y despliegue del servidor:   proyecto/deploy/ (README y bitácora)
 
 QUÉ HACER DESPUÉS DE DESZIPEAR
 ------------------------------

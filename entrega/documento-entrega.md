@@ -63,7 +63,7 @@ herramientas usa, a quién deriva, dónde se ejecuta).
 
 - **Ezequiel · IA Engineer & Data Scientist** → [`blueprint-ezequiel.md`](../blueprint-ezequiel.md)
 - **Fabio** → [`blueprint-fabio.md`](../blueprint-fabio.md) (plantilla; la completa Fabio)
-- **Gustavo** → [`blueprint-gustavo.md`](../blueprint-gustavo.md) (plantilla; la completa Gustavo)
+- **Gustavo** → [`blueprint-gustavo.md`](../blueprint-gustavo.md) (agente meteorólogo)
 
 En este repositorio el grupo levantó **tres agentes** propios (Ezequiel, Tomás y
 cocina). Tomás es el segundo agente del integrante Ezequiel, y existe para poder

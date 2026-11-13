@@ -108,6 +108,25 @@ def guardia_entrada(estado: Estado) -> dict:
     return {"bloqueado": True, "respuesta": v.mensaje, "ruta": ["guardia_entrada:bloqueado"]}
 
 
+def _normalizar_elegido(agente: str, catalogo: list) -> str:
+    """Objetivo: mapear lo que devolvió el supervisor al nombre EXACTO de un agente del catálogo,
+    tolerando 'Nombre: descripción' u otras variantes; o 'ninguno'. Así el ruteo no se cae por una
+    pequeña diferencia de formato en la salida del LLM. Salida: str."""
+    agente = (agente or "").strip()
+    if not agente or agente.lower() in ("ninguno", "none", "ningún agente", "ningun agente"):
+        return "ninguno"
+    nombres = [a.nombre for a in catalogo]
+    if agente in nombres:
+        return agente
+    base = agente.split(":")[0].strip()  # "Nombre: descripción" → "Nombre"
+    if base in nombres:
+        return base
+    for n in nombres:  # el nombre del catálogo es prefijo de lo devuelto (o viceversa)
+        if agente.startswith(n) or base.startswith(n) or n.startswith(base):
+            return n
+    return "ninguno"
+
+
 def enrutar(estado: Estado) -> dict:
     """Objetivo (nodo): el supervisor decide a qué agente mandar la pregunta leyendo el catálogo.
     Entradas: estado (Estado) con los messages.
@@ -118,7 +137,8 @@ def enrutar(estado: Estado) -> dict:
         SystemMessage(content=SYSTEM_SUPERVISOR),
         HumanMessage(content=f"Catálogo de agentes:\n{texto_catalogo(catalogo)}\n\nPregunta del usuario:\n{pregunta}"),
     ])
-    return {"elegido": d.agente, "motivo": d.motivo, "ruta": ["supervisor"]}
+    elegido = _normalizar_elegido(d.agente, catalogo)
+    return {"elegido": elegido, "motivo": d.motivo, "ruta": ["supervisor"]}
 
 
 def consultar(estado: Estado, config: RunnableConfig) -> dict:

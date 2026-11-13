@@ -44,4 +44,30 @@ FICHAS: dict[str, dict[str, str]] = {
             "(costo por ingrediente, total y por persona, en CLP). No responde temas fuera de cocina."
         ),
     },
+    "agente_meteorologo": {
+        "name": "agente_meteorologo",
+        "description": (
+            "Entrego pronósticos ficticios del clima de hoy y de los próximos siete días para "
+            "Santiago, Concepción y Valdivia, con temperaturas y condiciones. No respondo fuera de "
+            "la meteorología ni para otras ciudades o plazos mayores a siete días. (Réplica local "
+            "del agente de Gustavo Reyes.)"
+        ),
+    },
+    "agente_fabio": {
+        "name": "Agente Fabio",
+        "description": (
+            "Especialista en bioinformática: explica conceptos (alineamientos, FASTA/FASTQ, UniProt), "
+            "compara herramientas y bases de datos con criterios claros y diseña pipelines de análisis "
+            "paso a paso. Deriva lo de machine learning a ProteinMAN. (Réplica local del agente de "
+            "Fabio Durán.)"
+        ),
+    },
+    "proteinman": {
+        "name": "ProteinMAN",
+        "description": (
+            "Especialista en IA y Data Science aplicada a bioinformática: recomienda técnicas de ML "
+            "para datos biológicos, sugiere métricas y elige modelo según el tipo de dato (secuencias, "
+            "expresión génica, estructuras). (Réplica local del agente de Fabio Durán.)"
+        ),
+    },
 }

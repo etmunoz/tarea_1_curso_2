@@ -6,7 +6,10 @@
     "agente_viajes": "./src/agente_viajes/graph.py:graph",
     "agente_ezequiel": "./src/agente_ezequiel/graph.py:graph",
     "agente_tomas": "./src/agente_tomas/graph.py:graph",
-    "agente_cocina": "./src/agente_cocina/graph.py:graph"
+    "agente_cocina": "./src/agente_cocina/graph.py:graph",
+    "agente_meteorologo": "./src/agente_meteorologo/graph.py:graph",
+    "agente_fabio": "./src/agente_fabio/graph.py:graph",
+    "proteinman": "./src/proteinman/graph.py:graph"
   },
   "env": ".env"
 }

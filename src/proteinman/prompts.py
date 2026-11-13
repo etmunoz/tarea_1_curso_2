@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/proteinman/prompts.py
+# Objetivo: System prompt de ProteinMAN (réplica local; requisitos de Fabio Durán).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 # Autor: Fabio Durán · Taller 05. Basado en tarea_1_curso_2/src/agente_ezequiel/prompts.py (ver README.md).
 
 """Especificación de ProteinMAN: agente de IA y Data Science aplicada a bioinformática.

@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_fabio/graph.py
+# Objetivo: Agente Fabio (réplica local del agente de Fabio Durán · bioinformática), A2A nativo.
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 """Agente de viajes · se expone por A2A de forma NATIVA con el servidor de LangGraph.
 
 No hay código de servidor aquí. `langgraph dev` (o un deploy de LangGraph Platform) lee

@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_meteorologo/herramientas.py
+# Objetivo: Herramientas del meteorólogo: pronóstico ficticio (Santiago, Concepción, Valdivia).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 """Herramientas con pronósticos meteorológicos ficticios de Chile."""
 
 from langchain_core.tools import tool

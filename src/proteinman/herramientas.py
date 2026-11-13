@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/proteinman/herramientas.py
+# Objetivo: Herramientas de ProteinMAN: técnica, métricas, modelo y catálogo SQLite (bio-ML).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 # Autor: Fabio Durán · Taller 05. Basado en tarea_1_curso_2/src/agente_ezequiel/herramientas.py (cambios en README.md).
 
 """Herramientas de ProteinMAN · IA y Data Science aplicada a bioinformática (agente creado por Fabio Durán).

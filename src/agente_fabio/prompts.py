@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_fabio/prompts.py
+# Objetivo: System prompt de Agente Fabio (réplica local; requisitos de Fabio Durán).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 """Especificación del Agente Fabio: especialista en bioinformática.
 
 Se conservan las variables de la plantilla del Taller 05 (NOMBRE, ESPECIALIDAD, PERSONALIDAD, SOBRE_MI,

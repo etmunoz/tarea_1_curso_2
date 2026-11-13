@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_fabio/herramientas.py
+# Objetivo: Herramienta de Agente Fabio: consultar_mis_apuntes (bioinformática).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 from langchain_core.tools import tool
 
 APUNTES = {

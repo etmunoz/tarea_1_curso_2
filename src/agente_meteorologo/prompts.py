@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/agente_meteorologo/prompts.py
+# Objetivo: System prompt del agente meteorólogo (réplica local del de Gustavo).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 """Instrucciones del agente meteorólogo (réplica local del agente de Gustavo Reyes)."""
 
 SYSTEM_METEOROLOGO = """

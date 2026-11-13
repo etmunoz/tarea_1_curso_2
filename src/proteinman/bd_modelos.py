@@ -1,3 +1,11 @@
+# --8<-- encabezado-grupo
+# Archivo: src/proteinman/bd_modelos.py
+# Objetivo: Catálogo de modelos (SQLite) de ProteinMAN (réplica local del de Fabio).
+# Grupo del curso: Fabio Durán - Gustavo Reyes - Ezequiel Muñoz
+# Creación: 20261113 1130
+# Última modificación: 20261113 1130
+# --8<-- fin-encabezado-grupo
+
 # Autor: Fabio Durán · original en tarea_1_curso_2/src/agente_ezequiel/bd_modelos.py
 # Trasplantado al formato agente-viajes-a2a para el Taller 05 (ajustes documentados en README.md).
 
